@@ -1,0 +1,17 @@
+\section{Exercise Solutions}
+
+\begin{solution}
+The Tonelli-Shanks algorithm\index{Tonelli-Shanks algorithm} algorithm finds a square root of $a$ modulo $p$ by writing $p-1 = 2^s \cdot n$ with $n$ odd, finding a quadratic non-residue $z$, and iteratively refining the root. For $p \equiv 3 \pmod{4}$, Gauss's method gives $x \equiv \pm a^{(p+1)/4} \pmod{p}$ directly. Tonelli-Shanks algorithm\index{Tonelli-Shanks algorithm} is more general but computationally heavier; for $p \equiv 3 \pmod{4}$ it reduces to Gauss's formula in one iteration.
+\end{solution}
+
+\begin{solution}
+The index table maps each residue $a$ to $\operatorname{ind}_g(a) = x$ where $g^x \equiv a \pmod{p}$. To solve $g^x \equiv a \pmod{p}$, look up $\operatorname{ind}_g(a)$ in the table. Building the table takes $O(p)$ time and lookups are $O(1)$. For large $p$, the Baby-Step Giant-Step algorithm is more efficient with $O(\sqrt{p})$ time and space.
+\end{solution}
+
+\begin{solution}
+If $g$ is a primitive root\index{primitive root}, its order is $p-1$. The order of $g^k$ is $\frac{p-1}{\gcd(k, p-1)}$, which equals $p-1$ iff $\gcd(k, p-1) = 1$. The number of such $k$ in $\{1, \ldots, p-1\}$ is $\phi(p-1)$, so there are $\phi(p-1)$ primitive root\index{primitive root}s modulo $p$.
+\end{solution}
+
+\begin{solution}
+The Pohlig-Hellman algorithm exploits the factorization $p-1 = \prod q_i^{e_i}$. For each prime power $q_i^{e_i}$, it computes the discrete log modulo $q_i^{e_i}$ by solving a system of equations in the subgroups of order $q_i$. The full log is reconstructed by CRT. When $p-1$ is smooth (all small factors), this is exponentially faster than Baby-Step Giant-Step.
+\end{solution}

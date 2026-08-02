@@ -1,0 +1,17 @@
+\section{Exercise Solutions}
+
+\begin{solution}
+The normal density $\phi(x) = \frac{1}{\sqrt{2\pi}}e^{-x^2/2}$ has mean 0 and variance 1. The characteristic function is $\phi(t) = e^{-t^2/2}$, obtained by completing the square in the Fourier integral. By the Central Limit Theorem, sums of i.i.d. random variables converge to a normal distribution.
+\end{solution}
+
+\begin{solution}
+The $3\sigma$ rule states that approximately 99.7\% of mass lies within 3 standard deviations. Computing: $\Phi(3) - \Phi(-3) = 2\Phi(3) - 1 \approx 0.9973$. More precisely, $\Phi(1) \approx 0.8413$, $\Phi(2) \approx 0.9772$, $\Phi(3) \approx 0.9987$.
+\end{solution}
+
+\begin{solution}
+Maximum likelihood estimation for $N(\mu, \sigma^2)$ gives $\hat{\mu} = \bar{x}$ and $\hat{\sigma}^2 = \frac{1}{n}\sum(x_i - \bar{x})^2$. The Fisher information matrix is diagonal with entries $1/\sigma^2$ and $1/(2\sigma^4)$. The Cramér-Rao bound shows these estimators are efficient.
+\end{solution}
+
+\begin{solution}
+Convolution of two normals: if $X \sim N(\mu_1, \sigma_1^2)$ and $Y \sim N(\mu_2, \sigma_2^2)$, then $X+Y \sim N(\mu_1+\mu_2, \sigma_1^2+\sigma_2^2)$. This follows from characteristic functions: $\phi_X(t)\phi_Y(t) = e^{i\mu_1 t - \sigma_1^2 t^2/2} \cdot e^{i\mu_2 t - \sigma_2^2 t^2/2} = e^{i(\mu_1+\mu_2)t - (\sigma_1^2+\sigma_2^2)t^2/2}$.
+\end{solution}

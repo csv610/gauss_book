@@ -1,0 +1,21 @@
+\section{Exercise Solutions}
+
+\begin{solution}
+For the First Supplement, Gauss's Lemma\index{Gauss's Lemma} gives $\mu$ as the count of residues of $p/2$ exceeding $p/2$. For $a = -1$, the residues are $p-1, 2(p-1), \ldots$ whose least positive residues are $p-1, p-2, \ldots$. Exactly $\frac{p-1}{2}$ of these exceed $p/2$ when $p \equiv 3 \pmod{4}$, giving $\legendre{-1}{p} = (-1)^{(p-1)/2}$. Similarly for $a = 2$, the residues $2, 4, \ldots, p-1$ exceed $p/2$ in a pattern determined by $p \bmod 8$.
+\end{solution}
+
+\begin{solution}
+The Solovay-Strassen test picks random $a$ and checks if $a^{(p-1)/2} \equiv \left(\frac{a}{p}\right) \pmod{p}$. For primes this always holds; for composites it fails with probability at least $1/2$. Testing on Carmichael numbers like 561 shows failure, while primes pass. The test is a probabilistic primality test with one-sided error.
+\end{solution}
+
+\begin{solution}
+Using quadratic reciprocity\index{quadratic reciprocity}: $\left(\frac{10}{p}\right) = \left(\frac{2}{p}\right)\left(\frac{5}{p}\right)$. By the supplements, $\left(\frac{2}{p}\right) = 1$ iff $p \equiv \pm 1 \pmod{8}$. By reciprocity, $\left(\frac{5}{p}\right) = \left(\frac{p}{5}\right)$ since $5 \equiv 1 \pmod{4}$. The quadratic residue\index{quadratic residue}s mod 5 are $\{1, 4\}$, so $\left(\frac{p}{5}\right) = 1$ iff $p \equiv 1, 4 \pmod{5}$. Combining via CRT gives the full condition.
+\end{solution}
+
+\begin{solution}
+The Atkin-Morain test uses elliptic curves over $\F_p$. For a curve $E: y^2 = x^3 + ax + b$, the point count $N_p = p + 1 - a_p$ is computed via complex multiplication. If $N_p \neq 0$ and satisfies certain conditions from the CM theory, $p$ is prime. The test uses quadratic reciprocity\index{quadratic reciprocity} to find suitable curves with known endomorphism rings.
+\end{solution}
+
+\begin{solution}
+The polynomial $x^2 - a$ has derivative $2x$, which is nonzero for $x \neq 0$ when $p$ is odd. By Hensel's lemma or direct counting, each quadratic residue\index{quadratic residue} has exactly two square roots $\pm x_0$. Including $a = 0$ (one root), the total count is $1 + \legendre{a}{p}$ for $a \not\equiv 0$, and $1$ for $a \equiv 0$. For elliptic curves $y^2 = x^3 + ax + b$, summing $1 + \legendre{f(x)}{p}$ over all $x$ gives the point count.
+\end{solution}

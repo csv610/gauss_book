@@ -62,13 +62,39 @@ f = 1 - \frac{a}{r_0}(1 - \cos \Delta E), \quad
 g = \Delta t - \sqrt{\frac{a^3}{\mu}} (\Delta E - \sin \Delta E).
 \]
 
-\section{Least Squares Orbit Refinement}
+\section{Algorithm Complexity}
 
-Minimize residuals between observed and computed $(\alpha, \delta)$. The normal equations:
-\[
-(A^T W A) \Delta \mathbf{x} = A^T W \mathbf{r},
-\]
-where $A$ is the design matrix of partial derivatives.
+Gauss's method has complexity:
+\begin{itemize}
+    \item Time complexity: $O(n^3)$ for $n$ observations in the least-squares refinement
+    \item Space complexity: $O(n^2)$ for the normal equations matrix
+    \item Convergence: quadratic when using Newton-Raphson iterations
+    \item Total: $O(k \cdot n^3)$ for $k$ refinement iterations (typically 3-5)
+\end{itemize}
+
+Modern implementations use iterated differential corrections with Newton-Raphson, converging quadratically to machine precision in 3-5 iterations.
+
+\section{Numerical Stability Analysis}
+
+\begin{enumerate}
+    \item Condition number of the design matrix affects solution accuracy
+    \item Observations must span a significant arc for well-conditioned solutions
+    \item Near-conic configurations lead to ill-conditioned normal equations
+    \item Double-precision arithmetic provides $\sim 10^{-16}$ relative accuracy
+\end{enumerate}
+
+For long-arc orbit determination, Kalman filtering provides optimal stability by recursively updating state estimates with uncertainty quantification.
+
+\section{Limitations}
+
+Gauss's method has several limitations:
+\begin{enumerate}
+    \item Requires exactly three observations (no slack for redundant data without refinement)
+    \item Assumes Keplerian motion (neglects perturbations from other bodies)
+    \item Sensitive to observation errors, especially for short arcs
+    \item Assumes known mass parameter $\mu$
+    \item Poor performance when the observed arc subtends less than $90^\circ$
+\end{enumerate}
 
 \section{Python Implementation}
 
@@ -80,7 +106,7 @@ state_from_kepler_elements(elems, mu)     # Elements to state
 gauss_method(obs1, obs2, obs3)            # Gauss's 3-obs method
 least_squares_orbit(observations, x0)     # Refine orbit
 propagate_state(r, v, dt, mu)             # Universal variables
-solve_kepler(M, e)                        # Kepler's equation
+solve_kepler(M, e)                        # Kepler's equation solver
 f_g_functions(r0, v0, dt, mu)             # f, g, fdot, gdot
 differential_correction(obs, x0)          # Iterative refinement
 \end{lstlisting}
@@ -96,6 +122,20 @@ differential_correction(obs, x0)          # Iterative refinement
 >>> r, v = gauss_method(obs1, obs2, obs3)
 >>> elems = kepler_elements_from_state(r, v, mu=1.0)
 >>> print(elems)  # a, e, i, Omega, omega, M0
+\end{lstlisting}
+\end{example}
+
+\begin{example}[Orbit Propagation]
+\begin{lstlisting}[style=python]
+>>> from orbital import propagate_state
+>>> r_new, v_new = propagate_state(r, v, dt=86400, mu=1.0)
+\end{lstlisting}
+\end{example}
+
+\begin{example}[Differential Correction]
+\begin{lstlisting}[style=python]
+>>> from orbital import differential_correction
+>>> x_opt = differential_correction(observations, x0)
 \end{lstlisting}
 \end{example}
 
@@ -116,6 +156,28 @@ Apply Gauss's method to historical Ceres observations (Piazzi, 1801).
 \begin{exercise}
 Implement the batch least squares orbit determination with multiple observations.
 \end{exercise}
+
+\section{Historical Notes}
+
+After the discovery of Ceres by Piazzi in 1801, the dwarf planet was lost when it moved behind the Sun. Gauss applied his method of least squares to three observations and predicted its position with remarkable accuracy, allowing Franzi to rediscover it. This achievement brought Gauss to the attention of the scientific world and established his reputation as a computational mathematician.
+
+\section{Exercise Solutions}
+
+\begin{solution}
+The universal variable formulation uses Stumpff functions $C_2(z)$ and $C_3(z)$ to handle all orbit types (elliptic, parabolic, hyperbolic) with a single set of equations. The state at time $t$ is given by $\mathbf{r}(t) = f\mathbf{r}_0 + g\dot{\mathbf{r}}_0$ and $\dot{\mathbf{r}}(t) = f'\mathbf{r}_0 + g'\dot{\mathbf{r}}_0$, where $f$, $g$, $f'$, $g'$ are expressed in terms of Stumpff functions.
+\end{solution}
+
+\begin{solution}
+The partial derivatives $\frac{\partial(\alpha, \delta)}{\partial(a, e, i, \Omega, \omega, M_0)}$ are computed using the Jacobian of the transformation from orbital elements to observer-centric coordinates. These are used in the differential correction step of orbit determination.
+\end{solution}
+
+\begin{solution}
+Using Piazzi's 1801 observations of Ceres, Gauss applied his method to determine the orbital elements. The predicted position matched observations within arcminutes, enabling reobservation. The computed elements were approximately $a = 2.77$ AU, $e = 0.079$, $i = 10.6^\circ$.
+\end{solution}
+
+\begin{solution}
+For $N$ observations, the least squares problem becomes $\min_{\mathbf{x}} \sum_{i=1}^N \| \mathbf{y}_i - h_i(\mathbf{x}) \|^2$, where $\mathbf{x}$ contains the orbital elements and $h_i$ maps elements to predicted observations. The normal equations are $(J^T J) \delta\mathbf{x} = J^T \mathbf{r}$, solved iteratively.
+\end{solution}
 
 \section{References}
 

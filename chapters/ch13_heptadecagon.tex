@@ -1,12 +1,12 @@
 \section{Introduction}
 
-Gauss's work on the constructibility of regular polygons is one of his most famous achievements. At age 19, he proved that a regular heptadecagon (17-gon) is constructible with ruler and compass, and more generally characterized all constructible regular $n$-gons. This discovery was so important to Gauss that he requested a 17-gon be inscribed on his tombstone.
+Gauss's work on the constructibility of regular polygons is one of his most famous achievements. At age 19, he proved that a regular heptadecagon \index{heptadecagon} (17-gon) is constructible \index{constructible polygon} with ruler and compass \index{ruler-and-compass construction}, and more generally characterized all constructible regular $n$-gons. This discovery was so important to Gauss that he requested a 17-gon be inscribed on his tombstone.
 
 In this chapter, we cover:
 \begin{itemize}
     \item Roots of unity and cyclotomic polynomials
     \item Gauss's criterion for constructible polygons
-    \item The 17-gon construction using Gaussian periods
+    \item The 17-gon construction using Gaussian periods \index{Gaussian period}
     \item General $n$-gon construction when possible
     \item Implementation of the construction
 \end{itemize}
@@ -33,14 +33,14 @@ A regular $n$-gon is constructible with ruler and compass if and only if
 \[
 n = 2^k p_1 p_2 \cdots p_m
 \]
-where $p_i$ are distinct Fermat primes: $F_k = 2^{2^k} + 1$.
+where $p_i$ are distinct Fermat prime \index{Fermat prime}s: $F_k = 2^{2^k} + 1$.
 \end{theorem}
 
 Known Fermat primes: $3, 5, 17, 257, 65537$. The next $2^{2^5}+1 = 4294967297 = 641 \times 6700417$ is composite.
 
 \section{The 17-gon Construction}
 
-Gauss used Gaussian periods to express $\cos(2\pi/17)$ in nested square roots. Let $\zeta = e^{2\pi i/17}$. The periods of length 2 are:
+Gauss used Gaussian periods to express $\cos(2\pi/17)$ in nested square roots \index{nested radical}. Let $\zeta = e^{2\pi i/17}$. The periods of length 2 are:
 \begin{align*}
 \eta_1 &= \zeta + \zeta^9 + \zeta^{13} + \zeta^{15} + \zeta^{16} + \zeta^8 + \zeta^4 + \zeta^2 \\
 \eta_2 &= \zeta^3 + \zeta^{10} + \zeta^5 + \zeta^{11} + \zeta^{14} + \zeta^7 + \zeta^{12} + \zeta^6
@@ -97,12 +97,21 @@ Implement the construction of the 257-gon using Gaussian periods. How many squar
 \end{exercise}
 
 \begin{exercise}
-Prove that $\Phi_n(x)$ is irreducible over $\Q$ using Eisenstein's criterion on $\Phi_p(x+1)$ for prime $p$.
+Prove that $\Phi_n(x)$ is irreducible over $\Q$ using Eisenstein's criterion \index{Eisenstein's criterion} on $\Phi_p(x+1)$ for prime $p$.
 \end{exercise}
 
 \begin{exercise}
 Show that the coordinates of the 17-gon vertices lie in the field $\Q(\sqrt{17}, \sqrt{34-2\sqrt{17}}, \ldots)$.
 \end{exercise}
+
+
+
+\section{Exercise Solutions}
+
+\begin{solution}
+The regular heptadecagon (17-gon) has interior angle $\frac{(17-2) \cdot 180°}{17} = \frac{2700°}{17} \approx 158.82°$. The central angle is $360°/17 \approx 21.18°$. Using Gauss's construction, the vertices are at angles $2\pi k/17$ for $k = 0, \ldots, 16$, with coordinates given by nested square roots.
+\end{solution}
+
 
 \section{References}
 

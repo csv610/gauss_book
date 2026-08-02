@@ -1,11 +1,11 @@
 \section{Introduction}
 
-Gaussian processes (GPs) provide a principled, non-parametric approach to regression and classification. They define a distribution over functions, with the covariance structure encoding assumptions about smoothness, periodicity, and other properties. Kriging (geostatistics) is the application of GPs to spatial interpolation, named after D.G. Krige and formalized by Matheron.
+Gaussian process \index{Gaussian process}es (GPs) provide a principled, non-parametric approach to regression and classification. They define a distribution over functions, with the covariance structure encoding assumptions about smoothness, periodicity, and other properties. Kriging \index{Kriging} (geostatistics) is the application of GPs to spatial interpolation, named after D.G. Krige and formalized by Matheron.
 
 In this chapter, we cover:
 \begin{itemize}
     \item Definition and properties of Gaussian processes
-    \item Covariance functions (kernels)
+    \item Covariance functions (kernel \index{kernel (Gaussian process)}s)
     \item Gaussian process regression (Kriging)
     \item Hyperparameter optimization
     \item Scalable approximations for large datasets
@@ -18,7 +18,7 @@ In this chapter, we cover:
 A Gaussian process is a collection of random variables $\{f(x) : x \in \mathcal{X}\}$ such that any finite subset $(f(x_1), \ldots, f(x_n))$ has a multivariate normal distribution.
 \end{definition}
 
-A GP is completely specified by its mean function $m(x) = \E[f(x)]$ and covariance function $k(x, x') = \Cov(f(x), f(x'))$:
+A GP is completely specified by its mean function $m(x) = \E[f(x)]$ and covariance function \index{covariance function} $k(x, x') = \Cov(f(x), f(x'))$:
 \[
 f \sim \mathcal{GP}(m, k).
 \]
@@ -28,7 +28,7 @@ f \sim \mathcal{GP}(m, k).
 Common kernels:
 \begin{itemize}
     \item \textbf{Squared Exponential (RBF):} $k(x,x') = \sigma^2 \exp\left(-\frac{\|x-x'\|^2}{2\ell^2}\right)$
-    \item \textbf{Matérn:} $k(x,x') = \sigma^2 \frac{2^{1-\nu}}{\Gamma(\nu)} \left(\frac{\sqrt{2\nu}\|x-x'\|}{\ell}\right)^\nu K_\nu\left(\frac{\sqrt{2\nu}\|x-x'\|}{\ell}\right)$
+    \item \textbf{Matérn \index{kernel!Matérn}:} $k(x,x') = \sigma^2 \frac{2^{1-\nu}}{\Gamma(\nu)} \left(\frac{\sqrt{2\nu}\|x-x'\|}{\ell}\right)^\nu K_\nu\left(\frac{\sqrt{2\nu}\|x-x'\|}{\ell}\right)$
     \item \textbf{Periodic:} $k(x,x') = \sigma^2 \exp\left(-\frac{2\sin^2(\pi|x-x'|/p)}{\ell^2}\right)$
     \item \textbf{Rational Quadratic:} $k(x,x') = \sigma^2 \left(1 + \frac{\|x-x'\|^2}{2\alpha\ell^2}\right)^{-\alpha}$
     \item \textbf{Linear:} $k(x,x') = \sigma^2 x^T x' + c$
@@ -99,7 +99,7 @@ Implement the Matérn kernel with $\nu = 3/2$ and $\nu = 5/2$ using the simplifi
 \end{exercise}
 
 \begin{exercise}
-Derive the gradient of the log marginal likelihood with respect to kernel hyperparameters.
+Derive the gradient of the log marginal likelihood \index{marginal likelihood} with respect to kernel hyperparameters.
 \end{exercise}
 
 \begin{exercise}
@@ -109,6 +109,19 @@ Implement sparse Gaussian process approximations (FITC, VFE) for large $n$.
 \begin{exercise}
 Apply ordinary Kriging to a spatial dataset and compare with inverse distance weighting.
 \end{exercise}
+
+
+
+\section{Exercise Solutions}
+
+\begin{solution}
+A Gaussian process $f \sim \mathcal{GP}(m(x), k(x,x'))$ is determined by its mean function $m(x)$ and covariance function $k(x,x')$. Any finite collection $(f(x_1), \ldots, f(x_n))$ is jointly Gaussian with mean $(m(x_1), \ldots, m(x_n))$ and covariance matrix $K_{ij} = k(x_i, x_j)$.
+\end{solution}
+
+\begin{solution}
+The RBF kernel $k(x,x') = \sigma^2 \exp(-\|x-x'\|^2/(2\ell^2))$ produces infinitely differentiable functions. The length scale $\ell$ controls smoothness: small $\ell$ gives rapid oscillations, large $\ell$ gives smooth functions. The signal variance $\sigma^2$ controls the amplitude.
+\end{solution}
+
 
 \section{References}
 

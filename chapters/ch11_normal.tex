@@ -1,6 +1,6 @@
 \section{Introduction}
 
-The normal (Gaussian) distribution is central to probability theory and statistics. Gauss introduced it in his work on the method of least squares and the theory of errors. The distribution arises naturally as the limit of sums of independent random variables (Central Limit Theorem) and as the maximum entropy distribution for a given variance.
+The normal (Gaussian) distribution \index{normal distribution} is central to probability theory and statistics. Gauss introduced it in his work on the method of least squares and the theory of errors. The distribution arises naturally as the limit of sums of independent random variables (Central Limit Theorem \index{Central Limit Theorem}) and as the maximum entropy \index{Shannon entropy} distribution for a given variance.
 
 In this chapter, we cover:
 \begin{itemize}
@@ -41,7 +41,7 @@ Let $X_1, X_2, \ldots$ be i.i.d. with $\E[X_i] = \mu$, $\Var(X_i) = \sigma^2 < \
 where $\bar{X}_n = \frac{1}{n}\sum_{i=1}^n X_i$.
 \end{theorem}
 
-Gauss used the normal distribution to justify the method of least squares, showing that if errors are normally distributed, the least squares estimator is the maximum likelihood estimator.
+Gauss used the normal distribution to justify the method of least squares, showing that if errors are normally distributed, the least squares estimator is the maximum likelihood \index{maximum likelihood estimation} estimator.
 
 \section{Error Analysis and Propagation of Uncertainty}
 
@@ -50,7 +50,7 @@ Given a function $y = f(x_1, \ldots, x_n)$ with uncertain inputs $x_i \pm \Delta
 \Delta y \approx \sqrt{\sum_{i=1}^n \left(\frac{\partial f}{\partial x_i}\right)^2 (\Delta x_i)^2}.
 \]
 
-For correlated errors with covariance matrix $\Sigma_x$, the output variance is $\Sigma_y = J \Sigma_x J^T$ where $J$ is the Jacobian.
+For correlated errors with covariance matrix \index{covariance matrix} $\Sigma_x$, the output variance is $\Sigma_y = J \Sigma_x J^T$ where $J$ is the Jacobian.
 
 \section{Maximum Likelihood Estimation}
 
@@ -118,7 +118,7 @@ Prove that the normal distribution maximizes entropy among all distributions wit
 \end{exercise}
 
 \begin{exercise}
-Derive the MLE for the multivariate normal mean and covariance.
+Derive the MLE for the multivariate normal \index{multivariate normal distribution} mean and covariance.
 \end{exercise}
 
 \begin{exercise}
@@ -128,6 +128,27 @@ Implement the Box-Muller transform for generating normal random variables.
 \begin{exercise}
 Show that for normal data, the sample mean and sample variance are independent (Basu's theorem).
 \end{exercise}
+
+
+
+\section{Exercise Solutions}
+
+\begin{solution}
+The normal density $\phi(x) = \frac{1}{\sqrt{2\pi}}e^{-x^2/2}$ has mean 0 and variance 1. The characteristic function is $\phi(t) = e^{-t^2/2}$, obtained by completing the square in the Fourier integral. By the Central Limit Theorem, sums of i.i.d. random variables converge to a normal distribution.
+\end{solution}
+
+\begin{solution}
+The $3\sigma$ rule states that approximately 99.7\% of mass lies within 3 standard deviations. Computing: $\Phi(3) - \Phi(-3) = 2\Phi(3) - 1 \approx 0.9973$. More precisely, $\Phi(1) \approx 0.8413$, $\Phi(2) \approx 0.9772$, $\Phi(3) \approx 0.9987$.
+\end{solution}
+
+\begin{solution}
+Maximum likelihood estimation for $N(\mu, \sigma^2)$ gives $\hat{\mu} = \bar{x}$ and $\hat{\sigma}^2 = \frac{1}{n}\sum(x_i - \bar{x})^2$. The Fisher information matrix is diagonal with entries $1/\sigma^2$ and $1/(2\sigma^4)$. The Cramér-Rao bound shows these estimators are efficient.
+\end{solution}
+
+\begin{solution}
+Convolution of two normals: if $X \sim N(\mu_1, \sigma_1^2)$ and $Y \sim N(\mu_2, \sigma_2^2)$, then $X+Y \sim N(\mu_1+\mu_2, \sigma_1^2+\sigma_2^2)$. This follows from characteristic functions: $\phi_X(t)\phi_Y(t) = e^{i\mu_1 t - \sigma_1^2 t^2/2} \cdot e^{i\mu_2 t - \sigma_2^2 t^2/2} = e^{i(\mu_1+\mu_2)t - (\sigma_1^2+\sigma_2^2)t^2/2}$.
+\end{solution}
+
 
 \section{References}
 

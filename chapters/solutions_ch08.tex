@@ -1,0 +1,17 @@
+\section{Exercise Solutions}
+
+\begin{solution}
+Gaussian elimination\index{Gaussian elimination} with partial pivoting\index{partial pivoting} computes $PA = LU$ where $P$ is a permutation matrix, $L$ is lower triangular with 1s on the diagonal, and $U$ is upper triangular. The forward substitution solves $Ly = Pb$, then backward substitution solves $Ux = y$. The complexity is $O(n^3)$ for elimination and $O(n^2)$ for substitution.
+\end{solution}
+
+\begin{solution}
+For sparse matrices, Gaussian elimination\index{Gaussian elimination} introduces fill-in: zeros become nonzero during elimination. The nested dissection algorithm orders variables to minimize fill-in, achieving $O(n^{3/2})$ operations for 2D grid graphs. Cholesky factorization is used for symmetric positive definite systems, requiring only half the storage.
+\end{solution}
+
+\begin{solution}
+The condition number\index{condition number} $\kappa(A) = \|A\|\|A^{-1}\|$ measures sensitivity to perturbations. For Gaussian elimination\index{Gaussian elimination}, backward error analysis shows the computed solution satisfies $(A + \delta A)\hat{x} = b$ with $\|\delta A\| \leq n\epsilon \|A\|$, so the forward error is bounded by $\kappa(A) \cdot n\epsilon$.
+\end{solution}
+
+\begin{solution}
+LU decomposition\index{LU decomposition} with complete pivoting selects the largest element in the remaining submatrix. This gives better numerical stability\index{numerical stability} than partial pivoting\index{partial pivoting} but requires $O(n^2)$ comparisons. For well-conditioned matrices, partial pivoting\index{partial pivoting} is sufficient; for ill-conditioned ones, complete pivoting or iterative refinement is recommended.
+\end{solution}

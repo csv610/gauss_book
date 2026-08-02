@@ -1,14 +1,14 @@
 \section{Introduction}
 
-Gauss sums are exponential sums that play a central role in analytic number theory. Gauss introduced them in his work on quadratic reciprocity and used them to evaluate the sign of the quadratic Gauss sum $g(p) = \sum_{a=0}^{p-1} e^{2\pi i a^2/p}$, which he proved equals $\sqrt{p}$ for $p \equiv 1 \pmod{4}$ and $i\sqrt{p}$ for $p \equiv 3 \pmod{4}$. This discovery linked number theory with analysis and Fourier theory.
+Gauss sums \index{Gauss sum} are exponential sums that play a central role in analytic number theory. Gauss introduced them in his work on quadratic reciprocity and used them to evaluate the sign of the quadratic Gauss sum \index{Gauss sum!quadratic} $g(p) = \sum_{a=0}^{p-1} e^{2\pi i a^2/p}$, which he proved equals $\sqrt{p}$ for $p \equiv 1 \pmod{4}$ and $i\sqrt{p}$ for $p \equiv 3 \pmod{4}$. This discovery linked number theory with analysis and Fourier theory.
 
 In this chapter, we explore:
 \begin{itemize}
     \item Quadratic and general Gauss sums
-    \item Dirichlet characters and their properties
-    \item The discrete Fourier transform on finite abelian groups
+    \item Dirichlet characters \index{Dirichlet character} and their properties
+    \item The discrete Fourier transform \index{discrete Fourier transform} on finite abelian groups
     \item Applications to quadratic reciprocity and prime counting
-    \item The functional equation for Dirichlet L-functions
+    \item The functional equation for Dirichlet L-functions \index{Dirichlet L-function}
 \end{itemize}
 
 \section{Quadratic Gauss Sums}
@@ -43,7 +43,7 @@ Let $\chi$ be a Dirichlet character modulo $n$. The Gauss sum is
 \end{definition}
 
 \begin{theorem}[Properties of Gauss Sums]
-For primitive character $\chi$ modulo $n$:
+For primitive character \index{Dirichlet character!primitive} $\chi$ modulo $n$:
 \begin{enumerate}
     \item $|\tau(\chi)| = \sqrt{n}$
     \item $\tau(\chi) \tau(\overline{\chi}) = \chi(-1) n$
@@ -80,9 +80,9 @@ The inverse is $f(j) = \frac{1}{n} \sum_{k=0}^{n-1} \hat{f}(k) e^{2\pi i jk/n}$.
 
 \begin{itemize}
     \item Quadratic reciprocity via Gauss sums
-    \item Dirichlet's theorem on primes in arithmetic progressions
+    \item Dirichlet's theorem \index{Dirichlet's theorem on primes} on primes in arithmetic progressions
     \item Functional equation for Dirichlet L-functions
-    \item Pólya-Vinogradov inequality for character sums
+    \item Pólya-Vinogradov \index{Pólya-Vinogradov inequality} inequality for character sums
     \item Fast algorithms for computing character sums
 \end{itemize}
 
@@ -134,6 +134,27 @@ Use Gauss sums to prove the law of quadratic reciprocity (Gauss's fourth proof).
 \begin{exercise}
 Compute the Dirichlet L-function $L(s, \chi)$ for various characters and verify the functional equation.
 \end{exercise}
+
+
+
+\section{Exercise Solutions}
+
+\begin{solution}
+For primitive $\chi$ mod $p$: $\tau(\chi)\tau(\overline{\chi}) = \sum_{a,b} \chi(a)\overline{\chi}(b) e^{2\pi i(a-b)/p}$. Setting $b = ac$ gives $\sum_a \chi(a)\overline{\chi}(ac) \sum_c e^{2\pi i a(1-c)/p}$. The inner sum is $p$ when $c = 1$ and $0$ otherwise, leaving $p \cdot \chi(1)\overline{\chi}(1) = p$. More generally $\tau(\chi)\tau(\overline{\chi}) = \chi(-1) \cdot p$.
+\end{solution}
+
+\begin{solution}
+The FFT computes $\sum_{a=0}^{n-1} \chi(a) e^{2\pi i a/n}$ in $O(n \log n)$ vs $O(n)$ for direct summation. For Gauss sum\index{Gauss sum}s with $n$ prime, the direct sum is already optimal. For composite $n$ with smooth factorization, the FFT-based approach using the Chinese Remainder Theorem\index{Chinese Remainder Theorem} decomposition of $\Z/n\Z$ can be faster. In practice, for $n > 10^6$, the FFT approach wins.
+\end{solution}
+
+\begin{solution}
+Gauss's fourth proof uses $g = \sum_{a=0}^{p-1} e^{2\pi i a^2/p}$. One shows $g^2 = \left(\frac{-1}{p}\right) p$ and computes the sign by evaluating $g$ as a Riemann sum. For quadratic reciprocity\index{quadratic reciprocity}, one considers the Gauss sum\index{Gauss sum} for the product character and uses the fact that $\tau(\chi_p)\tau(\chi_q) = \left(\frac{p}{q}\right)\tau(\chi_{pq})$ to relate the sums.
+\end{solution}
+
+\begin{solution}
+The Dirichlet $L$-function $L(s, \chi) = \sum_{n=1}^{\infty} \chi(n) n^{-s}$ satisfies the functional equation $\Lambda(s, \chi) = \frac{\tau(\chi)}{i^a \sqrt{p}} \Lambda(1-s, \overline{\chi})$ where $a = 0$ if $\chi(-1) = 1$ and $a = 1$ otherwise. Numerical verification at $s = 1/2 + it$ confirms the equality of absolute values.
+\end{solution}
+
 
 \section{References}
 

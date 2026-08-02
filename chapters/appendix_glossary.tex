@@ -1,0 +1,107 @@
+\chapter{Glossary}
+\label{app:glossary}
+
+This glossary provides concise definitions of key mathematical and computational terms used throughout the book.
+
+\section*{A}
+\begin{description}
+\item[Arithmetic-Geometric Mean] The common limit of sequences $a_{n+1} = \frac{a_n+b_n}{2}$, $b_{n+1} = \sqrt{a_n b_n}$, discovered by Gauss.
+\item[Algorithm] A finite sequence of instructions for solving a mathematical problem.
+\end{description}
+
+\section*{C}
+\begin{description}
+\item[Chinese Remainder Theorem] A theorem stating that a system of congruences with pairwise coprime moduli has a unique solution modulo their product.
+\item[Cholesky Decomposition] A factorization $A = LL^T$ for symmetric positive definite matrices, where $L$ is lower triangular.
+\item[Condition Number] A measure of how sensitive a matrix is to numerical computations: $\kappa(A) = \|A\| \cdot \|A^{-1}\|$.
+\item[Covariance Function] A function $k(x,x')$ that specifies the covariance between values of a stochastic process at two points.
+\end{description}
+
+\section*{D}
+\begin{description}
+\item[Discrete Logarithm] For a primitive root $g$ modulo $p$, the integer $x$ such that $g^x \equiv a \pmod{p}$.
+\item[Dirichlet Character] A completely multiplicative periodic function $\chi: \mathbb{Z} \to \mathbb{C}$ with period $n$ and $\chi(a) = 0$ if $\gcd(a,n) > 1$.
+\item[Dawson Integral] The function $F(x) = e^{-x^2} \int_0^x e^{t^2} dt$, related to the imaginary error function.
+\end{description}
+
+\section*{E}
+\begin{description}
+\item[Error Function] $\erf(x) = \frac{2}{\sqrt{\pi}}\int_0^x e^{-t^2} dt$, a special function appearing in probability and statistics.
+\item[Euler's Criterion] A theorem stating $\legendre{a}{p} \equiv a^{(p-1)/2} \pmod{p}$ for odd prime $p$.
+\item[Euler's Totient Function] $\varphi(n)$ counts positive integers $\leq n$ coprime to $n$.
+\end{description}
+
+\section*{G}
+\begin{description}
+\item[Gaussian Curvature] An intrinsic measure of curvature $K = \frac{LN-M^2}{EG-F^2}$ for a surface.
+\item[Gaussian Elimination] An algorithm for solving linear systems by row reduction to upper triangular form.
+\item[Gaussian Process] A collection of random variables where any finite subset has a multivariate normal distribution.
+\item[Gauss Sum] The exponential sum $g(p) = \sum_{a=0}^{p-1} e^{2\pi i a^2/p}$, evaluated by Gauss.
+\item[Geodesic] A curve on a surface that locally minimizes distance; satisfies the geodesic equation.
+\item[Gradient Descent] An optimization algorithm that iteratively moves in the direction of steepest descent.
+\end{description}
+
+\section*{J}
+\begin{description}
+\item[Jacobian] The matrix of all first-order partial derivatives of a vector-valued function.
+\item[Jacobi Symbol] A generalization of the Legendre symbol to odd positive denominators.
+\item[Jacobi Triple Product] An identity relating infinite products to infinite sums, fundamental to theta functions.
+\end{description}
+
+\section*{K}
+\begin{description}
+\item[Kepler's Equation] The equation $M = E - e\sin E$ relating mean anomaly $M$ to eccentric anomaly $E$.
+\item[Kriging] A Gaussian process regression method used in geostatistics for spatial interpolation.
+\item[Kernel] A symmetric positive definite function $k(x,x')$ defining the covariance structure of a Gaussian process.
+\end{description}
+
+\section*{L}
+\begin{description}
+\item[Least Squares] A method for fitting data by minimizing the sum of squared residuals.
+\item[Legendre Polynomial] A sequence of orthogonal polynomials $P_n(x)$ on $[-1,1]$.
+\item[Legendre Symbol] $\legendre{a}{p}$ indicates whether $a$ is a quadratic residue modulo odd prime $p$.
+\item[Log Marginal Likelihood] The logarithm of the probability of data under a Gaussian process model.
+\end{description}
+
+\section*{M}
+\begin{description}
+\item[Mean Curvature] The average of principal curvatures $H = \frac{EN-2FM+GL}{2(EG-F^2)}$.
+\item[Modular Form] A holomorphic function on the upper half-plane satisfying a transformation law under $\mathrm{SL}_2(\mathbb{Z})$.
+\item[Modular Arithmetic] Arithmetic on equivalence classes modulo $n$, where $a \equiv b \pmod{n}$ if $n \mid (a-b)$.
+\end{description}
+
+\section*{N}
+\begin{description}
+\item[Normal Distribution] The Gaussian distribution $\mathcal{N}(\mu,\sigma^2)$ with PDF $\frac{1}{\sqrt{2\pi\sigma^2}}e^{-(x-\mu)^2/2\sigma^2}$.
+\item[Normal Equations] The system $A^TAx = A^Tb$ whose solution minimizes $\|Ax-b\|^2$.
+\end{description}
+
+\section*{O}
+\begin{description}
+\item[Orthogonal Matrix] A matrix $Q$ satisfying $Q^TQ = I$, so $Q^{-1} = Q^T$.
+\item[Orthogonal Polynomial] A sequence of polynomials $\{p_n\}$ satisfying $\int p_n(x)p_m(x)w(x)dx = 0$ for $n \neq m$.
+\end{description}
+
+\section*{Q}
+\begin{description}
+\item[QR Decomposition] A factorization $A = QR$ where $Q$ is orthogonal and $R$ is upper triangular.
+\end{description}
+
+\section*{R}
+\begin{description}
+\item[Residue Class] An equivalence class $[a]_n = \{b \in \mathbb{Z} : b \equiv a \pmod{n}\}$.
+\item[Riemann Curvature Tensor] A tensor $R^i_{jkl}$ measuring the curvature of a manifold.
+\end{description}
+
+\section*{T}
+\begin{description}
+\item[Theorema Egregium] Gauss's "remarkable theorem" stating Gaussian curvature is intrinsic to a surface.
+\item[Tonelli-Shanks Algorithm] An algorithm for computing square roots modulo a prime.
+\end{description}
+
+\section*{U}
+\begin{description}
+\item[Upper Triangular Matrix] A matrix $U$ where $U_{ij} = 0$ for all $i > j$.
+\end{description}
+
+\printindex

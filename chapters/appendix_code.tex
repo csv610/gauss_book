@@ -64,53 +64,53 @@ gauss_sum(p)                               # Quadratic Gauss sum
 \section{gauss\_sums.py}
 
 \begin{lstlisting}[style=python]
-quadratic_gauss_sum(p)                     # g(p) = sum e^{2*pi*i*a^2/p}
-general_gauss_sum(chi, n)                  # tau(chi) = sum chi(a) * e^{2*pi*i*a/n}
-dirichlet_characters(n)                    # All characters mod n
-primitive_character(n)                     # Find primitive character
-dirichlet_l_function(chi, s)               # L(s, chi)
-polya_vinogradov(chi, N)                   # Character sum bound
-verify_gauss_sum(p)                        # Check g(p) = sqrt(p) or i*sqrt(p)
+quadratic_gauss_sum(p)          # g(p) = sum e^{2*pi*i*a^2/p}
+general_gauss_sum(chi, n)       # tau(chi) = sum chi(a) * e^{2*pi*i*a/n}
+dirichlet_characters(n)         # All characters mod n
+primitive_character(n)          # Find primitive character
+dirichlet_l_function(chi, s)    # L(s, chi)
+polya_vinogradov(chi, N)        # Character sum bound
+verify_gauss_sum(p)             # Check g(p) = sqrt(p) or i*sqrt(p)
 \end{lstlisting}
 
 \section{disquisitiones.py}
 
 \begin{lstlisting}[style=python]
-solve_linear_congruence(a, b, n)           # ax == b (mod n)
-is_primitive(a, b, c)                      # Check if form is primitive
-discriminant(a, b, c)                       # Delta = b^2 - 4ac
-reduced_forms(D)                           # All reduced forms of disc D
-class_number(D)                            # h(D)
-form_multiply(f1, f2)                      # Gauss composition
-class_group(D)                             # Class group as list of forms
-class_group_structure(D)                   # Group invariants
-cyclotomic_poly(n)                         # Phi_n(x) coefficients
-primitive_root(p)                          # Primitive root mod p
-heptadecagon_vertices()                    # 17-gon coordinates
-fermat_primes()                            # Known Fermat primes
-is_constructible(n)                        # Check n-gon constructible
-represents(a, b, c, n)                     # Does form represent n?
+solve_linear_congruence(a, b, n)  # ax == b (mod n)
+is_primitive(a, b, c)             # Check if form is primitive
+discriminant(a, b, c)             # Delta = b^2 - 4ac
+reduced_forms(D)                  # All reduced forms of disc D
+class_number(D)                   # h(D)
+form_multiply(f1, f2)             # Gauss composition
+class_group(D)                    # Class group as list of forms
+class_group_structure(D)          # Group invariants
+cyclotomic_poly(n)                # Phi_n(x) coefficients
+primitive_root(p)                 # Primitive root mod p
+heptadecagon_vertices()           # 17-gon coordinates
+fermat_primes()                   # Known Fermat primes
+is_constructible(n)               # Check n-gon constructible
+represents(a, b, c, n)            # Does form represent n?
 \end{lstlisting}
 
 \section{gaussian\_integral.py}
 
 \begin{lstlisting}[style=python]
-gaussian_integral(a, b, c, x1, x2)         # integral exp(-ax^2+bx+c) dx
-gaussian_pdf(x, mu, sigma)                 # Normal PDF
-gaussian_cdf(x, mu, sigma)                 # Normal CDF
-gaussian_ppf(p, mu, sigma)                 # Normal quantile
-erf(x)                                     # Error function
-erfc(x)                                    # Complementary erf
-erfi(x)                                    # Imaginary error function
-dawson_integral(x)                         # Dawson's integral
-faddeeva(z)                                # Faddeeva function w(z)
-normal_pdf(x, mu, sigma)                   # Normal PDF
-normal_cdf(x, mu, sigma)                   # Normal CDF
-normal_sf(x, mu, sigma)                    # Survival function
-normal_ppf(p, mu, sigma)                   # Normal quantile
-normal_rvs(size, mu, sigma)                # Random variates
-confidence_interval_normal(mean, std, n)   # CI for mean
-error_propagation(f, vars)                 # Delta method
+gaussian_integral(a, b, c, x1, x2)  # integral exp(-ax^2+bx+c) dx
+gaussian_pdf(x, mu, sigma)          # Normal PDF
+gaussian_cdf(x, mu, sigma)          # Normal CDF
+gaussian_ppf(p, mu, sigma)          # Normal quantile
+erf(x)                              # Error function
+erfc(x)                             # Complementary erf
+erfi(x)                             # Imaginary error function
+dawson_integral(x)                  # Dawson's integral
+faddeeva(z)                         # Faddeeva function w(z)
+normal_pdf(x, mu, sigma)            # Normal PDF
+normal_cdf(x, mu, sigma)            # Normal CDF
+normal_sf(x, mu, sigma)             # Survival function
+normal_ppf(p, mu, sigma)            # Normal quantile
+normal_rvs(size, mu, sigma)         # Random variates
+confidence_interval_normal(mean, std, n)  # CI for mean
+error_propagation(f, vars)          # Delta method
 chi2_pdf(x, df), t_pdf(x, df), f_pdf(x, df1, df2)
 \end{lstlisting}
 

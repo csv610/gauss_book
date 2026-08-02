@@ -1,0 +1,17 @@
+\section{Exercise Solutions}
+
+\begin{solution}
+Gauss's composition algorithm (Articles 234--238) takes two forms $(a,b,c)$ and $(a',b',c')$ with the same discriminant and produces a third form representing the product of ideals. The algorithm finds $B \equiv b \pmod{2a}$, $B \equiv b' \pmod{2a'}$, $B^2 \equiv \Delta \pmod{4aa'}$, then sets the composed form to $(aa'/g, B, \ldots)$ where $g = \gcd(a, a', (B+\Delta)/2)$. Verification shows the composition is associative with identity and inverses.
+\end{solution}
+
+\begin{solution}
+Computing $h(\Delta)$ for $-100 < \Delta < 0$ using reduced forms: the class numbers are small (mostly 1--4) with occasional spikes at discriminants with many prime factors. The distribution shows that most fundamental discriminants have class number 1 or 2. The plot reveals no simple pattern, consistent with the class number formula $h(\Delta) = \frac{w\sqrt{|\Delta|}}{2\pi} L(1, \chi_\Delta)$.
+\end{solution}
+
+\begin{solution}
+The 17-gon construction uses the period equations of the 17th cyclotomic field. Gauss showed that $\zeta + \zeta^{-1} = 2\cos(2\pi/17)$ satisfies a quadratic over $\Q(\zeta+\zeta^{16}, \zeta^4+\zeta^{13}, \ldots)$. Iterating this process gives nested square roots. The coordinates are $(\cos(2\pi k/17), \sin(2\pi k/17))$ for $k = 0, \ldots, 16$.
+\end{solution}
+
+\begin{solution}
+The map from ideal classes to form classes sends an ideal $\mathfrak{a} = [a, \frac{b+\sqrt{\Delta}}{2}]$ to the form $a x^2 + bxy + \frac{b^2-\Delta}{4a} y^2$. This is well-defined, surjective, and injective (by reduction theory). The group operation corresponds to ideal multiplication, establishing the isomorphism $\operatorname{Cl}(\Q(\sqrt{\Delta})) \cong \operatorname{Cls}(\Delta)$.
+\end{solution}

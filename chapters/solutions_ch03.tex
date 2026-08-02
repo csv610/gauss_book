@@ -1,0 +1,17 @@
+\section{Exercise Solutions}
+
+\begin{solution}
+For primitive $\chi$ mod $p$: $\tau(\chi)\tau(\overline{\chi}) = \sum_{a,b} \chi(a)\overline{\chi}(b) e^{2\pi i(a-b)/p}$. Setting $b = ac$ gives $\sum_a \chi(a)\overline{\chi}(ac) \sum_c e^{2\pi i a(1-c)/p}$. The inner sum is $p$ when $c = 1$ and $0$ otherwise, leaving $p \cdot \chi(1)\overline{\chi}(1) = p$. More generally $\tau(\chi)\tau(\overline{\chi}) = \chi(-1) \cdot p$.
+\end{solution}
+
+\begin{solution}
+The FFT computes $\sum_{a=0}^{n-1} \chi(a) e^{2\pi i a/n}$ in $O(n \log n)$ vs $O(n)$ for direct summation. For Gauss sum\index{Gauss sum}s with $n$ prime, the direct sum is already optimal. For composite $n$ with smooth factorization, the FFT-based approach using the Chinese Remainder Theorem\index{Chinese Remainder Theorem} decomposition of $\Z/n\Z$ can be faster. In practice, for $n > 10^6$, the FFT approach wins.
+\end{solution}
+
+\begin{solution}
+Gauss's fourth proof uses $g = \sum_{a=0}^{p-1} e^{2\pi i a^2/p}$. One shows $g^2 = \left(\frac{-1}{p}\right) p$ and computes the sign by evaluating $g$ as a Riemann sum. For quadratic reciprocity\index{quadratic reciprocity}, one considers the Gauss sum\index{Gauss sum} for the product character and uses the fact that $\tau(\chi_p)\tau(\chi_q) = \left(\frac{p}{q}\right)\tau(\chi_{pq})$ to relate the sums.
+\end{solution}
+
+\begin{solution}
+The Dirichlet $L$-function $L(s, \chi) = \sum_{n=1}^{\infty} \chi(n) n^{-s}$ satisfies the functional equation $\Lambda(s, \chi) = \frac{\tau(\chi)}{i^a \sqrt{p}} \Lambda(1-s, \overline{\chi})$ where $a = 0$ if $\chi(-1) = 1$ and $a = 1$ otherwise. Numerical verification at $s = 1/2 + it$ confirms the equality of absolute values.
+\end{solution}

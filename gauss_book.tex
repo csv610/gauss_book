@@ -8,6 +8,7 @@
 \usepackage{hyperref}
 \usepackage{geometry}
 \usepackage{fancyhdr}
+\setlength{\headheight}{15pt}
 \usepackage{titlesec}
 \usepackage{enumitem}
 \usepackage{mathtools}
@@ -145,6 +146,9 @@
 \newtheorem{remark}[theorem]{Remark}
 \newtheorem{algorithmthm}[theorem]{Algorithm}
 \newtheorem{supplement}[theorem]{Supplement}
+
+% Solution environment
+\newenvironment{solution}{\par\medskip\noindent\textbf{Solution.}\itshape}{\par\medskip}
 
 % Header/footer
 \pagestyle{fancy}
@@ -406,5 +410,7 @@ Each chapter includes a companion Python module in the \texttt{python/} director
 \printbibliography
 
 \printindex
+
+\input{chapters/glossary}
 
 \end{document}

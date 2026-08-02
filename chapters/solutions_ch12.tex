@@ -1,0 +1,9 @@
+\section{Exercise Solutions}
+
+\begin{solution}
+A Gaussian process $f \sim \mathcal{GP}(m(x), k(x,x'))$ is determined by its mean function $m(x)$ and covariance function $k(x,x')$. Any finite collection $(f(x_1), \ldots, f(x_n))$ is jointly Gaussian with mean $(m(x_1), \ldots, m(x_n))$ and covariance matrix $K_{ij} = k(x_i, x_j)$.
+\end{solution}
+
+\begin{solution}
+The RBF kernel $k(x,x') = \sigma^2 \exp(-\|x-x'\|^2/(2\ell^2))$ produces infinitely differentiable functions. The length scale $\ell$ controls smoothness: small $\ell$ gives rapid oscillations, large $\ell$ gives smooth functions. The signal variance $\sigma^2$ controls the amplitude.
+\end{solution}

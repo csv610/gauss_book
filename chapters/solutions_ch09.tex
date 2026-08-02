@@ -1,0 +1,17 @@
+\section{Exercise Solutions}
+
+\begin{solution}
+The normal equations $A^TAx = A^Tb$ arise from minimizing $\|Ax - b\|^2$. The Hessian $2A^TA$ is positive definite if $A$ has full column rank, making this a convex optimization problem. The solution is $x = (A^TA)^{-1}A^Tb$ when $A^TA$ is invertible.
+\end{solution}
+
+\begin{solution}
+Using the QR decomposition $A = QR$ with $Q$ orthogonal, the least squares problem becomes $\min_x \|Rx - Q^Tb\|^2$, which is solved by back substitution. This is numerically more stable than forming $A^TA$ directly, as it avoids squaring the condition number.
+\end{solution}
+
+\begin{solution}
+The residual $r = b - Ax$ is orthogonal to the column space of $A$: $A^Tr = 0$. The covariance of the least squares estimator is $\operatorname{Cov}(\hat{x}) = \sigma^2(A^TA)^{-1}$ assuming $\operatorname{Cov}(b) = \sigma^2 I$. Gauss showed that if errors are normally distributed, least squares gives the maximum likelihood estimator.
+\end{solution}
+
+\begin{solution}
+Iterative refinement solves $A\delta = r$ where $r = b - A\hat{x}$ is the residual, then updates $\hat{x} \leftarrow \hat{x} + \delta$. Each iteration reduces the error by a factor of $\kappa(A)\epsilon$. In practice, 2--3 iterations suffice to reach machine precision for well-conditioned systems.
+\end{solution}

@@ -1,6 +1,6 @@
 \section{Introduction}
 
-The method of least squares is one of Gauss's most influential contributions to science. He developed it for analyzing astronomical observations (especially the orbit of Ceres) and published it in \textit{Theoria Motus Corporum Coelestium} (1809). The method minimizes the sum of squared residuals and provides the best linear unbiased estimator under the Gauss-Markov theorem.
+The method of least squares \index{least squares} is one of Gauss's most influential contributions to science. He developed it for analyzing astronomical observations (especially the orbit of Ceres) and published it in \textit{Theoria Motus Corporum Coelestium} (1809). The method minimizes the sum of squared residuals and provides the best linear unbiased estimator under the Gauss-Markov theorem \index{Gauss-Markov theorem}.
 
 In this chapter, we cover:
 \begin{itemize}
@@ -8,8 +8,8 @@ In this chapter, we cover:
     \item Normal equations: $A^T A x = A^T b$
     \item QR decomposition solution
     \item Weighted least squares
-    \item Regularization (Tikhonov, ridge regression)
-    \item Nonlinear least squares: Gauss-Newton, Levenberg-Marquardt
+    \item Regularization (Tikhonov, ridge regression \index{ridge regression})
+    \item Nonlinear least squares: Gauss-Newton, Levenberg-Marquardt \index{Levenberg-Marquardt algorithm}
     \item Gauss's application to the orbit of Ceres
 \end{itemize}
 
@@ -17,7 +17,7 @@ In this chapter, we cover:
 
 Given $A \in \R^{m \times n}$ ($m \ge n$) and $b \in \R^m$, find $x$ minimizing $\|Ax - b\|_2^2$.
 
-\begin{theorem}[Normal Equations]
+\begin{theorem}[Normal Equations \index{normal equations}]
 The minimizer satisfies $A^T A x = A^T b$. If $A$ has full column rank, $A^T A$ is invertible and $x = (A^T A)^{-1} A^T b$.
 \end{theorem}
 
@@ -42,7 +42,7 @@ For ill-conditioned problems, minimize $\|Ax - b\|_2^2 + \lambda \|x\|_2^2$:
 
 \section{Nonlinear Least Squares}
 
-Minimize $\|f(x)\|_2^2$ where $f: \R^n \to \R^m$. The Gauss-Newton method linearizes:
+Minimize $\|f(x)\|_2^2$ where $f: \R^n \to \R^m$. The Gauss-Newton method \index{Gauss-Newton method} linearizes:
 \[
 x_{k+1} = x_k - (J_k^T J_k)^{-1} J_k^T f(x_k)
 \]
@@ -65,7 +65,7 @@ In \texttt{python/least\_squares.py}:
 least_squares_normal(A, b)      # Normal equations
 least_squares_qr(A, b)          # QR decomposition
 weighted_least_squares(A, b, W) # Weighted LS
-ridge_regression(A, b, lam)     # Tikhonov regularization
+ridge_regression(A, b, lam)     # Tikhonov regularization \index{Tikhonov regularization}
 gauss_newton(f, jac, x0)        # Gauss-Newton
 levenberg_marquardt(f, jac, x0) # Levenberg-Marquardt
 ceres_orbit(data)               # Gauss's Ceres problem
@@ -87,7 +87,7 @@ ceres_orbit(data)               # Gauss's Ceres problem
 \section{Exercises}
 
 \begin{exercise}
-Derive the weighted least squares solution from first principles.
+Derive the weighted least squares \index{weighted least squares} solution from first principles.
 \end{exercise}
 
 \begin{exercise}
@@ -99,8 +99,29 @@ Apply Levenberg-Marquardt to fit an exponential model $y = a e^{bx} + c$.
 \end{exercise}
 
 \begin{exercise}
-Reconstruct Gauss's Ceres orbit determination using modern observations.
+Reconstruct Gauss's Ceres orbit determination \index{orbit determination} using modern observations.
 \end{exercise}
+
+
+
+\section{Exercise Solutions}
+
+\begin{solution}
+The normal equations $A^TAx = A^Tb$ arise from minimizing $\|Ax - b\|^2$. The Hessian $2A^TA$ is positive definite if $A$ has full column rank, making this a convex optimization problem. The solution is $x = (A^TA)^{-1}A^Tb$ when $A^TA$ is invertible.
+\end{solution}
+
+\begin{solution}
+Using the QR decomposition $A = QR$ with $Q$ orthogonal, the least squares problem becomes $\min_x \|Rx - Q^Tb\|^2$, which is solved by back substitution. This is numerically more stable than forming $A^TA$ directly, as it avoids squaring the condition number.
+\end{solution}
+
+\begin{solution}
+The residual $r = b - Ax$ is orthogonal to the column space of $A$: $A^Tr = 0$. The covariance of the least squares estimator is $\operatorname{Cov}(\hat{x}) = \sigma^2(A^TA)^{-1}$ assuming $\operatorname{Cov}(b) = \sigma^2 I$. Gauss showed that if errors are normally distributed, least squares gives the maximum likelihood estimator.
+\end{solution}
+
+\begin{solution}
+Iterative refinement solves $A\delta = r$ where $r = b - A\hat{x}$ is the residual, then updates $\hat{x} \leftarrow \hat{x} + \delta$. Each iteration reduces the error by a factor of $\kappa(A)\epsilon$. In practice, 2--3 iterations suffice to reach machine precision for well-conditioned systems.
+\end{solution}
+
 
 \section{References}
 

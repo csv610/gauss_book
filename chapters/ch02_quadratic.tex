@@ -1,26 +1,26 @@
 \section{Introduction}
 
-Gauss called the law of quadratic reciprocity the ``golden theorem'' of number theory. It provides a deep and unexpected connection between the solvability of $x^2 \equiv p \pmod{q}$ and $x^2 \equiv q \pmod{p}$ for distinct odd primes $p$ and $q$. Gauss gave no fewer than eight different proofs of this theorem throughout his life.
+Gauss called the law of quadratic reciprocity \index{quadratic reciprocity} the ``golden theorem \index{quadratic reciprocity!golden theorem}'' of number theory. It provides a deep and unexpected connection between the solvability of $x^2 \equiv p \pmod{q}$ and $x^2 \equiv q \pmod{p}$ for distinct odd primes $p$ and $q$. Gauss gave no fewer than eight different proofs of this theorem throughout his life.
 
 In this chapter, we explore:
 \begin{itemize}
-    \item The Legendre symbol and Euler's criterion
-    \item Gauss's Lemma and the first proof of quadratic reciprocity
-    \item The Jacobi and Kronecker symbols
-    \item Algorithms for computing square roots modulo primes (Tonelli-Shanks, Cipolla)
+    \item The Legendre symbol and Euler's criterion \index{Euler's criterion}
+    \item Gauss's Lemma \index{Gauss's Lemma} and the first proof of quadratic reciprocity
+    \item The Jacobi and Kronecker symbol \index{Kronecker symbol}s
+    \item Algorithms for computing square roots modulo primes (Tonelli-Shanks \index{Tonelli-Shanks algorithm}, Cipolla)
     \item Applications to quadratic congruences and primality testing
 \end{itemize}
 
 \section{The Legendre Symbol}
 
 \begin{definition}[Legendre Symbol]
-Let $p$ be an odd prime and $a \in \Z$. The \textit{Legendre symbol} is defined as
+Let $p$ be an odd prime and $a \in \Z$. The \textit{Legendre symbol} \index{Legendre symbol} is defined as
 \[
 \legendre{a}{p} = 
 \begin{cases}
 0 & \text{if } p \mid a, \\
-1 & \text{if } a \text{ is a quadratic residue modulo } p, \\
--1 & \text{if } a \text{ is a quadratic non-residue modulo } p.
+1 & \text{if } a \text{ is a quadratic residue \index{quadratic residue} modulo } p, \\
+-1 & \text{if } a \text{ is a quadratic non-residue \index{quadratic non-residue} modulo } p.
 \end{cases}
 \]
 \end{definition}
@@ -79,7 +79,7 @@ Equivalently,
 \]
 \end{theorem}
 
-\begin{supplement}[First Supplement]
+\begin{supplement}[First Supplement \index{quadratic reciprocity!supplements}]
 For odd prime $p$,
 \[
 \legendre{-1}{p} = (-1)^{(p-1)/2} = 
@@ -111,7 +111,7 @@ Let $p, q$ be distinct odd primes. Consider the rectangle $R = \{(x,y) \in \Z^2 
 
 \section{The Jacobi Symbol}
 
-The Jacobi symbol extends the Legendre symbol to composite odd denominators.
+The Jacobi symbol \index{Jacobi symbol} extends the Legendre symbol to composite odd denominators.
 
 \begin{definition}[Jacobi Symbol]
 For odd positive $n = p_1 p_2 \cdots p_k$ (prime factorization) and $a \in \Z$,
@@ -159,7 +159,7 @@ jacobi_symbol(a, n)             # Recursive with reciprocity
 kronecker_symbol(a, n)          # Full Kronecker symbol
 quadratic_reciprocity(p, q)     # Verify reciprocity law
 tonelli_shanks(n, p)            # Tonelli-Shanks sqrt
-cipolla(a, p)                   # Cipolla's algorithm
+cipolla(a, p)                   # Cipolla's algorithm \index{Cipolla's algorithm}
 solve_quadratic_congruence(a,b,c,p)  # ax^2 + bx + c == 0 (mod p)
 \end{lstlisting}
 
@@ -200,7 +200,7 @@ Prove the First and Second Supplements using Gauss's Lemma.
 \end{exercise}
 
 \begin{exercise}
-Implement the Solovay-Strassen primality test using the Jacobi symbol and Euler's criterion. Test on known primes and Carmichael numbers.
+Implement the Solovay-Strassen primality test using the Jacobi symbol and Euler's criterion. Test on known primes and Carmichael numbers \index{Carmichael number}.
 \end{exercise}
 
 \begin{exercise}
@@ -220,6 +220,31 @@ Prove that for odd prime $p$, the number of solutions to $x^2 \equiv a \pmod{p}$
 Gauss discovered quadratic reciprocity at age 18 (1796) and called it the ``fundamental theorem.'' He published six proofs in his lifetime (1801, 1808, 1811, 1817, 1818, 1824) and left two more in his unpublished papers. The eighth proof (using Gauss sums) appeared in 1818 and connects quadratic reciprocity to the theory of cyclotomic fields and the discrete Fourier transform---a profound link between number theory and analysis that we explore in Chapter~\ref{ch:gauss-sums}.
 
 Gauss's \textit{Disquisitiones Arithmeticae} (Article 131) states: ``The fundamental theorem of quadratic reciprocity is one of the most elegant of its type... It has been the subject of many investigations by the most celebrated geometers.''
+
+
+
+\section{Exercise Solutions}
+
+\begin{solution}
+For the First Supplement, Gauss's Lemma\index{Gauss's Lemma} gives $\mu$ as the count of residues of $p/2$ exceeding $p/2$. For $a = -1$, the residues are $p-1, 2(p-1), \ldots$ whose least positive residues are $p-1, p-2, \ldots$. Exactly $\frac{p-1}{2}$ of these exceed $p/2$ when $p \equiv 3 \pmod{4}$, giving $\legendre{-1}{p} = (-1)^{(p-1)/2}$. Similarly for $a = 2$, the residues $2, 4, \ldots, p-1$ exceed $p/2$ in a pattern determined by $p \bmod 8$.
+\end{solution}
+
+\begin{solution}
+The Solovay-Strassen test picks random $a$ and checks if $a^{(p-1)/2} \equiv \left(\frac{a}{p}\right) \pmod{p}$. For primes this always holds; for composites it fails with probability at least $1/2$. Testing on Carmichael numbers like 561 shows failure, while primes pass. The test is a probabilistic primality test with one-sided error.
+\end{solution}
+
+\begin{solution}
+Using quadratic reciprocity\index{quadratic reciprocity}: $\left(\frac{10}{p}\right) = \left(\frac{2}{p}\right)\left(\frac{5}{p}\right)$. By the supplements, $\left(\frac{2}{p}\right) = 1$ iff $p \equiv \pm 1 \pmod{8}$. By reciprocity, $\left(\frac{5}{p}\right) = \left(\frac{p}{5}\right)$ since $5 \equiv 1 \pmod{4}$. The quadratic residue\index{quadratic residue}s mod 5 are $\{1, 4\}$, so $\left(\frac{p}{5}\right) = 1$ iff $p \equiv 1, 4 \pmod{5}$. Combining via CRT gives the full condition.
+\end{solution}
+
+\begin{solution}
+The Atkin-Morain test uses elliptic curves over $\F_p$. For a curve $E: y^2 = x^3 + ax + b$, the point count $N_p = p + 1 - a_p$ is computed via complex multiplication. If $N_p \neq 0$ and satisfies certain conditions from the CM theory, $p$ is prime. The test uses quadratic reciprocity\index{quadratic reciprocity} to find suitable curves with known endomorphism rings.
+\end{solution}
+
+\begin{solution}
+The polynomial $x^2 - a$ has derivative $2x$, which is nonzero for $x \neq 0$ when $p$ is odd. By Hensel's lemma or direct counting, each quadratic residue\index{quadratic residue} has exactly two square roots $\pm x_0$. Including $a = 0$ (one root), the total count is $1 + \legendre{a}{p}$ for $a \not\equiv 0$, and $1$ for $a \equiv 0$. For elliptic curves $y^2 = x^3 + ax + b$, summing $1 + \legendre{f(x)}{p}$ over all $x$ gives the point count.
+\end{solution}
+
 
 \section{References}
 

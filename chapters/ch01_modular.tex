@@ -1,13 +1,13 @@
 \section{Introduction}
 
-Carl Friedrich Gauss revolutionized number theory with his seminal work \textit{Disquisitiones Arithmeticae} (1801), where he systematized the theory of congruences. The notion of modular arithmetic---working with remainders upon division---provides the foundation for modern cryptography, coding theory, and computational number theory.
+Carl Friedrich Gauss revolutionized number theory with his seminal work \textit{Disquisitiones Arithmeticae} (1801), where he systematized the theory of congruences \index{congruence}. The notion of modular arithmetic \index{modular arithmetic}---working with remainders upon division---provides the foundation for modern cryptography, coding theory, and computational number theory.
 
 In this chapter, we explore:
 \begin{itemize}
-    \item Congruences and residue classes
+    \item Congruences and residue classes \index{residue class}
     \item Modular arithmetic operations
-    \item The Chinese Remainder Theorem (Gauss's proof)
-    \item Primitive roots and discrete logarithms
+    \item The Chinese Remainder Theorem \index{Chinese Remainder Theorem} (Gauss's proof)
+    \item Primitive roots and discrete logarithm \index{discrete logarithm}s
     \item Gauss's algorithm for computing discrete logarithms
 \end{itemize}
 
@@ -48,7 +48,7 @@ If $a \equiv b \pmod{n}$ and $c \equiv d \pmod{n}$, then:
 Gauss gave the first complete proof of the Chinese Remainder Theorem in \textit{Disquisitiones Arithmeticae}, Article 36--44.
 
 \begin{theorem}[Chinese Remainder Theorem]
-Let $n_1, n_2, \ldots, n_k$ be pairwise coprime positive integers. For any integers $a_1, a_2, \ldots, a_k$, the system of congruences
+Let $n_1, n_2, \ldots, n_k$ be pairwise coprime \index{coprimality} positive integers. For any integers $a_1, a_2, \ldots, a_k$, the system of congruences
 \[
 \begin{cases}
 x \equiv a_1 \pmod{n_1} \\
@@ -71,10 +71,10 @@ satisfies all congruences. Uniqueness follows from the fact that any two solutio
 \section{Primitive Roots}
 
 \begin{definition}[Primitive Root]
-Let $p$ be an odd prime. An integer $g$ is a \textit{primitive root modulo $p$} if the order of $g$ modulo $p$ is $p-1$, i.e., the smallest positive integer $k$ such that $g^k \equiv 1 \pmod{p}$ is $k = p-1$.
+Let $p$ be an odd prime. An integer $g$ is a \textit{primitive root modulo $p$} \index{primitive root} if the order of $g$ modulo $p$ is $p-1$, i.e., the smallest positive integer $k$ such that $g^k \equiv 1 \pmod{p}$ is $k = p-1$.
 \end{definition}
 
-Gauss proved that primitive roots exist for all prime moduli (Article 55). More generally, primitive roots exist modulo $n$ iff $n = 2, 4, p^k, 2p^k$ for an odd prime $p$.
+Gauss proved that primitive roots exist \index{primitive root!existence} for all prime moduli (Article 55). More generally, primitive roots exist modulo $n$ iff $n = 2, 4, p^k, 2p^k$ for an odd prime $p$.
 
 \begin{algorithmthm}[Gauss's Algorithm for Discrete Logarithm]
 Given a primitive root $g$ modulo $p$ and $a \not\equiv 0 \pmod{p}$, find $x$ such that $g^x \equiv a \pmod{p}$.
@@ -291,7 +291,28 @@ Implement the Pohlig-Hellman algorithm for discrete logarithms when $p-1$ is smo
 
 \section{Historical Notes}
 
-Gauss's \textit{Disquisitiones Arithmeticae} was written when he was just 21 years old (published at 24). The work introduced the notation $a \equiv b \pmod{n}$ and systematically developed the theory of congruences. Article 36--44 contains the Chinese Remainder Theorem with Gauss's own proof. Articles 52--60 establish the existence of primitive roots for prime moduli. The discrete logarithm (index) calculus in Articles 81--85 was used by Gauss for extensive numerical computations.
+Gauss's \textit{Disquisitiones Arithmeticae} was written when he was just 21 years old (published at 24). The work introduced the notation $a \equiv b \pmod{n}$ and systematically developed the theory of congruences \index{congruence}. Article 36--44 contains the Chinese Remainder Theorem with Gauss's own proof. Articles 52--60 establish the existence of primitive roots for prime moduli. The discrete logarithm (index) calculus in Articles 81--85 was used by Gauss for extensive numerical computations.
+
+
+
+\section{Exercise Solutions}
+
+\begin{solution}
+The Tonelli-Shanks algorithm\index{Tonelli-Shanks algorithm} algorithm finds a square root of $a$ modulo $p$ by writing $p-1 = 2^s \cdot n$ with $n$ odd, finding a quadratic non-residue $z$, and iteratively refining the root. For $p \equiv 3 \pmod{4}$, Gauss's method gives $x \equiv \pm a^{(p+1)/4} \pmod{p}$ directly. Tonelli-Shanks algorithm\index{Tonelli-Shanks algorithm} is more general but computationally heavier; for $p \equiv 3 \pmod{4}$ it reduces to Gauss's formula in one iteration.
+\end{solution}
+
+\begin{solution}
+The index table maps each residue $a$ to $\operatorname{ind}_g(a) = x$ where $g^x \equiv a \pmod{p}$. To solve $g^x \equiv a \pmod{p}$, look up $\operatorname{ind}_g(a)$ in the table. Building the table takes $O(p)$ time and lookups are $O(1)$. For large $p$, the Baby-Step Giant-Step algorithm is more efficient with $O(\sqrt{p})$ time and space.
+\end{solution}
+
+\begin{solution}
+If $g$ is a primitive root\index{primitive root}, its order is $p-1$. The order of $g^k$ is $\frac{p-1}{\gcd(k, p-1)}$, which equals $p-1$ iff $\gcd(k, p-1) = 1$. The number of such $k$ in $\{1, \ldots, p-1\}$ is $\phi(p-1)$, so there are $\phi(p-1)$ primitive root\index{primitive root}s modulo $p$.
+\end{solution}
+
+\begin{solution}
+The Pohlig-Hellman algorithm exploits the factorization $p-1 = \prod q_i^{e_i}$. For each prime power $q_i^{e_i}$, it computes the discrete log modulo $q_i^{e_i}$ by solving a system of equations in the subgroups of order $q_i$. The full log is reconstructed by CRT. When $p-1$ is smooth (all small factors), this is exponentially faster than Baby-Step Giant-Step.
+\end{solution}
+
 
 \section{References}
 

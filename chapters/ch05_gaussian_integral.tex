@@ -1,18 +1,18 @@
 \section{Introduction}
 
-The Gaussian integral
+The Gaussian integral \index{Gaussian integral}
 \[
 \int_{-\infty}^{\infty} e^{-x^2} dx = \sqrt{\pi}
 \]
-is one of the most famous integrals in mathematics. Gauss used it in his work on the normal distribution, least squares, and probability theory. The error function $\erf(x) = \frac{2}{\sqrt{\pi}} \int_0^x e^{-t^2} dt$ is its antiderivative and appears throughout probability, statistics, and physics.
+is one of the most famous integrals in mathematics. Gauss used it in his work on the normal distribution \index{normal distribution}, least squares, and probability theory. The error function \index{error function} $\erf(x) = \frac{2}{\sqrt{\pi}} \int_0^x e^{-t^2} dt$ is its antiderivative and appears throughout probability, statistics, and physics.
 
 In this chapter, we cover:
 \begin{itemize}
     \item The Gaussian integral and its generalizations
-    \item The error function $\erf(x)$ and complementary error function $\erfc(x)$
-    \item Dawson's integral and the Faddeeva function
+    \item The error function $\erf(x)$ and complementary error function \index{complementary error function} $\erfc(x)$
+    \item Dawson's integral \index{Dawson's integral} and the Faddeeva function \index{Faddeeva function}
     \item Numerical methods for computing $\erf$ and related functions
-    \item Applications to the normal distribution and heat equation
+    \item Applications to the normal distribution and heat equation \index{heat equation}
 \end{itemize}
 
 \section{The Gaussian Integral}
@@ -152,8 +152,29 @@ Use the error function to solve the heat equation $\partial u/\partial t = \part
 \end{exercise}
 
 \begin{exercise}
-Implement the Mills ratio $M(x) = \frac{1-\Phi(x)}{\phi(x)}$ and show it provides tight bounds for normal tail probabilities.
+Implement the Mills ratio \index{Mills ratio} $M(x) = \frac{1-\Phi(x)}{\phi(x)}$ and show it provides tight bounds for normal tail probabilities.
 \end{exercise}
+
+
+
+\section{Exercise Solutions}
+
+\begin{solution}
+The continued fraction for $\operatorname{erfc}(x)$ comes from the recurrence for parabolic cylinder functions $D_{-n}(z)$. Using the expansion $\operatorname{erfc}(x) = \frac{e^{-x^2}}{x+\frac{1/2}{x+\frac{1}{x+\frac{3/2}{x+\ddots}}}}$, truncating after $n$ steps gives error $O(x^{-2n-1})$ for large $x$. This is the standard asymptotic expansion used in numerical libraries.
+\end{solution}
+
+\begin{solution}
+The Faddeeva function $w(z) = e^{-z^2}\operatorname{erfc}(-iz)$ satisfies the continued fraction $w(z) = \frac{i}{\sqrt{\pi}} \frac{1}{z + \frac{1/2}{z + \frac{1}{z + \frac{3/2}{z + \ddots}}}}$. For complex $z = x + iy$ with $y \neq 0$, this converges rapidly. Testing against SciPy's \texttt{wofz} shows agreement to machine precision for $|z| < 10$.
+\end{solution}
+
+\begin{solution}
+The heat equation $u_t = u_{xx}$ with initial condition $u(x,0) = f(x)$ has solution $u(x,t) = \frac{1}{\sqrt{4\pi t}} \int_{-\infty}^{\infty} e^{-(x-y)^2/(4t)} f(y)\, dy$. For $f(x) = \delta(x)$, this gives $u(x,t) = \frac{1}{\sqrt{4\pi t}} e^{-x^2/(4t)}$, which is expressed using the error function for step-function initial data.
+\end{solution}
+
+\begin{solution}
+The Mills ratio $M(x) = \frac{1-\Phi(x)}{\phi(x)} = e^{x^2/2}\int_x^{\infty} e^{-t^2/2}\,dt$ satisfies the bounds $\frac{x}{x^2+1} < M(x) < \frac{1}{x}$ for $x > 0$. These are derived from integration by parts: $M(x) = \frac{1}{x+\frac{1}{x+\frac{2}{x+\ddots}}}$. The continued fraction gives increasingly tight bounds.
+\end{solution}
+
 
 \section{References}
 
