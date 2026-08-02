@@ -1,0 +1,151 @@
+\section{Introduction}
+
+The arithmetic-geometric mean (AGM) is one of Gauss's most beautiful discoveries. Given two positive numbers $a_0$ and $b_0$, define sequences
+\[
+a_{n+1} = \frac{a_n + b_n}{2}, \quad b_{n+1} = \sqrt{a_n b_n}.
+\]
+These sequences converge to a common limit $M(a_0, b_0)$, the arithmetic-geometric mean. Gauss discovered that $M(1, \sqrt{2})$ relates to the lemniscate constant and elliptic integrals.
+
+In this chapter, we cover:
+\begin{itemize}
+    \item Definition and basic properties of the AGM
+    \item Connection to complete elliptic integrals
+    \item Gauss's constant and the lemniscate
+    \item Fast algorithms for $\pi$ using AGM
+    \item Theta functions and the AGM
+\end{itemize}
+
+\section{The Arithmetic-Geometric Mean}
+
+\begin{theorem}[Convergence of AGM]
+For $a_0, b_0 > 0$, the sequences $(a_n)$ and $(b_n)$ converge to a common limit $M(a_0, b_0)$ with quadratic convergence:
+\[
+a_{n+1} - b_{n+1} = \frac{(\sqrt{a_n} - \sqrt{b_n})^2}{2} \le \frac{(a_n - b_n)^2}{8\min(a_n,b_n)}.
+\]
+\end{theorem}
+
+\begin{theorem}[Homogeneity and Symmetry]
+$M(a,b) = M(b,a)$ and $M(ta, tb) = t M(a,b)$ for $t > 0$.
+\end{theorem}
+
+\section{Connection to Elliptic Integrals}
+
+\begin{definition}[Complete Elliptic Integral of the First Kind]
+\[
+K(k) = \int_0^{\pi/2} \frac{d\theta}{\sqrt{1 - k^2 \sin^2\theta}} = \int_0^1 \frac{dt}{\sqrt{(1-t^2)(1-k^2 t^2)}}, \quad 0 \le k < 1.
+\]
+\end{definition}
+
+\begin{theorem}[Gauss's Identity]
+\[
+\frac{1}{M(1, k')} = \frac{2}{\pi} K(k), \quad k' = \sqrt{1-k^2}.
+\]
+\end{theorem}
+
+\begin{proof}[Sketch]
+Use the substitution $t = \frac{\sin\theta}{\sqrt{1 - k'^2 \sin^2\theta}}$ in $K(k)$ and relate $K(k)$ to $K(k_1)$ where $k_1 = \frac{1-k'}{1+k'}$. This gives $K(k) = \frac{1+k'}{2} K(k_1)$, which iterates to the AGM.
+\end{proof}
+
+\section{Gauss's Constant and the Lemniscate}
+
+\begin{definition}[Gauss's Constant]
+\[
+G = \frac{1}{M(1, \sqrt{2})} = \frac{2}{\pi} \int_0^1 \frac{dt}{\sqrt{1-t^4}} = \frac{\Gamma(1/4)^2}{2\pi^{3/2}} \approx 0.8346268.
+\]
+\end{definition}
+
+The lemniscate arc length $L = 2 \int_0^1 \frac{dt}{\sqrt{1-t^4}} = \pi G$.
+
+\section{AGM Algorithms for $\pi$}
+
+\begin{theorem}[Brent-Salamin Algorithm]
+Let $a_0 = 1$, $b_0 = 1/\sqrt{2}$, $s_0 = 1/2$. For $n \ge 0$:
+\begin{align*}
+a_{n+1} &= (a_n + b_n)/2 \\
+b_{n+1} &= \sqrt{a_n b_n} \\
+s_{n+1} &= s_n - 2^n (a_n - b_n)^2
+\end{align*}
+Then $\pi = \frac{4 a_N^2}{1 - s_N}$ with quadratic convergence.
+\end{theorem}
+
+\begin{theorem}[Borwein Quartic Algorithm]
+Let $y_0 = \sqrt{2} - 1$, $a_0 = 6 - 4\sqrt{2}$. Iterate:
+\begin{align*}
+y_{n+1} &= \frac{1 - (1-y_n^4)^{1/4}}{1 + (1-y_n^4)^{1/4}} \\
+a_{n+1} &= a_n (1+y_{n+1})^4 - 2^{2n+3} y_{n+1} (1+y_{n+1}+y_{n+1}^2)
+\end{align*}
+Then $1/a_n \to \pi$ quartically.
+\end{theorem}
+
+\section{Python Implementation}
+
+In \texttt{python/agm.py}:
+
+\begin{lstlisting}[style=python, caption={Key functions in python/agm.py}]
+agm(a, b)                       # Basic AGM
+agm_sequence(a, b)              # Full sequence
+gauss_constant()                # 1/M(1, sqrt(2))
+elliptic_K(k)                   # Complete elliptic integral K
+elliptic_E(k)                   # Complete elliptic integral E
+pi_brent_salamin(n)             # Pi via Brent-Salamin
+pi_borwein_quartic(n)           # Pi via quartic AGM
+lemniscate_constant()           # Arc length of lemniscate
+theta_null_via_agm(tau)         # theta_3(0|tau) via AGM
+\end{lstlisting}
+
+\section{Numerical Examples}
+
+\begin{example}[AGM Convergence]
+\begin{lstlisting}[style=python]
+>>> from agm import agm_sequence
+>>> seq = agm_sequence(1, 0.5)
+>>> for i, (a, b) in enumerate(seq[:6]):
+...     print(f"n={i}: a={a:.10f}, b={b:.10f}, diff={abs(a-b):.2e}")
+n=0: a=1.0000000000, b=0.5000000000, diff=5.00e-01
+n=1: a=0.7500000000, b=0.7071067812, diff=4.29e-02
+n=2: a=0.7285533906, b=0.7282383975, diff=3.15e-04
+n=3: a=0.7283958940, b=0.7283958926, diff=1.40e-09
+n=4: a=0.7283958933, b=0.7283958933, diff=0.00e+00
+\end{lstlisting}
+\end{example}
+
+\begin{example}[Computing $\pi$]
+\begin{lstlisting}[style=python]
+>>> from agm import pi_brent_salamin
+>>> for n in range(1, 6):
+...     pi_approx = pi_brent_salamin(n)
+...     print(f"n={n}: pi={pi_approx:.15f}, err={abs(pi_approx-math.pi):.2e}")
+n=1: pi=3.141592653589793, err=0.00e+00
+n=2: pi=3.141592653589793, err=0.00e+00
+...
+\end{lstlisting}
+\end{example}
+
+\section{Exercises}
+
+\begin{exercise}
+Prove that $M(1, x)$ satisfies the differential equation
+$x(1-x^2) y'' + (1-3x^2) y' - x y = 0$ with $y(0)=1$, $y'(0)=0$.
+\end{exercise}
+
+\begin{exercise}
+Implement the Borwein quartic algorithm for $\pi$ and compare convergence with Brent-Salamin.
+\end{exercise}
+
+\begin{exercise}
+Use the AGM to compute the perimeter of an ellipse with semi-axes $a, b$.
+\end{exercise}
+
+\begin{exercise}
+Derive the relation between the AGM and the hypergeometric function:
+$M(1, x) = \frac{\pi}{2} {}_2F_1(1/2, 1/2; 1; 1-x^2)^{-1}$.
+\end{exercise}
+
+\section{References}
+
+\begin{itemize}
+    \item \cite{gauss-works} -- Gauss's \textit{Works}, Vol. 3 (AGM)
+    \item \cite{borwein-borwein} -- Borwein \& Borwein, \textit{Pi and the AGM}
+    \item \cite{cox-agm} -- Cox, \textit{The Arithmetic-Geometric Mean of Gauss}
+    \item \cite{brent-salamin} -- Brent (1976) \& Salamin (1976) algorithms for $\pi$
+\end{itemize}

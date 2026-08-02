@@ -1,0 +1,606 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{geometry}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+
+% Code listing style
+\definecolor{codebg}{rgb}{0.95,0.95,0.95}
+\definecolor{keyword}{rgb}{0.13,0.29,0.53}
+\definecolor{comment}{rgb}{0.5,0.5,0.5}
+\definecolor{string}{rgb}{0.31,0.60,0.02}
+\definecolor{number}{rgb}{0.4,0.4,0.4}
+
+\lstdefinestyle{python}{
+    language=Python,
+    backgroundcolor=\color{codebg},
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{keyword}\bfseries,
+    commentstyle=\color{comment}\itshape,
+    stringstyle=\color{string},
+    numberstyle=\color{number}\tiny,
+    numbers=left,
+    numbersep=5pt,
+    frame=single,
+    framesep=5pt,
+    breaklines=true,
+    breakatwhitespace=false,
+    tabsize=4,
+        showspaces=false,
+    showstringspaces=false,
+    captionpos=b,
+    extendedchars=true,
+    literate={≡}{{\ensuremath{\equiv}}}1
+             {π}{{\ensuremath{\pi}}}1
+             {τ}{{\ensuremath{\tau}}}1
+             {χ}{{\ensuremath{\chi}}}1
+             {√}{{\ensuremath{\sqrt{\vphantom{x}}}}}1
+             {≠}{{\ensuremath{\neq}}}1
+             {φ}{{\ensuremath{\phi}}}1
+             {Φ}{{\ensuremath{\Phi}}}1
+             {Δ}{{\ensuremath{\Delta}}}1
+             {∫}{{\ensuremath{\int}}}1
+             {θ}{{\ensuremath{\theta}}}1
+             {ω}{{\ensuremath{\omega}}}1
+             {ϖ}{{\ensuremath{\varpi}}}1
+             {≈}{{\ensuremath{\approx}}}1
+             {Γ}{{\ensuremath{\Gamma}}}1
+             {α}{{\ensuremath{\alpha}}}1
+             {κ}{{\ensuremath{\kappa}}}1
+             {μ}{{\ensuremath{\mu}}}1
+             {σ}{{\ensuremath{\sigma}}}1
+             {χ}{{\ensuremath{\chi}}}1
+             {½}{{\ensuremath{\tfrac{1}{2}}}}1
+             {¼}{{\ensuremath{\tfrac{1}{4}}}}1
+             {¾}{{\ensuremath{\tfrac{3}{4}}}}1
+             {ö}{{\"o}}1
+             {ä}{{\"a}}1
+             {ü}{{\"u}}1
+             {é}{{\'e}}1
+             {è}{{\`e}}1
+             {à}{{\`a}}1
+             {ᵀ}{{\ensuremath{^T}}}1
+             {·}{{\ensuremath{\cdot}}}1
+             {±}{{\ensuremath{\pm}}}1
+             {⁰}{{\ensuremath{^0}}}1
+             {¹}{{\ensuremath{^1}}}1
+             {²}{{\ensuremath{^2}}}1
+             {³}{{\ensuremath{^3}}}1
+             {⁴}{{\ensuremath{^4}}}1
+             {⁵}{{\ensuremath{^5}}}1
+             {⁶}{{\ensuremath{^6}}}1
+             {⁷}{{\ensuremath{^7}}}1
+             {⁸}{{\ensuremath{^8}}}1
+             {⁹}{{\ensuremath{^9}}}1
+             {₀}{{\ensuremath{_0}}}1
+             {₁}{{\ensuremath{_1}}}1
+             {₂}{{\ensuremath{_2}}}1
+             {₃}{{\ensuremath{_3}}}1
+             {₄}{{\ensuremath{_4}}}1
+             {₅}{{\ensuremath{_5}}}1
+             {₆}{{\ensuremath{_6}}}1
+             {₇}{{\ensuremath{_7}}}1
+             {₈}{{\ensuremath{_8}}}1
+             {₉}{{\ensuremath{_9}}}1
+             {ₙ}{{\ensuremath{_n}}}1,
+}
+
+\lstdefinestyle{output}{
+    backgroundcolor=\color{codebg},
+    basicstyle=\ttfamily\small,
+    frame=single,
+    framesep=5pt,
+    breaklines=true,
+    numbers=none
+}
+
+\lstdefinestyle{bash}{
+    language=bash,
+    backgroundcolor=\color{codebg},
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{keyword}\bfseries,
+    frame=single,
+    framesep=5pt,
+    breaklines=true,
+    numbers=none
+}
+
+\titleformat{\section}{\large\bfseries}{\thesection}{1em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{1em}{}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{Exploring Gauss's Mathematics using Python}
+\fancyhead[R]{Student User Guide}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue!70!black,
+    citecolor=green!60!black,
+    urlcolor=red!70!black
+}
+
+\begin{document}
+
+\begin{titlepage}
+    \centering
+    \vspace*{2cm}
+    
+    {\Huge\bfseries Student User Guide}\\[1.5cm]
+    
+    {\Large Exploring Gauss's Mathematics using Python}\\[2cm]
+    
+    \includegraphics[width=0.6\textwidth]{figures/gauss_portrait.png}\\[1.5cm]
+    
+    {\large Computational Mathematics Series}\\[0.5cm]
+    {\large Version 1.0}\\[2cm]
+    
+    \vfill
+    
+    {\textit{``Mathematics is the queen of the sciences and number theory is the queen of mathematics.''}}\\[0.5cm]
+    {\textit{--- Carl Friedrich Gauss}}\\[2cm]
+    
+    \today
+\end{titlepage}
+
+\tableofcontents
+
+\newpage
+
+\section{Introduction}
+
+This guide accompanies the book \textit{Exploring Gauss's Mathematics using Python}. It provides step-by-step instructions for running the code, understanding the mathematical concepts, and extending the implementations.
+
+\subsection{Prerequisites}
+
+\begin{itemize}
+    \item Python 3.8+
+    \item Required packages: \texttt{numpy}, \texttt{scipy}, \texttt{matplotlib}, \texttt{pytest}
+    \item Basic familiarity with Python and Jupyter notebooks
+    \item Mathematical background: calculus, linear algebra, basic number theory
+\end{itemize}
+
+\subsection{Installation}
+
+\begin{lstlisting}[style=bash, caption={Installing dependencies}]
+pip install numpy scipy matplotlib pytest
+\end{lstlisting}
+
+\subsection{Running the Code}
+
+Each chapter has a corresponding Python module in the \texttt{python/} directory:
+
+\begin{lstlisting}[style=bash, caption={Running a module}]
+cd /path/to/Gauss
+python -m python.modular          # Chapter 1: Modular arithmetic
+python -m python.quadratic        # Chapter 2: Quadratic reciprocity
+python -m python.gauss_sums       # Chapter 3: Gauss sums
+python -m python.agm              # Chapter 7: Arithmetic-geometric mean
+python -m python.gaussian_elim    # Chapter 8: Gaussian elimination
+python -m python.least_squares    # Chapter 9: Least squares
+python -m python.gauss_quadrature # Chapter 10: Gauss quadrature
+python -m python.normal           # Chapter 11: Normal distribution
+python -m python.gp               # Chapter 12: Gaussian processes
+python -m python.heptadecagon     # Chapter 13: Heptadecagon
+python -m python.theorema         # Chapter 14: Theorema Egregium
+python -m python.orbital          # Chapter 15: Orbital mechanics
+python -m python.lemniscate       # Lemniscate functions
+python -m python.gauss_composition # Binary quadratic forms
+\end{lstlisting}
+
+\section{Chapter-by-Chapter Guide}
+
+\subsection{Chapter 1: Modular Arithmetic and Congruences}
+
+\textbf{Key Concepts:}
+\begin{itemize}
+    \item Congruences and residue classes
+    \item Chinese Remainder Theorem (Gauss's proof)
+    \item Primitive roots and discrete logarithms
+    \item Gauss's algorithm for discrete log (baby-step giant-step)
+\end{itemize}
+
+\textbf{Key Functions in \texttt{python/modular.py}:}
+\begin{lstlisting}[style=python]
+mod_inv(a, n)              # Modular inverse
+chinese_remainder(a_list, n_list)  # CRT
+primitive_root(p)          # Find primitive root mod p
+discrete_log_gauss(g, a, p) # Baby-step giant-step
+tonelli_shanks(n, p)       # Square root mod p
+\end{lstlisting}
+
+\textbf{Try this:}
+\begin{lstlisting}[style=python]
+>>> from python.modular import chinese_remainder, primitive_root
+>>> chinese_remainder([2, 3, 2], [3, 5, 7])  # x=23
+23
+>>> primitive_root(17)  # 3 is a primitive root mod 17
+3
+\end{lstlisting}
+
+\subsection{Chapter 2: Quadratic Reciprocity}
+
+\textbf{Key Concepts:}
+\begin{itemize}
+    \item Legendre symbol $(a/p)$
+    \item Euler's criterion
+    \item Gauss's Lemma
+    \item Law of Quadratic Reciprocity
+    \item Jacobi and Kronecker symbols
+    \item Tonelli-Shanks and Cipolla algorithms
+\end{itemize}
+
+\textbf{Key Functions in \texttt{python/quadratic.py}:}
+\begin{lstlisting}[style=python]
+legendre_symbol(a, p)
+jacobi_symbol(a, n)
+kronecker_symbol(a, n)
+quadratic_reciprocity(p, q)
+tonelli_shanks(n, p)
+cipolla(a, p)
+solve_quadratic_congruence(a, b, c, p)
+\end{lstlisting}
+
+\subsection{Chapter 3: Gauss Sums and Dirichlet Characters}
+
+\textbf{Key Functions in \texttt{python/gauss\_sums.py}:}
+\begin{lstlisting}[style=python]
+quadratic_gauss_sum(p)        # g(p) = sum e^(2*pi*i a^2/p)
+general_gauss_sum(chi, n)     # tau(chi) = sum chi(a) e^(2*pi*i a/n)
+dirichlet_characters(n)       # Generate all characters mod n
+dirichlet_l_function(chi, s)  # L(s, chi)
+polya_vinogradov(chi, N)      # Character sum bound
+\end{lstlisting}
+
+\subsection{Chapter 4: Disquisitiones Arithmeticae}
+
+\textbf{Key Functions in \texttt{python/disquisitiones.py}:}
+\begin{lstlisting}[style=python]
+solve_linear_congruence(a, b, n)
+reduced_forms(D)              # Reduced forms of discriminant D
+class_group(D)                # Class group structure
+cyclotomic_poly(n)            # Phi_n(x)
+heptadecagon_vertices()       # Coordinates of 17-gon
+\end{lstlisting}
+
+\subsection{Chapter 5: Gaussian Integral and Error Function}
+
+\textbf{Key Functions in \texttt{python/gaussian\_integral.py}:}
+\begin{lstlisting}[style=python]
+gaussian_integral(a, b, c, x1, x2)  # integral exp(-ax^2+bx+c) dx
+erf(x)                              # Error function
+normal_cdf(x, mu, sigma)            # Normal CDF
+normal_ppf(p, mu, sigma)            # Normal quantile
+dawson_integral(x)                  # Dawson's integral
+faddeeva(z)                         # Faddeeva function
+error_propagation(f, vars)          # Delta method
+\end{lstlisting}
+
+\subsection{Chapter 6: Theta Functions and Modular Forms}
+
+\textbf{Key Functions in \texttt{python/theta.py}:}
+\begin{lstlisting}[style=python]
+theta1(z, tau), theta2(z, tau)    # Jacobi theta functions
+theta3(z, tau), theta4(z, tau)
+theta_null(tau)                   # theta(0|tau)
+dedekind_eta(tau)                 # Dedekind eta function
+sum_of_squares(k, N)              # r_k(n) for n<=N
+eisenstein_series(k, tau)         # G_k(tau)
+j_invariant(tau)                  # j(tau)
+\end{lstlisting}
+
+\subsection{Chapter 7: Arithmetic-Geometric Mean}
+
+\textbf{Key Functions in \texttt{python/agm.py}:}
+\begin{lstlisting}[style=python]
+agm(a, b)                       # Arithmetic-geometric mean
+elliptic_K(k)                   # Complete elliptic integral K
+elliptic_E(k)                   # Complete elliptic integral E
+pi_brent_salamin(n)             # Pi via Brent-Salamin
+pi_borwein_quartic(n)           # Pi via Borwein quartic
+lemniscate_constant()           # Arc length of lemniscate
+elliptic_perimeter(a, b)        # Ellipse perimeter
+\end{lstlisting}
+
+\textbf{Try this:}
+\begin{lstlisting}[style=python]
+>>> from python.agm import pi_brent_salamin
+>>> for n in range(1, 6):
+...     print(f"n={n}: pi = {pi_brent_salamin(n):.15f}")
+n=1: pi = 3.141592653589793
+n=2: pi = 3.141592653589793
+\end{lstlisting}
+
+\subsection{Chapter 8: Gaussian Elimination and Matrix Decompositions}
+
+\textbf{Key Functions in \texttt{python/gaussian\_elim.py}:}
+\begin{lstlisting}[style=python]
+gaussian_elimination(A, b)    # Solve Ax=b
+lu_decomposition(A)           # PA=LU
+cholesky(A)                   # LL^T for SPD
+qr_decomposition(A)           # QR via Householder
+least_squares_normal(A, b)    # Normal equations
+least_squares_qr(A, b)        # QR for least squares
+ridge_regression(A, b, lam)   # Tikhonov regularization
+bareiss(A)                    # Fraction-free elimination
+\end{lstlisting}
+
+\subsection{Chapter 9: Least Squares and Gauss-Newton}
+
+\textbf{Key Functions in \texttt{python/least\_squares.py}:}
+\begin{lstlisting}[style=python]
+least_squares_qr(A, b)
+ridge_regression(A, b, lam)
+gauss_newton(f, jac, x0)      # Gauss-Newton
+levenberg_marquardt(f, jac, x0)  # Levenberg-Marquardt
+fit_exponential(x, y)         # a*exp(bx)+c
+polyfit(x, y, deg)            # Polynomial fit
+\end{lstlisting}
+
+\subsection{Chapter 10: Gauss Quadrature}
+
+\textbf{Key Functions in \texttt{python/gauss\_quadrature.py}:}
+\begin{lstlisting}[style=python]
+gauss_legendre(n)             # Nodes/weights for [-1,1]
+gauss_hermite(n)              # (-inf, inf) weight e^{-x^2}
+gauss_laguerre(n)             # [0, inf) weight e^{-x}
+gauss_chebyshev(n, kind)      # [-1,1] weights
+golub_welsch(alpha, beta)     # General Golub-Welsch
+integrate(f, a, b, n)         # Quadrature integration
+integrate_adaptive(f, a, b)   # Adaptive Gauss-Kronrod
+\end{lstlisting}
+
+\subsection{Chapter 11: Normal Distribution and Error Analysis}
+
+\textbf{Key Functions in \texttt{python/normal.py}:}
+\begin{lstlisting}[style=python]
+normal_pdf(x, mu, sigma)
+normal_cdf(x, mu, sigma)
+normal_ppf(p, mu, sigma)
+normal_mle(data)              # MLE for mu, sigma
+error_propagation(f, vars)    # Delta method
+confidence_interval_normal(...)
+\end{lstlisting}
+
+\subsection{Chapter 12: Gaussian Processes}
+
+\textbf{Key Functions in \texttt{python/gp.py}:}
+\begin{lstlisting}[style=python]
+class GaussianProcess:
+    fit(X, y)
+    predict(X_star, return_std=True)
+    log_marginal_likelihood()
+    optimize_hyperparameters(X, y)
+
+rbf_kernel(x1, x2, length_scale, variance)
+matern_kernel(x1, x2, length_scale, variance, nu)
+kriging(x_obs, y_obs, x_pred, kernel)
+\end{lstlisting}
+
+\subsection{Chapter 13: Heptadecagon and Constructible Polygons}
+
+\textbf{Key Functions in \texttt{python/heptadecagon.py}:}
+\begin{lstlisting}[style=python]
+cyclotomic_poly(n)            # Phi_n(x)
+constructible_ngons(limit)    # List constructible n-gons
+heptadecagon_vertices()       # 17-gon coordinates
+cos_2pi_over_17()             # Exact expression
+gauss_periods(p)              # Gauss periods
+\end{lstlisting}
+
+\subsection{Chapter 14: Theorema Egregium}
+
+\textbf{Key Functions in \texttt{python/theorema.py}:}
+\begin{lstlisting}[style=python]
+first_fundamental_form(r, u, v)
+second_fundamental_form(r, u, v)
+gaussian_curvature(E, F, G, L, M, N)
+mean_curvature(E, F, G, L, M, N)
+christoffel_from_surface(r, u, v)
+theorema_egregium_check(r, u, v)
+gauss_bonnet_discrete(vertices, faces)
+\end{lstlisting}
+
+\subsection{Chapter 15: Orbital Mechanics}
+
+\textbf{Key Functions in \texttt{python/orbital.py}:}
+\begin{lstlisting}[style=python]
+solve_kepler(M, e)           # Kepler's equation
+state_from_kepler(elems)     # Elements to state vector
+gauss_method(obs1, obs2, obs3)  # Gauss's 3-obs method
+least_squares_orbit(obs, x0)    # Orbit refinement
+propagate_universal(r, v, dt)   # Universal variable propagation
+f_g_functions(r0, v0, dt)       # f,g functions
+\end{lstlisting}
+
+\section{Additional Modules}
+
+\subsection{Lemniscate Functions}
+\begin{lstlisting}[style=python]
+sl(omega)        # Lemniscate sine
+cl(omega)        # Lemniscate cosine
+lemniscate_integral(u)    # integral_0^u dt/sqrt(1-t^4)
+lemniscate_division(n)    # Division of lemniscate
+\end{lstlisting}
+
+\subsection{Binary Quadratic Forms (Gauss Composition)}
+\begin{lstlisting}[style=python]
+class BinaryQuadraticForm:
+    reduce()                    # Gauss reduction
+class ClassGroup:
+    compose(f, g)               # Gauss composition
+    inverse(f)
+    order(f)
+    is_cyclic()
+    invariants()
+\end{lstlisting}
+
+\section{Running Tests}
+
+Each module has a corresponding test file in \texttt{tests/}:
+
+\begin{lstlisting}[style=bash]
+# Run all tests
+pytest tests/
+
+# Run specific test file
+pytest tests/test_modular.py -v
+
+# Run with coverage
+pytest --cov=python tests/
+\end{lstlisting}
+
+\section{Visualizing Results}
+
+Many modules produce plots when run directly. For example:
+
+\begin{lstlisting}[style=python]
+# Plot Gaussian quadrature nodes
+from python.gauss_quadrature import gauss_legendre
+import matplotlib.pyplot as plt
+
+nodes, weights = gauss_legendre(10)
+plt.plot(nodes, weights, 'o')
+plt.show()
+
+# Plot lemniscate
+import numpy as np
+from python.lemniscate import sl
+omegas = np.linspace(0, 4, 200)
+sl_vals = [sl(w) for w in omegas]
+plt.plot(omegas, sl_vals)
+plt.show()
+\end{lstlisting}
+
+\section{Extending the Code}
+
+\subsection{Adding a New Quadrature Rule}
+
+\begin{lstlisting}[style=python]
+# In python/gauss_quadrature.py
+def gauss_jacobi(n, alpha, beta):
+    """Gauss-Jacobi quadrature for weight (1-x)^alpha (1+x)^beta."""
+    # Compute recurrence coefficients
+    # Use golub_welsch
+    return nodes, weights
+\end{lstlisting}
+
+\subsection{Adding a New Kernel for Gaussian Processes}
+
+\begin{lstlisting}[style=python]
+# In python/gp.py
+def spectral_mixture_kernel(x1, x2, weights, means, variances):
+    """Spectral mixture kernel for GP."""
+    # Implementation
+    pass
+\end{lstlisting}
+
+\section{Troubleshooting}
+
+\subsection{Common Issues}
+
+\begin{enumerate}
+    \item \textbf{Module not found}: Ensure you're in the project root and PYTHONPATH includes the project directory.
+    \item \textbf{Numerical precision}: Some algorithms (especially AGM) converge very fast; adjust tolerance as needed.
+    \item \textbf{Slow tests}: Run \texttt{pytest tests/ -x} to stop on first failure.
+\end{enumerate}
+
+\subsection{Performance Tips}
+\begin{itemize}
+    \item Use \texttt{numpy} vectorized operations instead of loops
+    \item For AGM, the quadratic convergence means 5-6 iterations give full double precision
+    \item Gaussian elimination: prefer QR or Cholesky for stability
+\end{itemize}
+
+\section{Frequently Asked Questions}
+\begin{description}
+  \item[Q: I get a "ModuleNotFoundError" when trying to run a module. What should I do?]
+  \item[A:] Ensure you are running the command from the project's root directory (the folder containing the {\tt python/} and {\tt tests/} directories). If you are using an IDE, set the working directory accordingly, or add the project root to your {\tt PYTHONPATH} environment variable.
+  \item[Q: Some tests are failing due to numerical precision. Is this normal?]
+  \item[A:] Yes. Algorithms that rely on floating-point arithmetic (e.g., AGM, QR decomposition, Gaussian quadrature) may produce results that differ from the expected values by a small tolerance. The test suite uses relative/absolute tolerances (typically 1e-10 or 1e-12) to account for this. If a failure persists, increase the tolerance in the corresponding test or check that you are using the same version of NumPy/SciPy as specified in the requirements.
+  \item[Q: How can I visualize the lemniscate or other special functions?]
+  \item[A:] Many modules generate plots when executed as a script. For example, to plot the lemniscate sine and cosine:
+  \begin{verbatim}
+  import numpy as np
+  import matplotlib.pyplot as plt
+  from python.lemniscate import sl, cl
+  t = np.linspace(0, 4, 400)
+  plt.plot(t, [sl(x) for x in t], label='sl(t)')
+  plt.plot(t, [cl(x) for x in t], label='cl(t)')
+  plt.legend()
+  plt.grid(True)
+  plt.show()
+  \end{verbatim}
+  Similar snippets are provided in the "Visualizing Results" section of this guide.
+  \item[Q: I want to experiment with a new quadrature rule (e.g., Gauss-Jacobi). Where should I add it?]
+  \item[A:] Add your implementation to {\tt python/gauss\_quadrature.py} following the pattern of the existing {\tt gauss\_legendre}, {\tt gauss\_hermite}, etc. functions. Then expose it in the module's {\tt \_\_all\_\_} list if desired, and write a short demo in the "Visualizing Results" section or a new subsection under "Extending the Code".
+  \item[Q: The Gaussian Process examples seem slow. How can I speed them up?]
+  \item[A:] For small datasets the pure-Python implementation is fine. For larger data:
+  \begin{itemize}
+    \item Use the {\tt scipy.optimize.minimize} wrapper in {\tt GaussianProcess.optimize\_hyperparameters} instead of a simple grid search.
+    \item Pre-compute the kernel matrix and use Cholesky factorization for repeated predictions.
+    \item Consider switching to a specialized GP library (e.g., GPy, GPflow) for production-scale applications.
+  \end{itemize}
+  \item[Q: Where can I find the mathematical derivations behind the algorithms?]
+  \item[A:] The main book ({\tt gauss\_book.tex}) contains detailed derivations, historical notes, and proofs. For each algorithm, look for the corresponding "Theorem" or "Algorithm" environment in the relevant chapter. The user guide focuses on how to run and experiment with the code.
+\end{description}
+
+\section{Further Reading}
+
+\begin{itemize}
+    \item \textbf{Gauss's Works}: \textit{Disquisitiones Arithmeticae}, \textit{Theoria Motus}, \textit{Disquisitiones Generales}
+    \item \textbf{Number Theory}: Ireland \& \'o, \textit{A Classical Introduction to Modern Number Theory}
+    \item \textbf{Numerical Analysis}: Golub \& Van Loan, \textit{Matrix Computations}
+    \item \textbf{Gaussian Processes}: Rasmussen \& Williams, \textit{Gaussian Processes for Machine Learning}
+    \item \textbf{Differential Geometry}: do Carmo, \textit{Differential Geometry of Curves and Surfaces}
+\end{itemize}
+
+\section{Contributing}
+
+To contribute improvements:
+\begin{enumerate}
+    \item Fork the repository
+    \item Create a feature branch
+    \item Add tests for new functionality
+    \item Ensure all tests pass
+    \item Submit a pull request
+\end{enumerate}
+
+\appendix
+
+\section{Quick Reference: Key Formulas}
+
+\begin{tabular}{ll}
+\toprule
+\textbf{Concept} & \textbf{Formula} \\
+\midrule
+Chinese Remainder Theorem & $x = \sum a_i N_i M_i \pmod{N}$ \\
+Legendre Symbol & $\left(\frac{a}{p}\right) \equiv a^{(p-1)/2} \pmod{p}$ \\
+Quadratic Reciprocity & $\left(\frac{p}{q}\right)\left(\frac{q}{p}\right) = (-1)^{\frac{p-1}{2}\frac{q-1}{2}}$ \\
+Gauss Sum & $g(p) = \sum_{a=0}^{p-1} e^{2\pi i a^2/p}$ \\
+AGM & $M(a,b) = \lim a_n = \lim b_n$ \\
+Brent-Salamin $\pi$ & $\pi = \frac{4a_n^2}{1-\sum 2^n(a_n-b_n)^2}$ \\
+Gaussian Elimination & $PA = LU$ \\
+QR & $A = QR$, $Q^TQ=I$ \\
+Least Squares & $x = (A^TA)^{-1}A^Tb$ \\
+Gaussian PDF & $\phi(x) = \frac{1}{\sqrt{2\pi}\sigma}e^{-(x-\mu)^2/2\sigma^2}$ \\
+Gaussian CDF & $\Phi(x) = \frac{1}{2}(1+\text{erf}(\frac{x-\mu}{\sigma\sqrt{2}}))$ \\
+GP Regression & $\mu_* = K_*^T(K+\sigma^2I)^{-1}y$ \\
+17-gon & $\cos(2\pi/17) = \frac{1}{16}(-1+\sqrt{17}+\sqrt{34-2\sqrt{17}}+\cdots)$ \\
+Theorema Egregium & $K = \frac{LN-M^2}{EG-F^2}$ \\
+Gauss-Bonnet & $\int_S K dA + \int_{\partial S}\kappa_g ds = 2\pi\chi(S)$ \\
+\bottomrule
+\end{tabular}
+
+\end{document}

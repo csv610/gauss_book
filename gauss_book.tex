@@ -1,0 +1,418 @@
+\documentclass[12pt,oneside]{book}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{geometry}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{mathtools}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{makeidx}
+\usepackage{imakeidx}
+\usepackage{appendix}
+\usepackage{csquotes}
+\usepackage[backend=bibtex]{biblatex}
+
+\geometry{margin=1in}
+\pgfplotsset{compat=1.18}
+
+% Colors for code listings
+\definecolor{codebg}{rgb}{0.95,0.95,0.95}
+\definecolor{keyword}{rgb}{0.13,0.29,0.53}
+\definecolor{comment}{rgb}{0.5,0.5,0.5}
+\definecolor{string}{rgb}{0.31,0.60,0.02}
+\definecolor{number}{rgb}{0.4,0.4,0.4}
+
+\lstdefinestyle{python}{
+    language=Python,
+    backgroundcolor=\color{codebg},
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{keyword}\bfseries,
+    commentstyle=\color{comment}\itshape,
+    stringstyle=\color{string},
+    numberstyle=\color{number}\tiny,
+    numbers=left,
+    numbersep=5pt,
+    frame=single,
+    framesep=5pt,
+    breaklines=true,
+    breakatwhitespace=false,
+    tabsize=4,
+        showspaces=false,
+    showstringspaces=false,
+    captionpos=b,
+    extendedchars=true,
+    literate={≡}{{\ensuremath{\equiv}}}1
+             {π}{{\ensuremath{\pi}}}1
+             {τ}{{\ensuremath{\tau}}}1
+             {χ}{{\ensuremath{\chi}}}1
+             {√}{{\ensuremath{\sqrt{\vphantom{x}}}}}1
+             {≠}{{\ensuremath{\neq}}}1
+             {φ}{{\ensuremath{\phi}}}1
+             {Φ}{{\ensuremath{\Phi}}}1
+             {Δ}{{\ensuremath{\Delta}}}1
+             {∫}{{\ensuremath{\int}}}1
+             {θ}{{\ensuremath{\theta}}}1
+             {ω}{{\ensuremath{\omega}}}1
+             {ϖ}{{\ensuremath{\varpi}}}1
+             {≈}{{\ensuremath{\approx}}}1
+             {Γ}{{\ensuremath{\Gamma}}}1
+             {α}{{\ensuremath{\alpha}}}1
+             {κ}{{\ensuremath{\kappa}}}1
+             {μ}{{\ensuremath{\mu}}}1
+             {σ}{{\ensuremath{\sigma}}}1
+             {χ}{{\ensuremath{\chi}}}1
+             {½}{{\ensuremath{\tfrac{1}{2}}}}1
+             {¼}{{\ensuremath{\tfrac{1}{4}}}}1
+             {¾}{{\ensuremath{\tfrac{3}{4}}}}1
+             {ö}{{\"o}}1
+             {ä}{{\"a}}1
+             {ü}{{\"u}}1
+             {é}{{\'e}}1
+             {è}{{\`e}}1
+             {à}{{\`a}}1
+             {ᵀ}{{\ensuremath{^T}}}1
+             {·}{{\ensuremath{\cdot}}}1
+             {±}{{\ensuremath{\pm}}}1
+             {⁰}{{\ensuremath{^0}}}1
+             {¹}{{\ensuremath{^1}}}1
+             {²}{{\ensuremath{^2}}}1
+             {³}{{\ensuremath{^3}}}1
+             {⁴}{{\ensuremath{^4}}}1
+             {⁵}{{\ensuremath{^5}}}1
+             {⁶}{{\ensuremath{^6}}}1
+             {⁷}{{\ensuremath{^7}}}1
+             {⁸}{{\ensuremath{^8}}}1
+             {⁹}{{\ensuremath{^9}}}1
+             {₀}{{\ensuremath{_0}}}1
+             {₁}{{\ensuremath{_1}}}1
+             {₂}{{\ensuremath{_2}}}1
+             {₃}{{\ensuremath{_3}}}1
+             {₄}{{\ensuremath{_4}}}1
+             {₅}{{\ensuremath{_5}}}1
+             {₆}{{\ensuremath{_6}}}1
+             {₇}{{\ensuremath{_7}}}1
+             {₈}{{\ensuremath{_8}}}1
+             {₉}{{\ensuremath{_9}}}1
+             {ₙ}{{\ensuremath{_n}}}1,
+}
+
+\lstdefinestyle{output}{
+    backgroundcolor=\color{codebg},
+    basicstyle=\ttfamily\small,
+    frame=single,
+    framesep=5pt,
+    breaklines=true,
+    numbers=none
+}
+
+\lstdefinestyle{bash}{
+    language=bash,
+    backgroundcolor=\color{codebg},
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{keyword}\bfseries,
+    frame=single,
+    framesep=5pt,
+    breaklines=true,
+    numbers=none
+}
+
+\lstdefinestyle{txt}{
+    backgroundcolor=\color{codebg},
+    basicstyle=\ttfamily\small,
+    frame=single,
+    framesep=5pt,
+    breaklines=true,
+    numbers=none
+}
+
+% Theorem environments
+\newtheorem{theorem}{Theorem}[chapter]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{exercise}[theorem]{Exercise}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{algorithmthm}[theorem]{Algorithm}
+\newtheorem{supplement}[theorem]{Supplement}
+
+% Header/footer
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE,RO]{\thepage}
+\fancyhead[LO]{\nouppercase{\rightmark}}
+\fancyhead[RE]{\nouppercase{\leftmark}}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% Title format
+\titleformat{\chapter}[display]
+  {\normalfont\huge\bfseries\centering}
+  {\chaptertitlename\ \thechapter}{20pt}{\Huge}
+\titlespacing*{\chapter}{0pt}{50pt}{40pt}
+
+% Hyperref setup
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue!70!black,
+    citecolor=green!60!black,
+    urlcolor=red!70!black,
+    pdftitle={Exploring Gauss's Mathematics using Python},
+    pdfauthor={Carl Friedrich Gauss Exploration Project},
+    pdfsubject={Computational Mathematics}
+}
+
+\makeindex
+
+\addbibresource{references.bib}
+
+% Custom commands
+\newcommand{\gauss}{\text{Gauss}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\modulo}{\ \mathrm{mod}\ }
+\newcommand{\legendre}[2]{\left(\frac{#1}{#2}\right)}
+\newcommand{\pdiff}[2]{\frac{\partial #1}{\partial #2}}
+\newcommand{\ddiff}[2]{\frac{d #1}{d #2}}
+\newcommand{\intinf}{\int_{-\infty}^{\infty}}
+\newcommand{\suminf}{\sum_{n=-\infty}^{\infty}}
+\newcommand{\norm}[1]{\lVert #1 \rVert}
+\newcommand{\inner}[2]{\langle #1, #2 \rangle}
+\newcommand{\expect}[1]{\mathbb{E}[#1]}
+\newcommand{\var}[1]{\mathrm{Var}(#1)}
+\newcommand{\prob}[1]{\mathbb{P}(#1)}
+\newcommand{\abs}[1]{\lvert #1 \rvert}
+\newcommand{\ceil}[1]{\lceil #1 \rceil}
+\newcommand{\floor}[1]{\lfloor #1 \rfloor}
+\newcommand{\tr}{\mathrm{tr}}
+\newcommand{\rank}{\mathrm{rank}}
+\newcommand{\nullity}{\mathrm{nullity}}
+\newcommand{\spanop}{\mathrm{span}}
+\newcommand{\diag}{\mathrm{diag}}
+\newcommand{\adj}{\mathrm{adj}}
+\newcommand{\detop}{\mathrm{det}}
+\newcommand{\supp}{\mathrm{supp}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\erf}{\operatorname{erf}}
+\newcommand{\erfi}{\operatorname{erfi}}
+\newcommand{\erfc}{\operatorname{erfc}}
+\newcommand{\Var}{\operatorname{Var}}
+\newcommand{\Cov}{\operatorname{Cov}}
+\newcommand{\cov}{\operatorname{cov}}
+
+\begin{document}
+
+\frontmatter
+
+% Title page
+\begin{titlepage}
+    \centering
+    \vspace*{2cm}
+    
+    {\Huge\bfseries Exploring Gauss's Mathematics using Python}\\[1.5cm]
+    
+    {\Large A Computational Journey Through the Prince of Mathematics' Legacy}\\[2cm]
+    
+    \includegraphics[width=0.6\textwidth]{figures/gauss_portrait.png}\\[1.5cm]
+    
+    {\large Computational Mathematics Series}\\[0.5cm]
+    {\large Version 1.0}\\[2cm]
+    
+    \vfill
+    
+    {\textit{``Mathematics is the queen of the sciences and number theory is the queen of mathematics.''}}\\[0.5cm]
+    {\textit{--- Carl Friedrich Gauss}}\\[2cm]
+    
+    \today
+\end{titlepage}
+
+\cleardoublepage
+
+% Copyright page
+\thispagestyle{empty}
+\vspace*{10cm}
+\noindent
+\textbf{Exploring Gauss's Mathematics using Python}\\
+\textit{A Computational Journey Through the Prince of Mathematics' Legacy}\\
+\vspace{0.5cm}
+\noindent
+Copyright \copyright\ 2024. All rights reserved.\\
+\vspace{0.5cm}
+\noindent
+This book is intended for educational purposes. The Python code accompanying this book is provided under the MIT License.\\
+\vspace{0.5cm}
+\noindent
+ISBN: XXX-X-XXXX-XXXX-X\\
+\vspace{0.5cm}
+\noindent
+Typeset in \LaTeX\ using the \texttt{book} class with \texttt{amsmath}, \texttt{tikz}, \texttt{pgfplots}, and \texttt{listings} packages.
+
+\cleardoublepage
+
+% Dedication
+\thispagestyle{empty}
+\vspace*{10cm}
+\begin{center}
+    \textit{To the memory of Carl Friedrich Gauss (1777--1855),\\
+    whose genius continues to illuminate the path of mathematical discovery.}
+\end{center}
+
+\cleardoublepage
+
+% Preface
+\chapter*{Preface}
+\addcontentsline{toc}{chapter}{Preface}
+\markboth{Preface}{Preface}
+
+Carl Friedrich Gauss (1777--1855), often called the ``Prince of Mathematicians,'' left an indelible mark on virtually every branch of mathematics. From his teenage discovery of the construction of the regular heptadecagon to his monumental \textit{Disquisitiones Arithmeticae}, from the method of least squares to the fundamental theorem of algebra, from Gaussian elimination to the Gaussian distribution---his contributions form the bedrock of modern mathematics.
+
+This book takes a computational approach to exploring Gauss's mathematics. Rather than merely presenting theorems and proofs, we implement Gauss's algorithms, reproduce his calculations, and extend his ideas using Python. Each chapter focuses on a major area of Gauss's work, providing:
+
+\begin{itemize}
+    \item Historical context and mathematical background
+    \item Rigorous mathematical development with proofs
+    \item Python implementations of Gauss's algorithms
+    \item Numerical experiments and visualizations
+    \item Exercises for deeper exploration
+\end{itemize}
+
+\textbf{Who this book is for:} Students of mathematics, computer science, and physics; researchers interested in computational number theory, numerical analysis, and mathematical history; and anyone who wants to experience Gauss's mathematics through the lens of modern computation.
+
+\textbf{Prerequisites:} Basic knowledge of Python programming, linear algebra, calculus, and elementary number theory. Familiarity with \texttt{numpy}, \texttt{scipy}, and \texttt{matplotlib} is helpful but not required---we introduce these tools as needed.
+
+\textbf{Structure of the book:}
+\begin{itemize}
+    \item \textbf{Part I: Number Theory} (Chapters 1--4) covers modular arithmetic, quadratic reciprocity, Gauss sums, and the \textit{Disquisitiones Arithmeticae}.
+    \item \textbf{Part II: Analysis and Special Functions} (Chapters 5--7) explores the Gaussian integral, theta functions, and the arithmetic-geometric mean.
+    \item \textbf{Part III: Linear Algebra and Numerical Methods} (Chapters 8--10) covers Gaussian elimination, least squares, and numerical integration.
+    \item \textbf{Part IV: Statistics and Probability} (Chapters 11--12) examines the normal distribution, error analysis, and Gaussian processes.
+    \item \textbf{Part V: Geometry and Astronomy} (Chapters 13--15) investigates the heptadecagon, differential geometry, and orbital mechanics.
+\end{itemize}
+
+Each chapter includes a companion Python module in the \texttt{python/} directory, with thorough documentation and tests in the \texttt{tests/} directory. A separate \textit{Student User Guide} provides step-by-step tutorials for running the code, modifying experiments, and extending the implementations.
+
+\textbf{Acknowledgments:} We are grateful for the digitized works of Gauss available through the G\"ottingen Digital Library, the comprehensive commentary in \cite{gauss-works}, and the modern expositions in \cite{edwards-fermat, stillwell-number-theory, cohen-number-theory}.
+
+\begin{flushright}
+    \textit{The Authors}\\
+    2024
+\end{flushright}
+
+\cleardoublepage
+
+% Table of contents
+\tableofcontents
+
+\cleardoublepage
+
+% List of figures and tables
+\listoffigures
+\listoftables
+
+\cleardoublepage
+
+\mainmatter
+
+\part{Number Theory: The \textit{Disquisitiones Arithmeticae}}
+
+\chapter{Modular Arithmetic and Congruences}
+\label{ch:modular}
+\input{chapters/ch01_modular}
+
+\chapter{Quadratic Reciprocity}
+\label{ch:quadratic}
+\input{chapters/ch02_quadratic}
+
+\chapter{Gauss Sums and Characters}
+\label{ch:gauss-sums}
+\input{chapters/ch03_gauss_sums}
+
+\chapter{The Disquisitiones Arithmeticae: Selected Topics}
+\label{ch:disquisitiones}
+\input{chapters/ch04_disquisitiones}
+
+\part{Analysis and Special Functions}
+
+\chapter{The Gaussian Integral and Error Function}
+\label{ch:gaussian-integral}
+\input{chapters/ch05_gaussian_integral}
+
+\chapter{Theta Functions and Modular Forms}
+\label{ch:theta}
+\input{chapters/ch06_theta}
+
+\chapter{The Arithmetic-Geometric Mean}
+\label{ch:agm}
+\input{chapters/ch07_agm}
+
+\part{Linear Algebra and Numerical Methods}
+
+\chapter{Gaussian Elimination and Matrix Decompositions}
+\label{ch:gaussian-elim}
+\input{chapters/ch08_gaussian_elim}
+
+\chapter{The Method of Least Squares}
+\label{ch:least-squares}
+\input{chapters/ch09_least_squares}
+
+\chapter{Numerical Integration: Gauss Quadrature}
+\label{ch:gauss-quadrature}
+\input{chapters/ch10_gauss_quadrature}
+
+\part{Statistics and Probability}
+
+\chapter{The Normal Distribution and Error Analysis}
+\label{ch:normal}
+\input{chapters/ch11_normal}
+
+\chapter{Gaussian Processes and Kriging}
+\label{ch:gp}
+\input{chapters/ch12_gp}
+
+\part{Geometry and Astronomy}
+
+\chapter{The Heptadecagon and Constructible Polygons}
+\label{ch:heptadecagon}
+\input{chapters/ch13_heptadecagon}
+
+\chapter{Differential Geometry: The Theorema Egregium}
+\label{ch:theorema}
+\input{chapters/ch14_theorema}
+
+\chapter{Orbital Mechanics: The Method of Least Squares in Astronomy}
+\label{ch:orbital}
+\input{chapters/ch15_orbital}
+
+\appendix
+
+\chapter{Python Environment Setup}
+\label{app:setup}
+\input{chapters/appendix_setup}
+
+\chapter{Mathematical Background}
+\label{app:math}
+\input{chapters/appendix_math}
+
+\chapter{Complete Code Reference}
+\label{app:code}
+\input{chapters/appendix_code}
+
+\printbibliography
+
+\printindex
+
+\end{document}

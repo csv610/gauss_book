@@ -1,0 +1,231 @@
+\section{Introduction}
+
+Gauss called the law of quadratic reciprocity the ``golden theorem'' of number theory. It provides a deep and unexpected connection between the solvability of $x^2 \equiv p \pmod{q}$ and $x^2 \equiv q \pmod{p}$ for distinct odd primes $p$ and $q$. Gauss gave no fewer than eight different proofs of this theorem throughout his life.
+
+In this chapter, we explore:
+\begin{itemize}
+    \item The Legendre symbol and Euler's criterion
+    \item Gauss's Lemma and the first proof of quadratic reciprocity
+    \item The Jacobi and Kronecker symbols
+    \item Algorithms for computing square roots modulo primes (Tonelli-Shanks, Cipolla)
+    \item Applications to quadratic congruences and primality testing
+\end{itemize}
+
+\section{The Legendre Symbol}
+
+\begin{definition}[Legendre Symbol]
+Let $p$ be an odd prime and $a \in \Z$. The \textit{Legendre symbol} is defined as
+\[
+\legendre{a}{p} = 
+\begin{cases}
+0 & \text{if } p \mid a, \\
+1 & \text{if } a \text{ is a quadratic residue modulo } p, \\
+-1 & \text{if } a \text{ is a quadratic non-residue modulo } p.
+\end{cases}
+\]
+\end{definition}
+
+\begin{theorem}[Euler's Criterion]
+For odd prime $p$ and $a \not\equiv 0 \pmod{p}$,
+\[
+\legendre{a}{p} \equiv a^{(p-1)/2} \pmod{p}.
+\]
+\end{theorem}
+
+\begin{proof}
+If $a \equiv x^2 \pmod{p}$, then $a^{(p-1)/2} \equiv x^{p-1} \equiv 1 \pmod{p}$ by Fermat's little theorem. If $a$ is a non-residue, consider the polynomial $x^{(p-1)/2} - 1$ which has at most $(p-1)/2$ roots. The $(p-1)/2$ quadratic residues are all roots, so non-residues cannot be roots, giving $a^{(p-1)/2} \equiv -1 \pmod{p}$.
+\end{proof}
+
+\section{Gauss's Lemma}
+
+Gauss's Lemma (Article 129 of \textit{Disquisitiones}) provides a combinatorial method to compute the Legendre symbol.
+
+\begin{theorem}[Gauss's Lemma]
+Let $p$ be an odd prime and $a \not\equiv 0 \pmod{p}$. Consider the least positive residues of
+\[
+a, 2a, 3a, \ldots, \frac{p-1}{2}a \pmod{p}.
+\]
+Let $\mu$ be the number of these residues that exceed $p/2$. Then
+\[
+\legendre{a}{p} = (-1)^\mu.
+\]
+\end{theorem}
+
+\begin{proof}
+Let $S = \{a, 2a, \ldots, \frac{p-1}{2}a\}$. For each $s \in S$, define $r_s$ as its least positive residue modulo $p$. Replace each $r_s > p/2$ by $r_s - p$ (so it becomes negative). The resulting set of absolute values is exactly $\{1, 2, \ldots, \frac{p-1}{2}\}$. Taking the product of all elements in $S$ and considering signs gives the result.
+\end{proof}
+
+\begin{example}
+Compute $\legendre{7}{13}$ using Gauss's Lemma.
+$S = \{7, 14, 21, 28, 35, 42\} \equiv \{7, 1, 8, 2, 9, 3\} \pmod{13}$.
+Residues exceeding $13/2 = 6.5$ are $\{7, 8, 9\}$, so $\mu = 3$.
+Thus $\legendre{7}{13} = (-1)^3 = -1$.
+\end{example}
+
+\section{The Law of Quadratic Reciprocity}
+
+\begin{theorem}[Law of Quadratic Reciprocity]
+Let $p$ and $q$ be distinct odd primes. Then
+\[
+\legendre{p}{q} \legendre{q}{p} = (-1)^{\frac{p-1}{2} \cdot \frac{q-1}{2}}.
+\]
+Equivalently,
+\[
+\legendre{p}{q} = 
+\begin{cases}
+\legendre{q}{p} & \text{if } p \equiv 1 \pmod{4} \text{ or } q \equiv 1 \pmod{4}, \\
+-\legendre{q}{p} & \text{if } p \equiv q \equiv 3 \pmod{4}.
+\end{cases}
+\]
+\end{theorem}
+
+\begin{supplement}[First Supplement]
+For odd prime $p$,
+\[
+\legendre{-1}{p} = (-1)^{(p-1)/2} = 
+\begin{cases}
+1 & \text{if } p \equiv 1 \pmod{4}, \\
+-1 & \text{if } p \equiv 3 \pmod{4}.
+\end{cases}
+\]
+\end{supplement}
+
+\begin{supplement}[Second Supplement]
+For odd prime $p$,
+\[
+\legendre{2}{p} = (-1)^{(p^2-1)/8} = 
+\begin{cases}
+1 & \text{if } p \equiv \pm 1 \pmod{8}, \\
+-1 & \text{if } p \equiv \pm 3 \pmod{8}.
+\end{cases}
+\]
+\end{supplement}
+
+\section{Gauss's First Proof (using Gauss's Lemma)}
+
+Gauss's first proof (1808) uses Gauss's Lemma to reduce quadratic reciprocity to a counting problem about lattice points in a rectangle.
+
+\begin{proof}[Sketch]
+Let $p, q$ be distinct odd primes. Consider the rectangle $R = \{(x,y) \in \Z^2 : 1 \le x \le \frac{p-1}{2}, 1 \le y \le \frac{q-1}{2}\}$. The number of lattice points in $R$ below the line $y = \frac{q}{p}x$ relates to $\mu(p,q)$ from Gauss's Lemma. By symmetry, the total number of points in $R$ is $\frac{p-1}{2} \cdot \frac{q-1}{2}$, and the sum of the two $\mu$ values gives the exponent in the reciprocity law.
+\end{proof}
+
+\section{The Jacobi Symbol}
+
+The Jacobi symbol extends the Legendre symbol to composite odd denominators.
+
+\begin{definition}[Jacobi Symbol]
+For odd positive $n = p_1 p_2 \cdots p_k$ (prime factorization) and $a \in \Z$,
+\[
+\legendre{a}{n}_J = \prod_{i=1}^k \legendre{a}{p_i}.
+\]
+\end{definition}
+
+The Jacobi symbol satisfies the same multiplicative and reciprocity properties as the Legendre symbol, but $\legendre{a}{n}_J = 1$ does \textit{not} imply $a$ is a quadratic residue modulo $n$.
+
+\begin{theorem}[Jacobi Reciprocity]
+For odd coprime positive integers $m, n$,
+\[
+\legendre{m}{n}_J \legendre{n}{m}_J = (-1)^{\frac{m-1}{2} \cdot \frac{n-1}{2}}.
+\]
+\end{theorem}
+
+\section{The Kronecker Symbol}
+
+The Kronecker symbol extends the Jacobi symbol to all integers $n$ (including even and negative). For $n = \pm 2^e p_1^{e_1} \cdots p_k^{e_k}$, the Kronecker symbol $\legendre{a}{n}_K$ is defined by multiplicativity, with special rules for $\legendre{a}{2}_K$ and $\legendre{a}{-1}_K$.
+
+\section{Algorithms for Square Roots Modulo $p$}
+
+\subsection{Tonelli-Shanks Algorithm}
+For $p \equiv 1 \pmod{4}$, this algorithm finds $\sqrt{n} \pmod{p}$ in $O(\log^2 p)$ time.
+
+\subsection{Cipolla's Algorithm}
+Works in the extension field $\F_p(\sqrt{d})$ where $d$ is a non-residue. Often faster in practice.
+
+\subsection{Special Cases}
+\begin{itemize}
+    \item $p \equiv 3 \pmod{4}$: $\sqrt{n} \equiv n^{(p+1)/4} \pmod{p}$.
+    \item $p \equiv 5 \pmod{8}$: Special formula using $\legendre{2}{p}$.
+\end{itemize}
+
+\section{Python Implementation}
+\label{sec:quadratic-python}
+
+The implementation is in \texttt{python/quadratic.py}. Key functions:
+
+\begin{lstlisting}[style=python, caption={Key functions in python/quadratic.py}]
+legendre_symbol(a, p)           # Euler's criterion
+legendre_symbol_gauss(a, p)     # Gauss's Lemma
+jacobi_symbol(a, n)             # Recursive with reciprocity
+kronecker_symbol(a, n)          # Full Kronecker symbol
+quadratic_reciprocity(p, q)     # Verify reciprocity law
+tonelli_shanks(n, p)            # Tonelli-Shanks sqrt
+cipolla(a, p)                   # Cipolla's algorithm
+solve_quadratic_congruence(a,b,c,p)  # ax^2 + bx + c == 0 (mod p)
+\end{lstlisting}
+
+\section{Numerical Examples}
+
+\begin{example}[Quadratic Reciprocity Verification]
+\begin{lstlisting}[style=python]
+>>> from quadratic import quadratic_reciprocity, legendre_symbol
+>>> quadratic_reciprocity(5, 13)
+(1, 1)  # (5/13)*(13/5) = 1, and (-1)^((5-1)(13-1)/4) = 1
+>>> legendre_symbol(5, 13), legendre_symbol(13, 5)
+(1, 1)  # 5 is a quadratic residue mod 13, and 13 == 3 is a residue mod 5
+\end{lstlisting}
+\end{example}
+
+\begin{example}[Jacobi Symbol Computation]
+\begin{lstlisting}[style=python]
+>>> from quadratic import jacobi_symbol
+>>> jacobi_symbol(12, 35)  # (12/35) = (12/5)(12/7) = (2/5)(5/7) = (-1)(-1) = 1
+1
+\end{lstlisting}
+\end{example}
+
+\begin{example}[Solving Quadratic Congruences]
+Solve $2x^2 + 3x + 1 \equiv 0 \pmod{11}$:
+\begin{lstlisting}[style=python]
+>>> from quadratic import solve_quadratic_congruence
+>>> solve_quadratic_congruence(2, 3, 1, 11)
+[5, 10]
+\end{lstlisting}
+Check: $2\cdot 5^2 + 3\cdot 5 + 1 = 66 \equiv 0 \pmod{11}$ and $2\cdot 10^2 + 3\cdot 10 + 1 = 231 \equiv 0 \pmod{11}$.
+\end{example}
+
+\section{Exercises}
+
+\begin{exercise}
+Prove the First and Second Supplements using Gauss's Lemma.
+\end{exercise}
+
+\begin{exercise}
+Implement the Solovay-Strassen primality test using the Jacobi symbol and Euler's criterion. Test on known primes and Carmichael numbers.
+\end{exercise}
+
+\begin{exercise}
+Use quadratic reciprocity to determine for which primes $p$ the congruence $x^2 \equiv 10 \pmod{p}$ has a solution.
+\end{exercise}
+
+\begin{exercise}
+Implement the Atkin-Morain elliptic curve primality test which uses quadratic reciprocity in the complex multiplication step.
+\end{exercise}
+
+\begin{exercise}
+Prove that for odd prime $p$, the number of solutions to $x^2 \equiv a \pmod{p}$ is $1 + \legendre{a}{p}$. Use this to count points on elliptic curves $y^2 = x^3 + ax + b$ over $\F_p$.
+\end{exercise}
+
+\section{Historical Notes}
+
+Gauss discovered quadratic reciprocity at age 18 (1796) and called it the ``fundamental theorem.'' He published six proofs in his lifetime (1801, 1808, 1811, 1817, 1818, 1824) and left two more in his unpublished papers. The eighth proof (using Gauss sums) appeared in 1818 and connects quadratic reciprocity to the theory of cyclotomic fields and the discrete Fourier transform---a profound link between number theory and analysis that we explore in Chapter~\ref{ch:gauss-sums}.
+
+Gauss's \textit{Disquisitiones Arithmeticae} (Article 131) states: ``The fundamental theorem of quadratic reciprocity is one of the most elegant of its type... It has been the subject of many investigations by the most celebrated geometers.''
+
+\section{References}
+
+\begin{itemize}
+    \item \cite{gauss-disq} -- Articles 125--150 (Quadratic Reciprocity)
+    \item \cite{ireland-rosen} -- Ireland \& Rosen, \textit{A Classical Introduction to Modern Number Theory}, Ch. 5
+    \item \cite{lemmermeyer-reciprocity} -- Lemmermeyer, \textit{Reciprocity Laws: From Euler to Eisenstein}
+    \item \cite{cohen-number-theory} -- Cohen, \textit{Number Theory: Volume I}, Ch. 4
+\end{itemize}

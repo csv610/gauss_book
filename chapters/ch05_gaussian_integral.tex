@@ -1,0 +1,166 @@
+\section{Introduction}
+
+The Gaussian integral
+\[
+\int_{-\infty}^{\infty} e^{-x^2} dx = \sqrt{\pi}
+\]
+is one of the most famous integrals in mathematics. Gauss used it in his work on the normal distribution, least squares, and probability theory. The error function $\erf(x) = \frac{2}{\sqrt{\pi}} \int_0^x e^{-t^2} dt$ is its antiderivative and appears throughout probability, statistics, and physics.
+
+In this chapter, we cover:
+\begin{itemize}
+    \item The Gaussian integral and its generalizations
+    \item The error function $\erf(x)$ and complementary error function $\erfc(x)$
+    \item Dawson's integral and the Faddeeva function
+    \item Numerical methods for computing $\erf$ and related functions
+    \item Applications to the normal distribution and heat equation
+\end{itemize}
+
+\section{The Gaussian Integral}
+
+\begin{theorem}[Gaussian Integral]
+\[
+\int_{-\infty}^{\infty} e^{-x^2} dx = \sqrt{\pi}.
+\]
+\end{theorem}
+
+\begin{proof}[Standard Proof]
+Let $I = \int_{-\infty}^{\infty} e^{-x^2} dx$. Then
+\[
+I^2 = \int_{-\infty}^{\infty} \int_{-\infty}^{\infty} e^{-(x^2+y^2)} dx dy = \int_0^{2\pi} \int_0^{\infty} e^{-r^2} r dr d\theta = 2\pi \cdot \frac{1}{2} = \pi.
+\]
+\end{proof}
+
+\begin{theorem}[Generalized Gaussian Integral]
+For $\Re(a) > 0$,
+\[
+\int_{-\infty}^{\infty} e^{-a x^2} dx = \sqrt{\frac{\pi}{a}}.
+\]
+For complex $a$ with $\Re(a) > 0$, the same holds with appropriate branch of $\sqrt{\cdot}$.
+\end{theorem}
+
+\section{The Error Function}
+
+\begin{definition}[Error Function]
+\[
+\erf(x) = \frac{2}{\sqrt{\pi}} \int_0^x e^{-t^2} dt, \quad
+\erfc(x) = 1 - \erf(x) = \frac{2}{\sqrt{\pi}} \int_x^{\infty} e^{-t^2} dt.
+\]
+\end{definition}
+
+\begin{theorem}[Properties of $\erf$]
+\begin{enumerate}
+    \item $\erf(-x) = -\erf(x)$ (odd function)
+    \item $\erf(0) = 0$, $\lim_{x\to\infty} \erf(x) = 1$
+    \item $\erf'(x) = \frac{2}{\sqrt{\pi}} e^{-x^2}$
+    \item $\erf(x) = \frac{2}{\sqrt{\pi}} \sum_{n=0}^{\infty} \frac{(-1)^n x^{2n+1}}{n!(2n+1)}$ (entire function)
+    \item Asymptotic: $\erfc(x) \sim \frac{e^{-x^2}}{x\sqrt{\pi}} \left(1 - \frac{1}{2x^2} + \frac{3}{4x^4} - \cdots \right)$
+\end{enumerate}
+\end{theorem}
+
+\section{Related Special Functions}
+
+\begin{itemize}
+    \item \textbf{Dawson's integral:} $F(x) = e^{-x^2} \int_0^x e^{t^2} dt = \frac{\sqrt{\pi}}{2} e^{-x^2} \erfi(x)$
+    \item \textbf{Imaginary error function:} $\erfi(x) = -i \erf(ix) = \frac{2}{\sqrt{\pi}} \int_0^x e^{t^2} dt$
+    \item \textbf{Faddeeva function:} $w(z) = e^{-z^2} \erfc(-iz)$
+    \item \textbf{Fresnel integrals:} $C(x) = \int_0^x \cos(\pi t^2/2) dt$, $S(x) = \int_0^x \sin(\pi t^2/2) dt$
+\end{itemize}
+
+\section{The Normal Distribution}
+
+The standard normal distribution has PDF
+\[
+\phi(x) = \frac{1}{\sqrt{2\pi}} e^{-x^2/2}
+\]
+and CDF
+\[
+\Phi(x) = \frac{1}{2} \left(1 + \erf\left(\frac{x}{\sqrt{2}}\right)\right).
+\]
+
+\section{Numerical Methods for $\erf$}
+
+\begin{enumerate}
+    \item \textbf{Series expansion} for $|x| \le 4$:
+    $\erf(x) = \frac{2}{\sqrt{\pi}} \sum_{n=0}^{\infty} \frac{(-1)^n x^{2n+1}}{n!(2n+1)}$
+    
+    \item \textbf{Asymptotic expansion} for large $|x|$:
+    $\erfc(x) = \frac{e^{-x^2}}{x\sqrt{\pi}} \left(1 + \sum_{n=1}^{\infty} (-1)^n \frac{(2n-1)!!}{(2x^2)^n} \right)$
+    
+    \item \textbf{Continued fraction} (valid for all $x$):
+    $\erfc(x) = \frac{e^{-x^2}}{x\sqrt{\pi} +} \frac{1/2}{x +} \frac{1}{x +} \frac{3/2}{x +} \cdots$
+    
+    \item \textbf{Chebyshev/rational approximations} (Cody's algorithm, used in SciPy)
+\end{enumerate}
+
+\section{Python Implementation}
+
+The implementation is in \texttt{python/gaussian\_integral.py}.
+
+\begin{lstlisting}[style=python, caption={Key functions in python/gaussian\_integral.py}]
+gaussian_integral(a, b, c, x1, x2)  # Integral of exp(-a x^2 + b x + c) from x1 to x2
+erf_series(x, terms)            # Series expansion
+erf_asymptotic(x)               # Asymptotic expansion
+erf_chebyshev(x)                # Cody's approximation
+erfc_continued_fraction(x)      # CF expansion
+normal_cdf(x, mu, sigma)        # Normal CDF
+normal_pdf(x, mu, sigma)        # Normal PDF
+dawson_integral(x)              # Dawson's F(x)
+faddeeva(z)                     # Faddeeva function w(z)
+\end{lstlisting}
+
+\section{Numerical Examples}
+
+\begin{example}[Gaussian Integral]
+\begin{lstlisting}[style=python]
+>>> from gaussian_integral import gaussian_integral
+>>> gaussian_integral(1, 0, 0, -10, 10)  # int exp(-x^2) from -10 to 10
+1.7724538509055159
+>>> import math
+>>> math.sqrt(math.pi)
+1.7724538509055159
+\end{lstlisting}
+\end{example}
+
+\begin{example}[Error Function Accuracy]
+\begin{lstlisting}[style=python]
+>>> from gaussian_integral import erf_chebyshev
+>>> import scipy.special as sp
+>>> for x in [0.1, 1.0, 2.0, 3.0, 5.0]:
+...     my = erf_chebyshev(x)
+...     ref = sp.erf(x)
+...     print(f"x={x}: my={my:.10f}, ref={ref:.10f}, err={abs(my-ref):.2e}")
+x=0.1: my=0.1124629160, ref=0.1124629160, err=0.00e+00
+x=1.0: my=0.8427007929, ref=0.8427007929, err=0.00e+00
+x=2.0: my=0.9953222650, ref=0.9953222650, err=0.00e+00
+x=3.0: my=0.9999779095, ref=0.9999779095, err=0.00e+00
+x=5.0: my=0.9999999999, ref=1.0000000000, err=0.00e+00
+\end{lstlisting}
+\end{example}
+
+\section{Exercises}
+
+\begin{exercise}
+Derive the continued fraction expansion for $\erfc(x)$ using the recurrence for parabolic cylinder functions.
+\end{exercise}
+
+\begin{exercise}
+Implement the Faddeeva function $w(z)$ using the continued fraction for complex $z$. Test against SciPy's \texttt{wofz}.
+\end{exercise}
+
+\begin{exercise}
+Use the error function to solve the heat equation $\partial u/\partial t = \partial^2 u/\partial x^2$ with initial condition $u(x,0) = f(x)$.
+\end{exercise}
+
+\begin{exercise}
+Implement the Mills ratio $M(x) = \frac{1-\Phi(x)}{\phi(x)}$ and show it provides tight bounds for normal tail probabilities.
+\end{exercise}
+
+\section{References}
+
+\begin{itemize}
+    \item \cite{gauss-works} -- Gauss's works on probability and least squares
+    \item \cite{abramowitz-stegun} -- Abramowitz \& Stegun, Ch. 7 (Error functions)
+    \item \cite{cody-1969} -- Cody, "Rational Chebyshev Approximations for the Error Function"
+    \item \cite{olver} -- Olver et al., \textit{NIST Handbook of Mathematical Functions}
+    \item \cite{population-growth} -- Applications to population growth models
+\end{itemize}

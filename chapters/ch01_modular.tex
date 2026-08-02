@@ -1,0 +1,303 @@
+\section{Introduction}
+
+Carl Friedrich Gauss revolutionized number theory with his seminal work \textit{Disquisitiones Arithmeticae} (1801), where he systematized the theory of congruences. The notion of modular arithmetic---working with remainders upon division---provides the foundation for modern cryptography, coding theory, and computational number theory.
+
+In this chapter, we explore:
+\begin{itemize}
+    \item Congruences and residue classes
+    \item Modular arithmetic operations
+    \item The Chinese Remainder Theorem (Gauss's proof)
+    \item Primitive roots and discrete logarithms
+    \item Gauss's algorithm for computing discrete logarithms
+\end{itemize}
+
+\section{Congruences and Residue Classes}
+
+\begin{definition}[Congruence]
+Let $a, b, n \in \Z$ with $n > 0$. We say $a$ is \textit{congruent} to $b$ modulo $n$, written
+\[
+a \equiv b \pmod{n},
+\]
+if $n \mid (a - b)$, i.e., $a - b = kn$ for some $k \in \Z$.
+\end{definition}
+
+The relation $\equiv \pmod{n}$ is an equivalence relation on $\Z$. The equivalence classes are called \textit{residue classes modulo $n$}. The set of all residue classes is denoted $\Z/n\Z$ or $\Z_n$.
+
+\begin{example}
+Modulo $7$, the residue classes are:
+\[
+[0]_7 = \{\ldots, -7, 0, 7, 14, \ldots\},\quad
+[1]_7 = \{\ldots, -6, 1, 8, 15, \ldots\},\quad \ldots,\quad
+[6]_7 = \{\ldots, -1, 6, 13, 20, \ldots\}.
+\]
+We typically represent each class by its least non-negative representative $\{0, 1, 2, 3, 4, 5, 6\}$.
+\end{example}
+
+\begin{theorem}[Properties of Congruences]
+If $a \equiv b \pmod{n}$ and $c \equiv d \pmod{n}$, then:
+\begin{enumerate}
+    \item $a + c \equiv b + d \pmod{n}$
+    \item $a - c \equiv b - d \pmod{n}$
+    \item $ac \equiv bd \pmod{n}$
+    \item $a^k \equiv b^k \pmod{n}$ for any $k \in \mathbb{N}$
+\end{enumerate}
+\end{theorem}
+
+\section{The Chinese Remainder Theorem}
+
+Gauss gave the first complete proof of the Chinese Remainder Theorem in \textit{Disquisitiones Arithmeticae}, Article 36--44.
+
+\begin{theorem}[Chinese Remainder Theorem]
+Let $n_1, n_2, \ldots, n_k$ be pairwise coprime positive integers. For any integers $a_1, a_2, \ldots, a_k$, the system of congruences
+\[
+\begin{cases}
+x \equiv a_1 \pmod{n_1} \\
+x \equiv a_2 \pmod{n_2} \\
+\vdots \\
+x \equiv a_k \pmod{n_k}
+\end{cases}
+\]
+has a unique solution modulo $N = n_1 n_2 \cdots n_k$.
+\end{theorem}
+
+\begin{proof}[Gauss's Constructive Proof]
+Let $N = \prod_{i=1}^k n_i$ and $N_i = N/n_i$. Since $\gcd(N_i, n_i) = 1$, there exists an integer $M_i$ such that $N_i M_i \equiv 1 \pmod{n_i}$. Then
+\[
+x = \sum_{i=1}^k a_i N_i M_i
+\]
+satisfies all congruences. Uniqueness follows from the fact that any two solutions differ by a multiple of each $n_i$, hence by a multiple of $N$.
+\end{proof}
+
+\section{Primitive Roots}
+
+\begin{definition}[Primitive Root]
+Let $p$ be an odd prime. An integer $g$ is a \textit{primitive root modulo $p$} if the order of $g$ modulo $p$ is $p-1$, i.e., the smallest positive integer $k$ such that $g^k \equiv 1 \pmod{p}$ is $k = p-1$.
+\end{definition}
+
+Gauss proved that primitive roots exist for all prime moduli (Article 55). More generally, primitive roots exist modulo $n$ iff $n = 2, 4, p^k, 2p^k$ for an odd prime $p$.
+
+\begin{algorithmthm}[Gauss's Algorithm for Discrete Logarithm]
+Given a primitive root $g$ modulo $p$ and $a \not\equiv 0 \pmod{p}$, find $x$ such that $g^x \equiv a \pmod{p}$.
+
+Gauss's method (Article 81) uses the fact that if $g$ is a primitive root, then every non-zero residue can be written uniquely as $g^x$. The algorithm reduces the problem by working with indices.
+\end{algorithmthm}
+
+\section{Python Implementation}
+\label{sec:modular-python}
+
+We implement modular arithmetic utilities and Gauss's algorithms in \texttt{python/modular.py}.
+
+\begin{lstlisting}[style=python, caption={Modular arithmetic utilities (excerpt from python/modular.py)}]
+# python/modular.py
+"""Modular arithmetic utilities implementing Gauss's algorithms."""
+
+from math import gcd
+from typing import List, Tuple, Optional
+
+def mod_inv(a: int, n: int) -> int:
+    """Modular inverse using extended Euclidean algorithm.
+    
+    Returns x such that a*x == 1 (mod n).
+    Raises ValueError if inverse doesn't exist.
+    """
+    def egcd(a: int, b: int) -> Tuple[int, int, int]:
+        if b == 0:
+            return (a, 1, 0)
+        g, x1, y1 = egcd(b, a % b)
+        return (g, y1, x1 - (a // b) * y1)
+    
+    g, x, _ = egcd(a, n)
+    if g != 1:
+        raise ValueError(f"No modular inverse for {a} mod {n}")
+    return x % n
+
+def chinese_remainder(residues: List[int], moduli: List[int]) -> int:
+    """Solve system of congruences using Gauss's constructive proof.
+    
+    Args:
+        residues: List of residues a_i
+        moduli: List of pairwise coprime moduli n_i
+        
+    Returns:
+        Solution x modulo product of moduli
+    """
+    if len(residues) != len(moduli):
+        raise ValueError("Residues and moduli must have same length")
+    
+    # Verify pairwise coprime
+    for i in range(len(moduli)):
+        for j in range(i + 1, len(moduli)):
+            if gcd(moduli[i], moduli[j]) != 1:
+                raise ValueError(f"Moduli {moduli[i]} and {moduli[j]} are not coprime")
+    
+    N = 1
+    for m in moduli:
+        N *= m
+    
+    result = 0
+    for a_i, n_i in zip(residues, moduli):
+        N_i = N // n_i
+        M_i = mod_inv(N_i, n_i)
+        result += a_i * N_i * M_i
+    
+    return result % N
+
+def primitive_root(p: int) -> int:
+    """Find a primitive root modulo prime p.
+    
+    Uses Gauss's criterion: g is a primitive root iff
+    g^((p-1)/q) != 1 (mod p) for all prime factors q of p-1.
+    """
+    if p == 2:
+        return 1
+    
+    # Factor p-1
+    def prime_factors(n: int) -> List[int]:
+        factors = []
+        d = 2
+        while d * d <= n:
+            while n % d == 0:
+                factors.append(d)
+                n //= d
+            d += 1 if d == 2 else 2
+        if n > 1:
+            factors.append(n)
+        return list(set(factors))
+    
+    factors = prime_factors(p - 1)
+    
+    for g in range(2, p):
+        if all(pow(g, (p - 1) // q, p) != 1 for q in factors):
+            return g
+    
+    raise ValueError(f"No primitive root found for {p}")
+
+def discrete_log_gauss(g: int, a: int, p: int) -> Optional[int]:
+    """Gauss's algorithm for discrete logarithm (baby-step giant-step).
+    
+    Finds x such that g^x == a (mod p), where g is a primitive root mod p.
+    Returns None if no solution exists.
+    """
+    if a % p == 0:
+        return None
+    
+    m = int((p - 1) ** 0.5) + 1
+    
+    # Baby steps: g^j for j = 0, 1, ..., m-1
+    baby_steps = {}
+    cur = 1
+    for j in range(m):
+        if cur not in baby_steps:
+            baby_steps[cur] = j
+        cur = (cur * g) % p
+    
+    # Giant steps: a * g^(-m*i)
+    g_inv_m = pow(g, (p - 1) - m, p)  # g^(-m) mod p
+    cur = a % p
+    
+    for i in range(m + 1):
+        if cur in baby_steps:
+            return i * m + baby_steps[cur]
+        cur = (cur * g_inv_m) % p
+    
+    return None
+
+def euler_totient(n: int) -> int:
+    """Euler's totient function phi(n)."""
+    result = n
+    p = 2
+    while p * p <= n:
+        if n % p == 0:
+            while n % p == 0:
+                n //= p
+            result -= result // p
+        p += 1 if p == 2 else 2
+    if n > 1:
+        result -= result // n
+    return result
+
+def multiplicative_order(a: int, n: int) -> int:
+    """Order of a modulo n (smallest k > 0 such that a^k == 1 mod n)."""
+    if gcd(a, n) != 1:
+        raise ValueError("a and n must be coprime")
+    
+    phi = euler_totient(n)
+    # Check divisors of phi
+    for d in range(1, phi + 1):
+        if phi % d == 0 and pow(a, d, n) == 1:
+            return d
+    return phi
+\end{lstlisting}
+
+\section{Numerical Experiments}
+
+\begin{example}[Chinese Remainder Theorem]
+Solve:
+\[
+\begin{cases}
+x \equiv 2 \pmod{3} \\
+x \equiv 3 \pmod{5} \\
+x \equiv 2 \pmod{7}
+\end{cases}
+\]
+
+Using our implementation:
+\begin{lstlisting}[style=python]
+>>> from modular import chinese_remainder
+>>> chinese_remainder([2, 3, 2], [3, 5, 7])
+23
+\end{lstlisting}
+
+Verification: $23 \equiv 2 \pmod{3}$, $23 \equiv 3 \pmod{5}$, $23 \equiv 2 \pmod{7}$. The solution is unique modulo $105$.
+\end{example}
+
+\begin{example}[Primitive Roots]
+Find primitive roots modulo $17$:
+\begin{lstlisting}[style=python]
+>>> from modular import primitive_root
+>>> primitive_root(17)
+3
+\end{lstlisting}
+The primitive roots modulo $17$ are $3, 5, 6, 7, 10, 11, 12, 14$ (all generators of $(\Z/17\Z)^\times$).
+\end{example}
+
+\begin{example}[Discrete Logarithm]
+Find $x$ such that $3^x \equiv 13 \pmod{17}$:
+\begin{lstlisting}[style=python]
+>>> from modular import discrete_log_gauss
+>>> discrete_log_gauss(3, 13, 17)
+4
+\end{lstlisting}
+Indeed, $3^4 = 81 \equiv 13 \pmod{17}$.
+\end{example}
+
+\section{Exercises}
+
+\begin{exercise}
+Implement the Tonelli-Shanks algorithm for computing square roots modulo a prime. Compare with Gauss's method for $p \equiv 3 \pmod{4}$.
+\end{exercise}
+
+\begin{exercise}
+Write a function to compute the index (discrete logarithm) table for a given primitive root modulo $p$. Use it to solve $g^x \equiv a \pmod{p}$ by table lookup.
+\end{exercise}
+
+\begin{exercise}
+Prove that if $g$ is a primitive root modulo $p$, then $g^k$ is also a primitive root iff $\gcd(k, p-1) = 1$. How many primitive roots exist modulo $p$?
+\end{exercise}
+
+\begin{exercise}
+Implement the Pohlig-Hellman algorithm for discrete logarithms when $p-1$ is smooth. Compare performance with baby-step giant-step.
+\end{exercise}
+
+\section{Historical Notes}
+
+Gauss's \textit{Disquisitiones Arithmeticae} was written when he was just 21 years old (published at 24). The work introduced the notation $a \equiv b \pmod{n}$ and systematically developed the theory of congruences. Article 36--44 contains the Chinese Remainder Theorem with Gauss's own proof. Articles 52--60 establish the existence of primitive roots for prime moduli. The discrete logarithm (index) calculus in Articles 81--85 was used by Gauss for extensive numerical computations.
+
+\section{References}
+
+\begin{itemize}
+    \item \cite{gauss-disq} -- \textit{Disquisitiones Arithmeticae}, Articles 1--85
+    \item \cite{edwards-fermat} -- Edwards, H.M., \textit{Fermat's Last Theorem: A Genetic Introduction to Algebraic Number Theory}
+    \item \cite{stillwell-number-theory} -- Stillwell, J., \textit{Elements of Number Theory}
+    \item \cite{cohen-number-theory} -- Cohen, H., \textit{Number Theory: Volume I: Tools and Diophantine Equations}
+\end{itemize}

@@ -1,0 +1,139 @@
+\section{Introduction}
+
+The normal (Gaussian) distribution is central to probability theory and statistics. Gauss introduced it in his work on the method of least squares and the theory of errors. The distribution arises naturally as the limit of sums of independent random variables (Central Limit Theorem) and as the maximum entropy distribution for a given variance.
+
+In this chapter, we cover:
+\begin{itemize}
+    \item The normal distribution: PDF, CDF, properties
+    \item The Central Limit Theorem
+    \item Error analysis and propagation of uncertainty
+    \item Maximum likelihood estimation
+    \item Multivariate normal distribution
+    \item Applications to measurement error and regression
+\end{itemize}
+
+\section{The Normal Distribution}
+
+\begin{definition}[Normal Distribution]
+A random variable $X$ has a normal distribution with mean $\mu$ and variance $\sigma^2$, denoted $X \sim \mathcal{N}(\mu, \sigma^2)$, if its PDF is
+\[
+f(x) = \frac{1}{\sqrt{2\pi\sigma^2}} \exp\left(-\frac{(x-\mu)^2}{2\sigma^2}\right).
+\]
+\end{definition}
+
+\begin{theorem}[Properties]
+\begin{enumerate}
+    \item Linear transformation: $aX + b \sim \mathcal{N}(a\mu+b, a^2\sigma^2)$
+    \item Sum of independent normals: $\sum X_i \sim \mathcal{N}(\sum\mu_i, \sum\sigma_i^2)$
+    \item Standard normal: $Z = (X-\mu)/\sigma \sim \mathcal{N}(0,1)$
+    \item MGF: $M(t) = \exp(\mu t + \sigma^2 t^2/2)$
+    \item Characteristic function: $\phi(t) = \exp(i\mu t - \sigma^2 t^2/2)$
+\end{enumerate}
+\end{theorem}
+
+\section{The Central Limit Theorem}
+
+\begin{theorem}[Central Limit Theorem (Lindeberg-L\'evy)]
+Let $X_1, X_2, \ldots$ be i.i.d. with $\E[X_i] = \mu$, $\Var(X_i) = \sigma^2 < \infty$. Then
+\[
+\frac{\bar{X}_n - \mu}{\sigma/\sqrt{n}} \xrightarrow{d} \mathcal{N}(0,1),
+\]
+where $\bar{X}_n = \frac{1}{n}\sum_{i=1}^n X_i$.
+\end{theorem}
+
+Gauss used the normal distribution to justify the method of least squares, showing that if errors are normally distributed, the least squares estimator is the maximum likelihood estimator.
+
+\section{Error Analysis and Propagation of Uncertainty}
+
+Given a function $y = f(x_1, \ldots, x_n)$ with uncertain inputs $x_i \pm \Delta x_i$, the uncertainty in $y$ is approximately
+\[
+\Delta y \approx \sqrt{\sum_{i=1}^n \left(\frac{\partial f}{\partial x_i}\right)^2 (\Delta x_i)^2}.
+\]
+
+For correlated errors with covariance matrix $\Sigma_x$, the output variance is $\Sigma_y = J \Sigma_x J^T$ where $J$ is the Jacobian.
+
+\section{Maximum Likelihood Estimation}
+
+For $X_1, \ldots, X_n \sim \mathcal{N}(\mu, \sigma^2)$ i.i.d.:
+\begin{align*}
+\hat{\mu}_{MLE} &= \bar{X} = \frac{1}{n}\sum X_i \\
+\hat{\sigma}^2_{MLE} &= \frac{1}{n}\sum (X_i - \bar{X})^2
+\end{align*}
+The MLE of $\sigma^2$ is biased; the unbiased estimator is $S^2 = \frac{n}{n-1}\hat{\sigma}^2$.
+
+\section{Multivariate Normal Distribution}
+
+$\mathbf{X} \sim \mathcal{N}_p(\boldsymbol{\mu}, \boldsymbol{\Sigma})$ with PDF
+\[
+f(\mathbf{x}) = \frac{1}{(2\pi)^{p/2} |\boldsymbol{\Sigma}|^{1/2}} \exp\left(-\frac{1}{2}(\mathbf{x}-\boldsymbol{\mu})^T \boldsymbol{\Sigma}^{-1} (\mathbf{x}-\boldsymbol{\mu})\right).
+\]
+
+Key properties: marginals are normal, conditionals are normal, independence $\Leftrightarrow$ uncorrelated.
+
+\section{Python Implementation}
+
+In \texttt{python/normal.py}:
+
+\begin{lstlisting}[style=python, caption={Key functions in python/normal.py}]
+normal_pdf(x, mu, sigma)        # PDF
+normal_cdf(x, mu, sigma)        # CDF (using erf)
+normal_ppf(p, mu, sigma)        # Quantile function (inverse CDF)
+normal_mle(data)                # MLE for mu, sigma
+error_propagation(f, x, sigma)  # Uncertainty propagation
+multivariate_normal_pdf(x, mu, Sigma)
+multivariate_normal_logpdf(x, mu, Sigma)
+sample_normal(mu, sigma, n)     # Random samples
+confidence_interval(data, alpha=0.05)
+\end{lstlisting}
+
+\section{Numerical Examples}
+
+\begin{example}[Normal CDF and Quantiles]
+\begin{lstlisting}[style=python]
+>>> from normal import normal_cdf, normal_ppf
+>>> normal_cdf(1.96, 0, 1)  # P(Z <= 1.96)
+0.9750021048517795
+>>> normal_ppf(0.975, 0, 1)  # 97.5% quantile
+1.959963984540054
+\end{lstlisting}
+\end{example}
+
+\begin{example}[Error Propagation]
+For $y = x_1^2 + x_2$ with $x_1 = 3 \pm 0.1$, $x_2 = 5 \pm 0.2$:
+\begin{lstlisting}[style=python]
+>>> from normal import error_propagation
+>>> f = lambda x: x[0]**2 + x[1]
+>>> x = [3, 5]
+>>> sigma = [0.1, 0.2]
+>>> y, dy = error_propagation(f, x, sigma)
+>>> print(f"y = {y:.2f} ± {dy:.2f}")
+y = 14.00 ± 0.62
+\end{lstlisting}
+\end{example}
+
+\section{Exercises}
+
+\begin{exercise}
+Prove that the normal distribution maximizes entropy among all distributions with fixed mean and variance.
+\end{exercise}
+
+\begin{exercise}
+Derive the MLE for the multivariate normal mean and covariance.
+\end{exercise}
+
+\begin{exercise}
+Implement the Box-Muller transform for generating normal random variables.
+\end{exercise}
+
+\begin{exercise}
+Show that for normal data, the sample mean and sample variance are independent (Basu's theorem).
+\end{exercise}
+
+\section{References}
+
+\begin{itemize}
+    \item \cite{gauss-theoria} -- Gauss, \textit{Theoria Motus} (1809), \textit{Theoria Combinationis} (1823)
+    \item \cite{casella-berger} -- Casella \& Berger, \textit{Statistical Inference}
+    \item \cite{billingsley} -- Billingsley, \textit{Probability and Measure}
+    \item \cite{jaynes} -- Jaynes, \textit{Probability Theory: The Logic of Science}
+\end{itemize}

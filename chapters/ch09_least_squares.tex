@@ -1,0 +1,112 @@
+\section{Introduction}
+
+The method of least squares is one of Gauss's most influential contributions to science. He developed it for analyzing astronomical observations (especially the orbit of Ceres) and published it in \textit{Theoria Motus Corporum Coelestium} (1809). The method minimizes the sum of squared residuals and provides the best linear unbiased estimator under the Gauss-Markov theorem.
+
+In this chapter, we cover:
+\begin{itemize}
+    \item Linear least squares: $Ax \approx b$
+    \item Normal equations: $A^T A x = A^T b$
+    \item QR decomposition solution
+    \item Weighted least squares
+    \item Regularization (Tikhonov, ridge regression)
+    \item Nonlinear least squares: Gauss-Newton, Levenberg-Marquardt
+    \item Gauss's application to the orbit of Ceres
+\end{itemize}
+
+\section{Linear Least Squares}
+
+Given $A \in \R^{m \times n}$ ($m \ge n$) and $b \in \R^m$, find $x$ minimizing $\|Ax - b\|_2^2$.
+
+\begin{theorem}[Normal Equations]
+The minimizer satisfies $A^T A x = A^T b$. If $A$ has full column rank, $A^T A$ is invertible and $x = (A^T A)^{-1} A^T b$.
+\end{theorem}
+
+\section{QR Solution}
+
+Using $A = QR$ with $Q^T Q = I$, $R$ upper triangular:
+\[
+\|Ax - b\|_2 = \|QRx - b\|_2 = \|Rx - Q^T b\|_2.
+\]
+Solve $Rx = Q^T b$ by back substitution. This is more stable than normal equations.
+
+\section{Weighted Least Squares}
+
+Minimize $\|W^{1/2}(Ax - b)\|_2^2$ for symmetric positive definite weight matrix $W$. Solution: $(A^T W A)x = A^T W b$.
+
+\section{Tikhonov Regularization}
+
+For ill-conditioned problems, minimize $\|Ax - b\|_2^2 + \lambda \|x\|_2^2$:
+\[
+(A^T A + \lambda I)x = A^T b.
+\]
+
+\section{Nonlinear Least Squares}
+
+Minimize $\|f(x)\|_2^2$ where $f: \R^n \to \R^m$. The Gauss-Newton method linearizes:
+\[
+x_{k+1} = x_k - (J_k^T J_k)^{-1} J_k^T f(x_k)
+\]
+where $J_k$ is the Jacobian of $f$ at $x_k$.
+
+The Levenberg-Marquardt algorithm adds damping:
+\[
+x_{k+1} = x_k - (J_k^T J_k + \lambda I)^{-1} J_k^T f(x_k).
+\]
+
+\section{Gauss and the Orbit of Ceres}
+
+In 1801, asteroid Ceres was discovered but lost. Gauss used least squares on three observations to predict its orbit, enabling its rediscovery. He solved a nonlinear least squares problem for the six orbital elements.
+
+\section{Python Implementation}
+
+In \texttt{python/least\_squares.py}:
+
+\begin{lstlisting}[style=python, caption={Key functions in python/least\_squares.py}]
+least_squares_normal(A, b)      # Normal equations
+least_squares_qr(A, b)          # QR decomposition
+weighted_least_squares(A, b, W) # Weighted LS
+ridge_regression(A, b, lam)     # Tikhonov regularization
+gauss_newton(f, jac, x0)        # Gauss-Newton
+levenberg_marquardt(f, jac, x0) # Levenberg-Marquardt
+ceres_orbit(data)               # Gauss's Ceres problem
+\end{lstlisting}
+
+\section{Numerical Examples}
+
+\begin{example}[Linear Least Squares]
+\begin{lstlisting}[style=python]
+>>> from least_squares import least_squares_qr
+>>> import numpy as np
+>>> A = np.array([[1, 1], [1, 2], [1, 3], [1, 4]], dtype=float)
+>>> b = np.array([2.1, 3.9, 6.2, 7.8])
+>>> x = least_squares_qr(A, b)
+>>> print(x)  # [0.85, 1.75] -> y = 0.85 + 1.75x
+\end{lstlisting}
+\end{example}
+
+\section{Exercises}
+
+\begin{exercise}
+Derive the weighted least squares solution from first principles.
+\end{exercise}
+
+\begin{exercise}
+Implement the QR updating/downdating algorithms for recursive least squares.
+\end{exercise}
+
+\begin{exercise}
+Apply Levenberg-Marquardt to fit an exponential model $y = a e^{bx} + c$.
+\end{exercise}
+
+\begin{exercise}
+Reconstruct Gauss's Ceres orbit determination using modern observations.
+\end{exercise}
+
+\section{References}
+
+\begin{itemize}
+    \item \cite{gauss-theoria} -- Gauss, \textit{Theoria Motus Corporum Coelestium} (1809)
+    \item \cite{golub-vanloan} -- Ch. 5 (Least Squares)
+    \item \cite{bjorck} -- Björck, \textit{Numerical Methods for Least Squares Problems}
+    \item \cite{nocedal-wright} -- Nocedal \& Wright, \textit{Numerical Optimization}
+\end{itemize}

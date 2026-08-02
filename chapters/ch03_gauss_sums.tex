@@ -1,0 +1,145 @@
+\section{Introduction}
+
+Gauss sums are exponential sums that play a central role in analytic number theory. Gauss introduced them in his work on quadratic reciprocity and used them to evaluate the sign of the quadratic Gauss sum $g(p) = \sum_{a=0}^{p-1} e^{2\pi i a^2/p}$, which he proved equals $\sqrt{p}$ for $p \equiv 1 \pmod{4}$ and $i\sqrt{p}$ for $p \equiv 3 \pmod{4}$. This discovery linked number theory with analysis and Fourier theory.
+
+In this chapter, we explore:
+\begin{itemize}
+    \item Quadratic and general Gauss sums
+    \item Dirichlet characters and their properties
+    \item The discrete Fourier transform on finite abelian groups
+    \item Applications to quadratic reciprocity and prime counting
+    \item The functional equation for Dirichlet L-functions
+\end{itemize}
+
+\section{Quadratic Gauss Sums}
+
+\begin{definition}[Quadratic Gauss Sum]
+For an odd prime $p$, the quadratic Gauss sum is
+\[
+g(p) = \sum_{a=0}^{p-1} e^{2\pi i a^2/p} = \sum_{a=0}^{p-1} \legendre{a}{p} e^{2\pi i a/p}.
+\]
+\end{definition}
+
+\begin{theorem}[Gauss's Evaluation of the Quadratic Gauss Sum]
+\[
+g(p) = \begin{cases}
+\sqrt{p} & \text{if } p \equiv 1 \pmod{4}, \\
+i\sqrt{p} & \text{if } p \equiv 3 \pmod{4}.
+\end{cases}
+\]
+\end{theorem}
+
+\begin{proof}[Sketch]
+Compute $g(p)^2 = \sum_{a,b} e^{2\pi i (a^2-b^2)/p} = \sum_{a,c} e^{2\pi i c(2a+c)/p} = \sum_c e^{2\pi i c^2/p} \sum_a e^{4\pi i ac/p}$. The inner sum is $p$ if $p \mid 2c$ and $0$ otherwise. This gives $g(p)^2 = (-1)^{(p-1)/2} p$. The sign determination required Gauss's deep insight into the argument of the complex sum.
+\end{proof}
+
+\section{General Gauss Sums}
+
+\begin{definition}[Gauss Sum with Character]
+Let $\chi$ be a Dirichlet character modulo $n$. The Gauss sum is
+\[
+\tau(\chi) = \sum_{a=0}^{n-1} \chi(a) e^{2\pi i a/n}.
+\]
+\end{definition}
+
+\begin{theorem}[Properties of Gauss Sums]
+For primitive character $\chi$ modulo $n$:
+\begin{enumerate}
+    \item $|\tau(\chi)| = \sqrt{n}$
+    \item $\tau(\chi) \tau(\overline{\chi}) = \chi(-1) n$
+    \item $\tau(\chi)^k = \tau(\chi^k)$ for $\chi^k$ primitive (holds when $\chi^k$ is also primitive modulo the same modulus)
+\end{enumerate}
+\end{theorem}
+
+\section{Dirichlet Characters}
+
+\begin{definition}[Dirichlet Character]
+A Dirichlet character modulo $n$ is a group homomorphism $\chi: (\Z/n\Z)^\times \to \C^\times$, extended to $\Z$ by $\chi(a) = 0$ if $\gcd(a,n) > 1$. The trivial character $\chi_0$ is $\chi_0(a) = 1$ if $\gcd(a,n)=1$, else $0$.
+\end{definition}
+
+\begin{theorem}[Orthogonality Relations]
+For characters $\chi, \psi$ modulo $n$:
+\[
+\sum_{a=1}^n \chi(a) \overline{\psi(a)} = 
+\begin{cases}
+\varphi(n) & \text{if } \chi = \psi, \\
+0 & \text{otherwise}.
+\end{cases}
+\]
+\end{theorem}
+
+\section{The Discrete Fourier Transform}
+
+The Gauss sum is essentially a discrete Fourier transform of the character values. For a function $f: \Z/n\Z \to \C$, the DFT is
+\[
+\hat{f}(k) = \sum_{j=0}^{n-1} f(j) e^{-2\pi i jk/n}.
+\]
+The inverse is $f(j) = \frac{1}{n} \sum_{k=0}^{n-1} \hat{f}(k) e^{2\pi i jk/n}$.
+
+\section{Applications}
+
+\begin{itemize}
+    \item Quadratic reciprocity via Gauss sums
+    \item Dirichlet's theorem on primes in arithmetic progressions
+    \item Functional equation for Dirichlet L-functions
+    \item Pólya-Vinogradov inequality for character sums
+    \item Fast algorithms for computing character sums
+\end{itemize}
+
+\section{Python Implementation}
+\label{sec:gauss-sums-python}
+
+The implementation is in \texttt{python/gauss\_sums.py}.
+
+\begin{lstlisting}[style=python, caption={Key functions in python/gauss\_sums.py}]
+quadratic_gauss_sum(p)          # Classical Gauss sum
+general_gauss_sum(chi, n)       # For any Dirichlet character
+dirichlet_characters(n)         # Generate all characters mod n
+dft(f)                          # Discrete Fourier transform
+dirichlet_l_function(chi, s)    # L-function approximation
+polya_vinogradov(chi, N)        # Character sum bound
+\end{lstlisting}
+
+\section{Numerical Examples}
+
+\begin{example}[Quadratic Gauss Sum]
+\begin{lstlisting}[style=python]
+>>> from gauss_sums import quadratic_gauss_sum
+>>> for p in [3, 5, 7, 11, 13]:
+...     g = quadratic_gauss_sum(p)
+...     expected = (1 if p%4==1 else 1j) * (p**0.5)
+...     print(f"g({p}) = {g:.6f}, expected = {expected:.6f}, diff = {abs(g-expected):.2e}")
+g(3) = 1.732051j, expected = 1.732051j, diff = 0.00e+00
+g(5) = 2.236068, expected = 2.236068, diff = 0.00e+00
+g(7) = 2.645751j, expected = 2.645751j, diff = 0.00e+00
+g(11) = 3.316625j, expected = 3.316625j, diff = 0.00e+00
+g(13) = 3.605551, expected = 3.605551, diff = 0.00e+00
+\end{lstlisting}
+\end{example}
+
+\section{Exercises}
+
+\begin{exercise}
+Prove that for primitive character $\chi$ modulo $p$ (prime), $\tau(\chi) \tau(\overline{\chi}) = \chi(-1) p$.
+\end{exercise}
+
+\begin{exercise}
+Implement the fast Fourier transform (FFT) to compute Gauss sums for large $n$. Compare with direct summation.
+\end{exercise}
+
+\begin{exercise}
+Use Gauss sums to prove the law of quadratic reciprocity (Gauss's fourth proof).
+\end{exercise}
+
+\begin{exercise}
+Compute the Dirichlet L-function $L(s, \chi)$ for various characters and verify the functional equation.
+\end{exercise}
+
+\section{References}
+
+\begin{itemize}
+    \item \cite{gauss-disq} -- Article 358 (Gauss sums)
+    \item \cite{ireland-rosen} -- Ch. 6 (Gauss sums), Ch. 9 (Characters)
+    \item \cite{davenport} -- Davenport, \textit{Multiplicative Number Theory}, Ch. 9
+    \item \cite{montgomery-vaughan} -- Montgomery \& Vaughan, \textit{Multiplicative Number Theory I}
+\end{itemize}

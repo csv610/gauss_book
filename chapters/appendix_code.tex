@@ -1,0 +1,426 @@
+\chapter{Complete Code Reference}
+\label{app:code}
+
+This appendix provides a complete reference of all Python modules, functions, and classes available in the codebase.
+
+\section{Module Overview}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{ll}
+\toprule
+\textbf{Module} & \textbf{Description} \\
+\midrule
+\texttt{modular.py} & Modular arithmetic, CRT, primitive roots, discrete log \\
+\texttt{quadratic.py} & Legendre/Jacobi/Kronecker symbols, quadratic reciprocity \\
+\texttt{gauss\_sums.py} & Gauss sums, Dirichlet characters, L-functions \\
+\texttt{disquisitiones.py} & Binary quadratic forms, class groups, cyclotomic polynomials \\
+\texttt{gaussian\_integral.py} & Error function, normal distribution, error propagation \\
+\texttt{theta.py} & Jacobi theta functions, Dedekind eta, Eisenstein series \\
+\texttt{agm.py} & Arithmetic-geometric mean, elliptic integrals, $\pi$ algorithms \\
+\texttt{gaussian\_elim.py} & Gaussian elimination, LU/Cholesky/QR decomposition \\
+\texttt{least\_squares.py} & Linear/nonlinear least squares, Gauss-Newton, Levenberg-Marquardt \\
+\texttt{gauss\_quadrature.py} & Gauss-Legendre/Hermite/Laguerre/Chebyshev quadrature \\
+\texttt{normal.py} & Normal distribution, MLE, confidence intervals \\
+\texttt{gp.py} & Gaussian processes, Kriging, kernels \\
+\texttt{heptadecagon.py} & 17-gon construction, Gauss periods, constructible polygons \\
+\texttt{theorema.py} & Differential geometry, Theorema Egregium, Gauss-Bonnet \\
+\texttt{orbital.py} & Orbital mechanics, Gauss's method, Kepler equation \\
+\texttt{lemniscate.py} & Lemniscate functions, Gauss constant relations \\
+\texttt{gauss\_composition.py} & Binary quadratic form composition, class groups \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{modular.py}
+
+\begin{lstlisting}[style=python]
+mod_inv(a, n)                              # Modular inverse
+chinese_remainder(residues, moduli)        # Gauss's CRT
+primitive_root(p)                          # Find primitive root mod p
+all_primitive_roots(p)                     # All primitive roots
+discrete_log_gauss(g, a, p)                # Baby-step giant-step
+euler_totient(n)                           # Euler's phi function
+multiplicative_order(a, n)                 # Order of a mod n
+legendre_symbol(a, p)                      # Legendre symbol (a/p)
+tonelli_shanks(n, p)                       # Square root mod p
+\end{lstlisting}
+
+\section{quadratic.py}
+
+\begin{lstlisting}[style=python]
+legendre_symbol(a, p)                      # Euler's criterion
+legendre_symbol_gauss(a, p)                # Gauss's Lemma
+jacobi_symbol(a, n)                        # Jacobi symbol
+kronecker_symbol(a, n)                     # Kronecker symbol
+quadratic_reciprocity(p, q)                # Verify (p/q)(q/p)
+quadratic_residues(p)                      # List quadratic residues
+quadratic_nonresidues(p)                   # List non-residues
+tonelli_shanks(n, p)                       # Square root mod p
+cipolla(a, p)                              # Cipolla's algorithm
+solve_quadratic_congruence(a, b, c, p)     # ax^2+bx+c == 0 (mod p)
+gauss_sum(p)                               # Quadratic Gauss sum
+\end{lstlisting}
+
+\section{gauss\_sums.py}
+
+\begin{lstlisting}[style=python]
+quadratic_gauss_sum(p)                     # g(p) = sum e^{2*pi*i*a^2/p}
+general_gauss_sum(chi, n)                  # tau(chi) = sum chi(a) * e^{2*pi*i*a/n}
+dirichlet_characters(n)                    # All characters mod n
+primitive_character(n)                     # Find primitive character
+dirichlet_l_function(chi, s)               # L(s, chi)
+polya_vinogradov(chi, N)                   # Character sum bound
+verify_gauss_sum(p)                        # Check g(p) = sqrt(p) or i*sqrt(p)
+\end{lstlisting}
+
+\section{disquisitiones.py}
+
+\begin{lstlisting}[style=python]
+solve_linear_congruence(a, b, n)           # ax == b (mod n)
+is_primitive(a, b, c)                      # Check if form is primitive
+discriminant(a, b, c)                       # Delta = b^2 - 4ac
+reduced_forms(D)                           # All reduced forms of disc D
+class_number(D)                            # h(D)
+form_multiply(f1, f2)                      # Gauss composition
+class_group(D)                             # Class group as list of forms
+class_group_structure(D)                   # Group invariants
+cyclotomic_poly(n)                         # Phi_n(x) coefficients
+primitive_root(p)                          # Primitive root mod p
+heptadecagon_vertices()                    # 17-gon coordinates
+fermat_primes()                            # Known Fermat primes
+is_constructible(n)                        # Check n-gon constructible
+represents(a, b, c, n)                     # Does form represent n?
+\end{lstlisting}
+
+\section{gaussian\_integral.py}
+
+\begin{lstlisting}[style=python]
+gaussian_integral(a, b, c, x1, x2)         # integral exp(-ax^2+bx+c) dx
+gaussian_pdf(x, mu, sigma)                 # Normal PDF
+gaussian_cdf(x, mu, sigma)                 # Normal CDF
+gaussian_ppf(p, mu, sigma)                 # Normal quantile
+erf(x)                                     # Error function
+erfc(x)                                    # Complementary erf
+erfi(x)                                    # Imaginary error function
+dawson_integral(x)                         # Dawson's integral
+faddeeva(z)                                # Faddeeva function w(z)
+normal_pdf(x, mu, sigma)                   # Normal PDF
+normal_cdf(x, mu, sigma)                   # Normal CDF
+normal_sf(x, mu, sigma)                    # Survival function
+normal_ppf(p, mu, sigma)                   # Normal quantile
+normal_rvs(size, mu, sigma)                # Random variates
+confidence_interval_normal(mean, std, n)   # CI for mean
+error_propagation(f, vars)                 # Delta method
+chi2_pdf(x, df), t_pdf(x, df), f_pdf(x, df1, df2)
+\end{lstlisting}
+
+\section{theta.py}
+
+\begin{lstlisting}[style=python]
+theta1(z, tau), theta2(z, tau)             # Jacobi theta functions
+theta3(z, tau), theta4(z, tau)
+theta_null(tau)                            # theta(0|tau) tuple
+dedekind_eta(tau)                          # Dedekind eta function
+theta_quadratic_form(A, z)                 # Theta of quadratic form
+sum_of_squares(k, N)                       # r_k(n) for n<=N
+jacobi_triple_product(q, z)                # Identity for theta_1
+eisenstein_series(k, tau)                  # G_k(tau)
+j_invariant(tau)                           # j(tau)
+modular_transform_sl2z(tau, a, b, c, d)    # SL(2,Z) action
+\end{lstlisting}
+
+\section{agm.py}
+
+\begin{lstlisting}[style=python]
+agm(a, b)                                  # Arithmetic-geometric mean
+agm_sequence(a, b)                         # Full iteration sequence
+gauss_constant()                           # 1/M(1, sqrt(2))
+elliptic_K(k)                              # Complete elliptic integral K
+elliptic_E(k)                              # Complete elliptic integral E
+pi_brent_salamin(n)                        # pi via Brent-Salamin
+pi_borwein_quartic(n)                      # pi via Borwein quartic
+lemniscate_constant()                      # Arc length of lemniscate
+elliptic_perimeter(a, b)                   # Ellipse perimeter
+theta_null_via_agm(tau)                    # theta_3(0|tau) via AGM
+hypergeometric_2F1(a, b, c, z)             # Gauss hypergeometric
+agm_hypergeometric(a, b)                   # M(a,b) via 2F1
+\end{lstlisting}
+
+\section{gaussian\_elim.py}
+
+\begin{lstlisting}[style=python]
+gaussian_elimination(A, b)                 # Solve Ax=b
+lu_decomposition(A)                        # PA=LU
+lu_solve(P, L, U, b)                       # Solve PAx=b
+cholesky(A)                                # Cholesky LL^T
+cholesky_solve(L, b)                       # Solve LL^Tx=b
+qr_decomposition(A)                        # QR via Householder
+qr_solve(A, b)                             # Least squares via QR
+matrix_inverse(A)                          # Inverse via LU
+condition_number(A, norm)                  # kappa(A)
+least_squares_normal(A, b)                 # Normal equations
+least_squares_qr(A, b)                     # QR least squares
+ridge_regression(A, b, lam)                # Tikhonov regularization
+bareiss(A)                                 # Fraction-free elimination
+\end{lstlisting}
+
+\section{least\_squares.py}
+
+\begin{lstlisting}[style=python]
+least_squares_normal(A, b)                 # Normal equations
+least_squares_qr(A, b)                     # QR least squares
+weighted_least_squares(A, b, W)            # Weighted LS
+ridge_regression(A, b, lam)                # Ridge regression
+gauss_newton(f, jac, x0)                   # Gauss-Newton
+levenberg_marquardt(f, jac, x0)            # Levenberg-Marquardt
+fit_exponential(x, y)                      # a*exp(bx)+c fit
+polyfit(x, y, deg)                         # Polynomial fit
+polyval(coeffs, x)                         # Evaluate polynomial
+ceres_orbit(observations)                  # Gauss's Ceres method
+\end{lstlisting}
+
+\section{gauss\_quadrature.py}
+
+\begin{lstlisting}[style=python]
+gauss_legendre(n)                          # Nodes/weights for [-1,1]
+gauss_hermite(n)                           # (-inf, inf) weight e^{-x^2}
+gauss_laguerre(n, alpha)                   # [0, inf) weight x^alpha * e^{-x}
+gauss_chebyshev(n, kind)                   # [-1,1] weight (1-x^2)^{+/-1/2}
+golub_welsch(alpha, beta)                  # General Golub-Welsch
+integrate(f, a, b, n)                      # Quadrature on [a,b]
+integrate_infinite(f, n)                   # Quadrature on (-inf, inf)
+integrate_adaptive(f, a, b)                # Adaptive Gauss-Kronrod
+gauss_kronrod(n)                           # Gauss-Kronrod nodes/weights
+\end{lstlisting}
+
+\section{normal.py}
+
+\begin{lstlisting}[style=python]
+normal_pdf(x, mu, sigma)                   # Normal PDF
+normal_cdf(x, mu, sigma)                   # Normal CDF
+normal_sf(x, mu, sigma)                    # Survival function
+normal_ppf(p, mu, sigma)                   # Quantile function
+normal_rvs(size, mu, sigma)                # Random variates
+normal_mle(data)                           # MLE for mu, sigma
+normal_mle_unbiased(data)                  # Unbiased estimators
+confidence_interval_normal(mean, std, n)   # CI for mean
+confidence_interval_t(mean, std, n)        # t-distribution CI
+z_test(data, mu0, sigma)                   # Z-test
+t_test(data, mu0)                          # t-test
+error_propagation(f, vars)                 # Delta method
+multivariate_normal_pdf(x, mu, Sigma)      # Multivariate PDF
+multivariate_normal_logpdf(x, mu, Sigma)   # Multivariate log PDF
+chi2_pdf(x, df), chi2_cdf(x, df)
+t_pdf(x, df), f_pdf(x, df1, df2)
+box_muller(u1, u2)                         # Box-Muller transform
+marsaglia_bray()                           # Polar method
+\end{lstlisting}
+
+\section{gp.py}
+
+\begin{lstlisting}[style=python]
+class GaussianProcess:
+    __init__(kernel, noise=1e-6)
+    fit(X, y, **kernel_params)
+    predict(X_star, return_std=True)
+    log_marginal_likelihood(**kernel_params)
+    optimize_hyperparameters(X, y, initial_params, bounds)
+
+rbf_kernel(x1, x2, length_scale, variance)
+matern_kernel(x1, x2, length_scale, variance, nu)
+periodic_kernel(x1, x2, length_scale, variance, period)
+rational_quadratic_kernel(x1, x2, length_scale, variance, alpha)
+linear_kernel(x1, x2, variance, c)
+white_kernel(x1, x2, noise_level)
+simple_kriging(x_obs, y_obs, x_pred, kernel)
+ordinary_kriging(x_obs, y_obs, x_pred, kernel)
+\end{lstlisting}
+
+\section{heptadecagon.py}
+
+\begin{lstlisting}[style=python]
+cyclotomic_poly(n)                         # Phi_n(x) coefficients
+primitive_root(p)                          # Primitive root mod p
+constructible_ngons(limit)                 # List constructible n
+heptadecagon_vertices()                    # 17-gon coordinates
+cos_2pi_over_17()                          # Exact expression
+cos_2pi_over_17_value()                    # Numerical value
+gaussian_periods(p, length)                # Gauss periods
+fermat_primes()                            # [3, 5, 17, 257, 65537]
+is_constructible(n)                        # Check n-gon constructible
+\end{lstlisting}
+
+\section{theorema.py}
+
+\begin{lstlisting}[style=python]
+first_fundamental_form(r, u, v)            # E, F, G
+second_fundamental_form(r, u, v)           # L, M, N
+gaussian_curvature(E, F, G, L, M, N)       # K = (LN-M^2)/(EG-F^2)
+mean_curvature(E, F, G, L, M, N)           # H = (EN-2FM+GL)/(2(EG-F^2))
+principal_curvatures(E, F, G, L, M, N)     # k_1, k_2
+christoffel_symbols(E, F, G, ...)          # Gamma^k_ij
+christoffel_from_surface(r, u, v)          # From parametrization
+theorema_egregium_check(r, u, v)           # Verify K intrinsic
+geodesic_equations(E, F, G, ...)           # Geodesic ODEs
+geodesic_ode(state, s, r)                  # Geodesic ODE system
+gauss_bonnet_discrete(vertices, faces)     # Discrete Gauss-Bonnet
+
+# Example surfaces
+sphere(u, v, R)
+cylinder(u, v, R)
+torus(u, v, R, r)
+pseudosphere(u, v)
+\end{lstlisting}
+
+\section{orbital.py}
+
+\begin{lstlisting}[style=python]
+solve_kepler(M, e)                         # Kepler's equation E - e sin E = M
+mean_anomaly_from_true(f, e)               # f -> M
+true_anomaly_from_mean(M, e)               # M -> f
+state_to_elements(r, v, mu)                # State -> orbital elements
+elements_to_state(elems, mu)               # Elements -> state vector
+rotation_matrix(Omega, i, omega)           # Perifocal -> inertial
+fg_functions(r0, v0, dt, mu)               # f, g, fdot, gdot
+universal_anomaly(r0, rv0, alpha, dt, mu)  # Universal anomaly chi
+stumpff_C(z), stumpff_S(z)                 # Stumpff functions
+propagate_universal(r0, v0, dt, mu)        # Universal propagation
+gauss_method(obs1, obs2, obs3, mu)         # Gauss's 3-obs method
+differential_correction(obs, x0, mu)       # Batch least squares
+ceres_example()                            # Ceres orbit demo
+\end{lstlisting}
+
+\section{lemniscate.py}
+
+\begin{lstlisting}[style=python]
+LEMNISCATE_CONSTANT                        # omega_bar ~ 2.622057554
+GAUSS_CONSTANT                             # G ~ 0.834626842
+lemniscate_integral(u)                     # integral_0^u dt/sqrt(1-t^4)
+lemniscate_integral_inverse(omega)         # sl(omega) = u
+sl(omega)                                  # Lemniscate sine
+cl(omega)                                  # Lemniscate cosine
+pythagorean_check(omega)                   # sl^2+cl^2+sl^2*cl^2
+sl_add(u, v)                               # sl(u+v) formula
+cl_add(u, v)                               # cl(u+v) formula
+lemniscate_division(n)                     # n-division points
+constructible_lemniscate_divisions(limit)  # Constructible n
+lemniscate_hypergeometric(x)               # omega = x * 2F1(1/4, 1/2; 5/4; x^4)
+\end{lstlisting}
+
+\section{gauss\_composition.py}
+
+\begin{lstlisting}[style=python]
+class BinaryQuadraticForm:
+    __init__(a, b, c)                      # ax^2 + bxy + cy^2
+    is_primitive()                         # Check gcd=1
+    is_reduced()                           # Check Gauss reduction
+    value(x, y)                            # Evaluate form
+    __repr__()                             # String representation
+
+discriminant(a, b, c)                       # Delta = b^2 - 4ac
+reduce_form(f)                             # Gauss reduction
+all_reduced_forms(D)                       # All reduced forms
+class_number(D)                            # h(D)
+gauss_composition(f, g)                    # Gauss composition
+compose_forms(f, g)                        # Alias
+
+class ClassGroup:
+    __init__(D)                            # Discriminant D
+    compose(f, g)                          # Group operation
+    inverse(f)                             # Inverse element
+    order(f)                               # Order of element
+    is_cyclic()                            # Check if cyclic
+    invariants()                           # Group structure
+
+gauss_class_numbers(limit)                 # Class numbers for D<0
+class_number_one_discriminants()           # D with h(D)=1
+verify_gauss_class_numbers()               # Check against Gauss's table
+dirichlet_composition(f, g)                # Dirichlet's algorithm
+mobius(n)                                  # Mobius function
+\end{lstlisting}
+
+\section{Quick Start Examples}
+
+\subsection{Chapter 1: Modular Arithmetic}
+\begin{lstlisting}[style=python]
+from python.modular import chinese_remainder, primitive_root, discrete_log_gauss
+
+# CRT: x ≡ 2 (mod 3), x ≡ 3 (mod 5), x ≡ 2 (mod 7)
+x = chinese_remainder([2, 3, 2], [3, 5, 7])  # x = 23
+
+# Primitive root mod 17
+g = primitive_root(17)  # 3
+
+# Discrete log: 3^x ≡ 13 (mod 17)
+x = discrete_log_gauss(3, 13, 17)  # x = 4
+\end{lstlisting}
+
+\subsection{Chapter 2: Quadratic Reciprocity}
+\begin{lstlisting}[style=python]
+from python.quadratic import legendre_symbol, jacobi_symbol, tonelli_shanks
+
+# Legendre symbol
+print(legendre_symbol(5, 13))  # 1 (5 is QR mod 13)
+
+# Quadratic reciprocity
+print(legendre_symbol(5, 13) * legendre_symbol(13, 5))  # 1
+
+# Square root mod p
+r = tonelli_shanks(10, 13)  # 6 or 7 (since 6² = 36 ≡ 10 mod 13)
+\end{lstlisting}
+
+\subsection{Chapter 7: AGM and \texorpdfstring{$\pi$}{Pi}}
+\begin{lstlisting}[style=python]
+from python.agm import agm, pi_brent_salamin, elliptic_K
+
+# AGM
+print(agm(1, 0.5))  # 0.7283958933...
+
+# pi via Brent-Salamin
+for n in range(1, 6):
+    print(pi_brent_salamin(n))  # Converges quadratically
+
+# Elliptic integral
+K = elliptic_K(1/math.sqrt(2))  # Gamma(1/4)^2 / (4*sqrt(pi))
+\end{lstlisting}
+
+\subsection{Chapter 8: Gaussian Elimination}
+\begin{lstlisting}[style=python]
+from python.gaussian_elim import gaussian_elimination, lu_decomposition, qr_solve
+import numpy as np
+
+A = np.array([[2, 1, -1], [-3, -1, 2], [-2, 1, 2]], dtype=float)
+b = np.array([8, -11, -3], dtype=float)
+
+x = gaussian_elimination(A, b)  # [2, 3, -1]
+P, L, U = lu_decomposition(A)
+x_qr = qr_solve(A, b)  # Least squares via QR
+\end{lstlisting}
+
+\subsection{Chapter 13: Heptadecagon}
+\begin{lstlisting}[style=python]
+from python.heptadecagon import heptadecagon_vertices, constructible_ngons
+
+verts = heptadecagon_vertices()
+print(verts[:3])  # First 3 vertices
+
+print(constructible_ngons(50))
+# [3, 4, 5, 6, 8, 10, 12, 15, 16, 17, 20, 24, 30, 32, 34, 40, 48]
+\end{lstlisting}
+
+\subsection{Chapter 14: Theorema Egregium}
+\begin{lstlisting}[style=python]
+from python.theorema import sphere, gaussian_curvature, first_fundamental_form
+
+r = lambda u, v: (math.sin(u)*math.cos(v), math.sin(u)*math.sin(v), math.cos(u))
+E, F, G = first_fundamental_form(r, 1.0, 0.5)
+L, M, N = second_fundamental_form(r, 1.0, 0.5)
+K = gaussian_curvature(E, F, G, L, M, N)  # K = 1.0 for unit sphere
+\end{lstlisting}
+
+\section{Version Information}
+
+All modules are part of the \textit{Exploring Gauss's Mathematics using Python} codebase, version 1.0.
+
+For updates and contributions, visit the project repository.

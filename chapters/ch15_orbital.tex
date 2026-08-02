@@ -1,0 +1,127 @@
+\section{Introduction}
+
+Gauss's work in astronomy, particularly his determination of the orbit of Ceres from just three observations, is one of the most celebrated applications of mathematics to science. He developed the method of least squares specifically for this problem and introduced the Gauss method for preliminary orbit determination.
+
+In this chapter, we cover:
+\begin{itemize}
+    \item Two-body problem and Kepler's laws
+    \item Orbital elements and state vectors
+    \item Gauss's method for preliminary orbit determination
+    \item Least squares refinement of orbits
+    \item The method of differential corrections
+\end{itemize}
+
+\section{The Two-Body Problem}
+
+The motion of a body under a central inverse-square force:
+\[
+\ddot{\mathbf{r}} = -\frac{\mu}{r^3} \mathbf{r}, \quad \mu = G(M+m).
+\]
+
+\begin{theorem}[Conservation Laws]
+\begin{enumerate}
+    \item Angular momentum: $\mathbf{h} = \mathbf{r} \times \dot{\mathbf{r}} = \text{const}$
+    \item Energy: $\mathcal{E} = \frac{1}{2} \|\dot{\mathbf{r}}\|^2 - \frac{\mu}{r} = \text{const}$
+    \item Laplace-Runge-Lenz vector: $\mathbf{e} = \frac{1}{\mu} \dot{\mathbf{r}} \times \mathbf{h} - \frac{\mathbf{r}}{r} = \text{const}$ (eccentricity vector)
+\end{enumerate}
+\end{theorem}
+
+\section{Orbital Elements}
+
+Six classical elements:
+\begin{itemize}
+    \item $a$ -- semi-major axis
+    \item $e$ -- eccentricity
+    \item $i$ -- inclination
+    \item $\Omega$ -- longitude of ascending node
+    \item $\omega$ -- argument of periapsis
+    \item $M_0$ -- mean anomaly at epoch (or true anomaly $f_0$)
+\end{itemize}
+
+\section{Gauss's Method of Preliminary Orbit Determination}
+
+Given three observations $(\alpha_i, \delta_i, t_i)$ (right ascension, declination, time), Gauss solved for the orbit using:
+
+\begin{enumerate}
+    \item Compute approximate position vectors $\mathbf{\rho}_i$ (topocentric)
+    \item Use the relationship $\mathbf{r} = \mathbf{R} + \mathbf{\rho}$ (heliocentric = Earth + topocentric)
+    \item Solve for $\rho_i$ using the coplanarity condition and Lagrange's interpolation
+    \item Compute velocity from the f and g functions
+    \item Refine using least squares
+\end{enumerate}
+
+\section{The f and g Functions}
+
+State transition for the two-body problem:
+\[
+\mathbf{r} = f(t, t_0) \mathbf{r}_0 + g(t, t_0) \dot{\mathbf{r}}_0,
+\]
+where
+\[
+f = 1 - \frac{a}{r_0}(1 - \cos \Delta E), \quad
+g = \Delta t - \sqrt{\frac{a^3}{\mu}} (\Delta E - \sin \Delta E).
+\]
+
+\section{Least Squares Orbit Refinement}
+
+Minimize residuals between observed and computed $(\alpha, \delta)$. The normal equations:
+\[
+(A^T W A) \Delta \mathbf{x} = A^T W \mathbf{r},
+\]
+where $A$ is the design matrix of partial derivatives.
+
+\section{Python Implementation}
+
+In \texttt{python/orbital.py}:
+
+\begin{lstlisting}[style=python, caption={Key functions in python/orbital.py}]
+kepler_elements_from_state(r, v, mu)      # State to elements
+state_from_kepler_elements(elems, mu)     # Elements to state
+gauss_method(obs1, obs2, obs3)            # Gauss's 3-obs method
+least_squares_orbit(observations, x0)     # Refine orbit
+propagate_state(r, v, dt, mu)             # Universal variables
+solve_kepler(M, e)                        # Kepler's equation
+f_g_functions(r0, v0, dt, mu)             # f, g, fdot, gdot
+differential_correction(obs, x0)          # Iterative refinement
+\end{lstlisting}
+
+\section{Numerical Examples}
+
+\begin{example}[Ceres Orbit (Simulated)]
+\begin{lstlisting}[style=python]
+>>> from orbital import gauss_method, kepler_elements_from_state
+>>> obs1 = (ra1, dec1, t1)
+>>> obs2 = (ra2, dec2, t2)
+>>> obs3 = (ra3, dec3, t3)
+>>> r, v = gauss_method(obs1, obs2, obs3)
+>>> elems = kepler_elements_from_state(r, v, mu=1.0)
+>>> print(elems)  # a, e, i, Omega, omega, M0
+\end{lstlisting}
+\end{example}
+
+\section{Exercises}
+
+\begin{exercise}
+Implement the universal variable formulation for propagation (works for all orbit types).
+\end{exercise}
+
+\begin{exercise}
+Derive the partial derivatives of $(\alpha, \delta)$ with respect to orbital elements.
+\end{exercise}
+
+\begin{exercise}
+Apply Gauss's method to historical Ceres observations (Piazzi, 1801).
+\end{exercise}
+
+\begin{exercise}
+Implement the batch least squares orbit determination with multiple observations.
+\end{exercise}
+
+\section{References}
+
+\begin{itemize}
+    \item \cite{gauss-theoria} -- Gauss, \textit{Theoria Motus Corporum Coelestium} (1809)
+    \item \cite{bate-mueller-white} -- Bate, Mueller, \& White, \textit{Fundamentals of Astrodynamics}
+    \item \cite{vallado} -- Vallado, \textit{Fundamentals of Astrodynamics and Applications}
+    \item \cite{milani-gronchi} -- Milani \& Gronchi, \textit{Theory of Orbit Determination}
+\end{itemize}

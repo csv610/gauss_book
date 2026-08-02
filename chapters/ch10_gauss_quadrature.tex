@@ -1,0 +1,121 @@
+\section{Introduction}
+
+Gaussian quadrature is a numerical integration method that achieves exact results for polynomials up to degree $2n-1$ using only $n$ function evaluations. Gauss developed this method in his work on the arithmetic-geometric mean and the theory of special functions.
+
+In this chapter, we cover:
+\begin{itemize}
+    \item Orthogonal polynomials and their zeros
+    \item Gauss-Legendre quadrature
+    \item Gauss-Hermite, Gauss-Laguerre, Gauss-Chebyshev quadrature
+    \item The Golub-Welsch algorithm for computing nodes and weights
+    \item Error analysis and convergence
+    \item Multidimensional quadrature and sparse grids
+\end{itemize}
+
+\section{Orthogonal Polynomials}
+
+Let $w(x) > 0$ be a weight function on $[a,b]$. The monic orthogonal polynomials $p_n(x)$ satisfy
+\[
+\int_a^b p_n(x) p_m(x) w(x) dx = 0 \quad (n \ne m).
+\]
+They obey a three-term recurrence:
+\[
+p_{n+1}(x) = (x - \alpha_n) p_n(x) - \beta_n p_{n-1}(x).
+\]
+
+\section{Gaussian Quadrature}
+
+\begin{theorem}[Gauss Quadrature]
+Let $x_1, \ldots, x_n$ be the zeros of $p_n(x)$. There exist positive weights $w_1, \ldots, w_n$ such that
+\[
+\int_a^b f(x) w(x) dx = \sum_{i=1}^n w_i f(x_i)
+\]
+for all polynomials $f$ of degree $\le 2n-1$.
+\end{theorem}
+
+The weights are $w_i = \int_a^b \frac{p_n(x)}{(x-x_i)p_n'(x_i)} w(x) dx$.
+
+\section{Classical Gauss Quadrature Rules}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{llll}
+\toprule
+Rule & Interval & Weight & Polynomials \\
+\midrule
+Gauss-Legendre & $[-1,1]$ & $1$ & Legendre $P_n$ \\
+Gauss-Hermite & $(-\infty,\infty)$ & $e^{-x^2}$ & Hermite $H_n$ \\
+Gauss-Laguerre & $[0,\infty)$ & $e^{-x}$ & Laguerre $L_n$ \\
+Gauss-Chebyshev 1st & $[-1,1]$ & $(1-x^2)^{-1/2}$ & Chebyshev $T_n$ \\
+Gauss-Chebyshev 2nd & $[-1,1]$ & $(1-x^2)^{1/2}$ & Chebyshev $U_n$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Golub-Welsch Algorithm}
+
+Compute nodes and weights via the symmetric tridiagonal matrix
+\[
+J = \begin{pmatrix}
+\alpha_0 & \sqrt{\beta_1} & & \\
+\sqrt{\beta_1} & \alpha_1 & \sqrt{\beta_2} & \\
+& \ddots & \ddots & \ddots \\
+& & \sqrt{\beta_{n-1}} & \alpha_{n-1}
+\end{pmatrix}
+\]
+The eigenvalues of $J$ are the nodes $x_i$. The weights are $w_i = \mu_0 v_{i,1}^2$ where $v_i$ is the normalized eigenvector and $\mu_0 = \int w(x) dx$.
+
+\section{Python Implementation}
+
+In \texttt{python/gauss\_quadrature.py}:
+
+\begin{lstlisting}[style=python, caption={Key functions in python/gauss\_quadrature.py}]
+gauss_legendre(n)           # Nodes, weights for Legendre
+gauss_hermite(n)            # Hermite
+gauss_laguerre(n)           # Laguerre
+gauss_chebyshev(n, kind)    # Chebyshev 1 or 2
+golub_welsch(alpha, beta)   # General Golub-Welsch
+integrate(f, a, b, n)       # Gauss-Legendre quadrature
+gauss_kronrod(n)            # Kronrod extension for error estimate
+\end{lstlisting}
+
+\section{Numerical Examples}
+
+\begin{example}[Gauss-Legendre]
+\begin{lstlisting}[style=python]
+>>> from gauss_quadrature import gauss_legendre, integrate
+>>> x, w = gauss_legendre(5)
+>>> print("Nodes:", x)
+>>> print("Weights:", w)
+>>> # Integrate x^8 on [-1,1] (exact for degree <= 9)
+>>> val = integrate(lambda x: x**8, -1, 1, 5)
+>>> print(val, "exact:", 2/9)
+\end{lstlisting}
+\end{example}
+
+\section{Exercises}
+
+\begin{exercise}
+Derive the recurrence coefficients $\alpha_n, \beta_n$ for Legendre polynomials.
+\end{exercise}
+
+\begin{exercise}
+Implement Gauss-Radau and Gauss-Lobatto quadrature (include endpoints).
+\end{exercise}
+
+\begin{exercise}
+Use Gauss-Hermite quadrature to compute $\int_{-\infty}^{\infty} e^{-x^2} f(x) dx$ for various $f$.
+\end{exercise}
+
+\begin{exercise}
+Compare Gaussian quadrature with Clenshaw-Curtis for analytic functions.
+\end{exercise}
+
+\section{References}
+
+\begin{itemize}
+    \item \cite{gauss-works} -- Gauss's \textit{Methodus nova integralium valores per approximationem inveniendi}
+    \item \cite{golub-welsch} -- Golub \& Welsch (1969), \textit{Calculation of Gauss Quadrature Rules}
+    \item \cite{stroud-secrest} -- Stroud \& Secrest, \textit{Gaussian Quadrature Formulas}
+    \item \cite{trefethen-approx} -- Trefethen, \textit{Approximation Theory and Approximation Practice}
+\end{itemize}

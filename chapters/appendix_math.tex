@@ -1,0 +1,376 @@
+\chapter{Mathematical Background}
+\label{app:math}
+
+This appendix provides a quick reference for the mathematical concepts used throughout the book.
+
+\section{Number Theory}
+
+\subsection{Modular Arithmetic}
+
+For integers $a, b, n$ with $n > 0$:
+\[
+a \equiv b \pmod{n} \iff n \mid (a - b)
+\]
+
+Properties:
+\begin{align*}
+a \equiv b \pmod{n},\; c \equiv d \pmod{n} &\implies a+c \equiv b+d \pmod{n} \\
+&\implies ac \equiv bd \pmod{n} \\
+&\implies a^k \equiv b^k \pmod{n}
+\end{align*}
+
+\subsection{Euler's Totient Function}
+
+\[
+\varphi(n) = n \prod_{p \mid n} \left(1 - \frac{1}{p}\right)
+\]
+
+Properties:
+\begin{itemize}
+    \item $\varphi(p) = p-1$ for prime $p$
+    \item $\varphi(p^k) = p^k - p^{k-1}$
+    \item $\varphi(mn) = \varphi(m)\varphi(n)$ if $\gcd(m,n)=1$
+    \item Euler's theorem: $a^{\varphi(n)} \equiv 1 \pmod{n}$ for $\gcd(a,n)=1$
+\end{itemize}
+
+\subsection{Chinese Remainder Theorem}
+
+If $n_1, \ldots, n_k$ are pairwise coprime, then the system
+\[
+x \equiv a_i \pmod{n_i}, \quad i=1,\ldots,k
+\]
+has a unique solution modulo $N = n_1 n_2 \cdots n_k$.
+
+Gauss's constructive solution:
+\[
+x = \sum_{i=1}^k a_i N_i M_i \pmod{N}, \quad
+N_i = \frac{N}{n_i},\quad M_i \equiv N_i^{-1} \pmod{n_i}
+\]
+
+\subsection{Quadratic Residues and Legendre Symbol}
+
+For odd prime $p$ and $a \not\equiv 0 \pmod{p}$:
+\[
+\left(\frac{a}{p}\right) = 
+\begin{cases}
+1 & \text{if } a \text{ is a quadratic residue mod } p \\
+-1 & \text{if } a \text{ is a quadratic non-residue mod } p
+\end{cases}
+\]
+
+Euler's criterion: $\left(\frac{a}{p}\right) \equiv a^{(p-1)/2} \pmod{p}$
+
+\textbf{Law of Quadratic Reciprocity} (Gauss's "Golden Theorem"):
+For distinct odd primes $p, q$:
+\[
+\left(\frac{p}{q}\right)\left(\frac{q}{p}\right) = (-1)^{\frac{p-1}{2}\frac{q-1}{2}}
+\]
+
+\textbf{Supplements}:
+\begin{align*}
+\left(\frac{-1}{p}\right) &= (-1)^{(p-1)/2} = \begin{cases} 1 & p \equiv 1 \pmod{4} \\ -1 & p \equiv 3 \pmod{4} \end{cases} \\
+\left(\frac{2}{p}\right) &= (-1)^{(p^2-1)/8} = \begin{cases} 1 & p \equiv \pm 1 \pmod{8} \\ -1 & p \equiv \pm 3 \pmod{8} \end{cases}
+\end{align*}
+
+\subsection{Gauss Sums}
+
+Quadratic Gauss sum:
+\[
+g(p) = \sum_{a=0}^{p-1} e^{2\pi i a^2/p} = 
+\begin{cases}
+\sqrt{p} & p \equiv 1 \pmod{4} \\
+i\sqrt{p} & p \equiv 3 \pmod{4}
+\end{cases}
+\]
+
+General Gauss sum with Dirichlet character $\chi$:
+\[
+\tau(\chi) = \sum_{a=0}^{n-1} \chi(a) e^{2\pi i a/n}
+\]
+
+\subsection{Binary Quadratic Forms}
+
+A binary quadratic form: $f(x,y) = ax^2 + bxy + cy^2$ with discriminant $\Delta = b^2 - 4ac$.
+
+Gauss's composition law makes the set of equivalence classes of primitive forms of discriminant $\Delta < 0$ into an abelian group (the class group).
+
+\section{Analysis}
+
+\subsection{Gaussian Integral}
+
+\[
+\int_{-\infty}^{\infty} e^{-x^2} dx = \sqrt{\pi}
+\]
+
+Generalized:
+\[
+\int_{-\infty}^{\infty} e^{-ax^2+bx+c} dx = \sqrt{\frac{\pi}{a}} e^{c + b^2/(4a)}, \quad \Re(a) > 0
+\]
+
+\subsection{Error Function}
+
+\[
+\erf(x) = \frac{2}{\sqrt{\pi}} \int_0^x e^{-t^2} dt, \quad
+\erfc(x) = 1 - \erf(x) = \frac{2}{\sqrt{\pi}} \int_x^{\infty} e^{-t^2} dt
+\]
+
+Properties:
+\begin{itemize}
+    \item $\erf(-x) = -\erf(x)$
+    \item $\erf(0) = 0$, $\lim_{x\to\infty} \erf(x) = 1$
+    \item $\erf'(x) = \frac{2}{\sqrt{\pi}} e^{-x^2}$
+    \item Series: $\erf(x) = \frac{2}{\sqrt{\pi}} \sum_{n=0}^{\infty} \frac{(-1)^n x^{2n+1}}{n!(2n+1)}$
+    \item Asymptotic: $\erfc(x) \sim \frac{e^{-x^2}}{x\sqrt{\pi}}\left(1 - \frac{1}{2x^2} + \cdots\right)$
+\end{itemize}
+
+\subsection{Normal Distribution}
+
+Standard normal PDF and CDF:
+\[
+\phi(x) = \frac{1}{\sqrt{2\pi}} e^{-x^2/2}, \quad
+\Phi(x) = \frac{1}{2}\left(1 + \erf\left(\frac{x}{\sqrt{2}}\right)\right)
+\]
+
+General $\mathcal{N}(\mu, \sigma^2)$:
+\[
+f(x) = \frac{1}{\sigma\sqrt{2\pi}} e^{-(x-\mu)^2/(2\sigma^2)}, \quad
+F(x) = \Phi\left(\frac{x-\mu}{\sigma}\right)
+\]
+
+\subsection{Arithmetic-Geometric Mean (AGM)}
+
+For $a_0, b_0 > 0$:
+\[
+a_{n+1} = \frac{a_n + b_n}{2}, \quad b_{n+1} = \sqrt{a_n b_n}
+\]
+Converge quadratically to common limit $M(a_0, b_0)$.
+
+Gauss's identity:
+\[
+\frac{1}{M(1, k')} = \frac{2}{\pi} K(k), \quad k' = \sqrt{1-k^2}
+\]
+where $K(k)$ is the complete elliptic integral of the first kind.
+
+Gauss's constant: $G = 1/M(1, \sqrt{2}) \approx 0.8346268$
+
+\subsection{Brent-Salamin Algorithm for $\pi$}
+
+$a_0 = 1,\; b_0 = 1/\sqrt{2},\; s_0 = 1/2$
+
+For $n \ge 0$:
+\begin{align*}
+a_{n+1} &= (a_n + b_n)/2 \\
+b_{n+1} &= \sqrt{a_n b_n} \\
+s_{n+1} &= s_n - 2^n (a_n - b_n)^2
+\end{align*}
+
+Then $\pi = \dfrac{4 a_N^2}{1 - s_N}$ with quadratic convergence.
+
+\subsection{Theta Functions}
+
+Jacobi theta functions ($q = e^{\pi i \tau}$):
+\begin{align*}
+\vartheta_1(z|\tau) &= -i \sum_{n=-\infty}^{\infty} (-1)^n q^{(n+1/2)^2} e^{2\pi i (n+1/2)z} \\
+\vartheta_2(z|\tau) &= \sum_{n=-\infty}^{\infty} q^{(n+1/2)^2} e^{2\pi i (n+1/2)z} \\
+\vartheta_3(z|\tau) &= \sum_{n=-\infty}^{\infty} q^{n^2} e^{2\pi i n z} \\
+\vartheta_4(z|\tau) &= \sum_{n=-\infty}^{\infty} (-1)^n q^{n^2} e^{2\pi i n z}
+\end{align*}
+
+Jacobi's triple product identity:
+\[
+\vartheta_1(z|\tau) = 2 q^{1/4} \sin(\pi z) \prod_{n=1}^{\infty} (1 - q^{2n})(1 - 2 q^{2n} \cos(2\pi z) + q^{4n})
+\]
+
+Modular transformation:
+\[
+\vartheta_3(0|-1/\tau) = \sqrt{-i\tau}\, \vartheta_3(0|\tau)
+\]
+
+\subsection{Dedekind Eta Function}
+
+\[
+\eta(\tau) = q^{1/24} \prod_{n=1}^{\infty} (1 - q^n), \quad q = e^{2\pi i \tau}
+\]
+
+Modular transformation:
+\[
+\eta(-1/\tau) = \sqrt{-i\tau}\, \eta(\tau)
+\]
+
+\section{Linear Algebra}
+
+\subsection{Gaussian Elimination}
+
+Forward elimination with partial pivoting, then back substitution.
+Complexity: $O(n^3)$.
+
+\subsection{LU Decomposition}
+
+$PA = LU$ where $P$ is permutation, $L$ unit lower triangular, $U$ upper triangular.
+
+\subsection{Cholesky Decomposition}
+
+For symmetric positive definite $A$: $A = LL^T$ with $L$ lower triangular.
+
+\subsection{QR Decomposition}
+
+$A = QR$ with $Q$ orthogonal, $R$ upper triangular.
+Householder reflections: $H = I - 2uu^T$.
+
+\subsection{Condition Number}
+
+$\kappa(A) = \|A\| \|A^{-1}\|$ for a given norm.
+For 2-norm: $\kappa_2(A) = \sigma_{\max}/\sigma_{\min}$.
+
+\subsection{Least Squares}
+
+Minimize $\|Ax - b\|_2^2$.
+Normal equations: $A^T A x = A^T b$.
+QR solution: $Rx = Q^T b$ (more stable).
+
+\subsection{Gaussian Quadrature}
+
+For weight function $w(x)$ on $[a,b]$, nodes $x_i$ are zeros of orthogonal polynomial $p_n(x)$.
+Weights $w_i = \int_a^b \frac{p_n(x)}{(x-x_i)p_n'(x_i)} w(x) dx$.
+Exact for polynomials of degree $\le 2n-1$.
+
+Golub-Welsch algorithm: eigenvalues of Jacobi matrix give nodes; first eigenvector components squared give weights.
+
+\section{Statistics}
+
+\subsection{Error Propagation (Delta Method)}
+
+For $y = f(x_1, \ldots, x_n)$ with uncertainties $\sigma_i$:
+\[
+\sigma_y^2 \approx \sum_{i=1}^n \left(\frac{\partial f}{\partial x_i}\right)^2 \sigma_i^2
+\]
+
+For correlated variables with covariance matrix $\Sigma_x$:
+\[
+\Sigma_y = J \Sigma_x J^T
+\]
+where $J$ is the Jacobian of $f$.
+
+\subsection{Gaussian Process}
+
+A Gaussian process is a collection of random variables $\{f(x) : x \in \mathcal{X}\}$ such that any finite subset has a multivariate normal distribution.
+
+Specified by mean function $m(x)$ and covariance kernel $k(x, x')$:
+\[
+f \sim \mathcal{GP}(m, k)
+\]
+
+GP regression predictive distribution:
+\begin{align*}
+\mu_* &= m(X_*) + K(X_*, X) [K(X, X) + \sigma_n^2 I]^{-1} (y - m(X)) \\
+\Sigma_* &= K(X_*, X_*) - K(X_*, X) [K(X, X) + \sigma_n^2 I]^{-1} K(X, X_*)
+\end{align*}
+
+Log marginal likelihood:
+\[
+\log p(y|X, \theta) = -\frac{1}{2} y^T K_\theta^{-1} y - \frac{1}{2} \log |K_\theta| - \frac{n}{2} \log 2\pi
+\]
+
+Common kernels:
+\begin{itemize}
+    \item RBF: $k(x,x') = \sigma^2 \exp(-\|x-x'\|^2/(2\ell^2))$
+    \item Matérn $\nu=3/2$: $k(x,x') = \sigma^2 (1 + \frac{\sqrt{3}r}{\ell}) e^{-\sqrt{3}r/\ell}$
+    \item Periodic: $k(x,x') = \sigma^2 \exp(-\frac{2\sin^2(\pi|x-x'|/p)}{\ell^2})$
+\end{itemize}
+
+\section{Geometry}
+
+\subsection{First Fundamental Form}
+
+For surface $\mathbf{r}(u,v)$:
+\[
+E = \mathbf{r}_u \cdot \mathbf{r}_u, \quad
+F = \mathbf{r}_u \cdot \mathbf{r}_v, \quad
+G = \mathbf{r}_v \cdot \mathbf{r}_v
+\]
+
+\subsection{Second Fundamental Form}
+
+Unit normal $\mathbf{N} = \frac{\mathbf{r}_u \times \mathbf{r}_v}{\|\mathbf{r}_u \times \mathbf{r}_v\|}$:
+\[
+L = \mathbf{r}_{uu} \cdot \mathbf{N}, \quad
+M = \mathbf{r}_{uv} \cdot \mathbf{N}, \quad
+N = \mathbf{r}_{vv} \cdot \mathbf{N}
+\]
+
+\subsection{Curvature}
+
+Gaussian curvature: $K = \frac{LN - M^2}{EG - F^2}$
+
+Mean curvature: $H = \frac{EN - 2FM + GL}{2(EG - F^2)}$
+
+\textbf{Theorema Egregium}: $K$ depends only on $E, F, G$ and their derivatives (intrinsic).
+
+Christoffel symbols:
+\begin{align*}
+\Gamma_{11}^1 &= \frac{GE_u - 2FF_u + FE_v}{2(EG-F^2)} \\
+\Gamma_{12}^1 &= \frac{GE_v - FG_u}{2(EG-F^2)} \\
+\Gamma_{22}^1 &= \frac{2GF_v - GG_u - FG_v}{2(EG-F^2)} \\
+\Gamma_{11}^2 &= \frac{2EF_u - EE_v - FE_u}{2(EG-F^2)} \\
+\Gamma_{12}^2 &= \frac{EG_u - FE_v}{2(EG-F^2)} \\
+\Gamma_{22}^2 &= \frac{EG_v - 2FF_v + FG_u}{2(EG-F^2)}
+\end{align*}
+
+\subsection{Gauss-Bonnet Theorem}
+
+For compact surface $S$ with boundary $\partial S$:
+\[
+\int_S K\, dA + \int_{\partial S} \kappa_g\, ds = 2\pi \chi(S)
+\]
+
+Discrete version for triangle mesh:
+\[
+\sum_i (2\pi - \theta_i) = 2\pi \chi
+\]
+where $\theta_i$ is sum of angles at vertex $i$.
+
+\section{Astronomy}
+
+\subsection{Orbital Elements}
+
+Six classical elements:
+\begin{itemize}
+    \item $a$ -- semi-major axis
+    \item $e$ -- eccentricity
+    \item $i$ -- inclination
+    \item $\Omega$ -- longitude of ascending node
+    \item $\omega$ -- argument of periapsis
+    \item $M_0$ -- mean anomaly at epoch
+\end{itemize}
+
+\subsection{Kepler's Equation}
+
+$M = E - e \sin E$, solved iteratively:
+\[
+E_{n+1} = E_n - \frac{E_n - e\sin E_n - M}{1 - e\cos E_n}
+\]
+
+\subsection{Two-Body Problem}
+
+$\ddot{\mathbf{r}} = -\frac{\mu}{r^3} \mathbf{r}$, $\mu = G(M+m)$.
+
+Conserved quantities:
+\begin{itemize}
+    \item Angular momentum: $\mathbf{h} = \mathbf{r} \times \dot{\mathbf{r}}$
+    \item Energy: $\mathcal{E} = \frac{1}{2}\|\dot{\mathbf{r}}\|^2 - \frac{\mu}{r}$
+    \item Laplace-Runge-Lenz vector: $\mathbf{e} = \frac{1}{\mu}\dot{\mathbf{r}} \times \mathbf{h} - \frac{\mathbf{r}}{r}$
+\end{itemize}
+
+\subsection{Universal Variables (f and g functions)}
+
+$\mathbf{r} = f \mathbf{r}_0 + g \dot{\mathbf{r}}_0$,
+$\dot{\mathbf{r}} = \dot{f} \mathbf{r}_0 + \dot{g} \dot{\mathbf{r}}_0$
+
+With universal anomaly $\chi$:
+\begin{align*}
+f &= 1 - \frac{\chi^2}{r_0} C(z) \\
+g &= \Delta t - \frac{\chi^3}{\sqrt{\mu}} S(z) \\
+\dot{f} &= \frac{\sqrt{\mu}}{r r_0} \chi (z S(z) - 1) \\
+\dot{g} &= 1 - \frac{\chi^2}{r} C(z)
+\end{align*}
+where $z = \alpha \chi^2$, $C(z)$ and $S(z)$ are Stumpff functions.

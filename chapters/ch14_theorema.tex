@@ -1,0 +1,138 @@
+\section{Introduction}
+
+Gauss's \textit{Theorema Egregium} (1827) states that the Gaussian curvature of a surface is an intrinsic invariant: it can be determined entirely from measurements within the surface (the first fundamental form), without reference to the ambient space. This was a revolutionary discovery that founded differential geometry.
+
+In this chapter, we cover:
+\begin{itemize}
+    \item First and second fundamental forms
+    \item Gaussian curvature and mean curvature
+    \item The Theorema Egregium
+    \item Geodesics and the Gauss-Bonnet theorem
+    \item Numerical computation of curvature
+\end{itemize}
+
+\section{Surfaces and Fundamental Forms}
+
+Let $\mathbf{r}(u,v)$ be a parametrized surface in $\R^3$.
+
+\begin{definition}[First Fundamental Form (Metric Tensor)]
+\[
+I = E du^2 + 2F du dv + G dv^2,
+\]
+where
+\[
+E = \mathbf{r}_u \cdot \mathbf{r}_u,\quad
+F = \mathbf{r}_u \cdot \mathbf{r}_v,\quad
+G = \mathbf{r}_v \cdot \mathbf{r}_v.
+\]
+\end{definition}
+
+\begin{definition}[Second Fundamental Form]
+Let $\mathbf{N} = \frac{\mathbf{r}_u \times \mathbf{r}_v}{\|\mathbf{r}_u \times \mathbf{r}_v\|}$ be the unit normal.
+\[
+II = L du^2 + 2M du dv + N dv^2,
+\]
+where
+\[
+L = \mathbf{r}_{uu} \cdot \mathbf{N},\quad
+M = \mathbf{r}_{uv} \cdot \mathbf{N},\quad
+N = \mathbf{r}_{vv} \cdot \mathbf{N}.
+\]
+\end{definition}
+
+\section{Curvature}
+
+\begin{definition}[Gaussian and Mean Curvature]
+\[
+K = \frac{LN - M^2}{EG - F^2}, \quad
+H = \frac{EN - 2FM + GL}{2(EG - F^2)}.
+\]
+\end{definition}
+
+\begin{theorem}[Theorema Egregium]
+The Gaussian curvature $K$ depends only on the first fundamental form $E, F, G$ and their derivatives. It is an intrinsic invariant of the surface.
+\end{theorem}
+
+\begin{proof}[Proof Sketch]
+The Christoffel symbols $\Gamma_{ij}^k$ are computed from $E, F, G$. The Riemann curvature tensor $R_{ijkl}$ is expressed in terms of $\Gamma$. The Gaussian curvature is $K = R_{1212} / \det(g)$. No dependence on $L, M, N$ remains.
+\end{proof}
+
+\section{Christoffel Symbols and Riemann Tensor}
+
+\begin{align*}
+\Gamma_{11}^1 &= \frac{GE_u - 2FF_u + FE_v}{2(EG-F^2)} \\
+\Gamma_{12}^1 &= \frac{GE_v - FG_u}{2(EG-F^2)} \\
+\Gamma_{22}^1 &= \frac{2GF_v - GG_u - FG_v}{2(EG-F^2)} \\
+\Gamma_{11}^2 &= \frac{2EF_u - EE_v - FE_u}{2(EG-F^2)} \\
+\Gamma_{12}^2 &= \frac{EG_u - FE_v}{2(EG-F^2)} \\
+\Gamma_{22}^2 &= \frac{EG_v - 2FF_v + FG_u}{2(EG-F^2)}
+\end{align*}
+
+Then $R_{1212} = \frac{1}{2}(E_{vv} + G_{uu} - 2F_{uv}) + \text{terms in } \Gamma$.
+
+\section{Python Implementation}
+
+In \texttt{python/theorema.py}:
+
+\begin{lstlisting}[style=python, caption={Key functions in python/theorema.py}]
+first_fundamental_form(r, u, v)     # Returns E, F, G
+second_fundamental_form(r, u, v)    # Returns L, M, N
+christoffel_symbols(E, F, G)        # Returns Gamma^k_ij
+gaussian_curvature(E, F, G, ...)    # K from first form only
+mean_curvature(E, F, G, L, M, N)    # H
+riemann_tensor(E, F, G)             # R_ijkl
+theorema_egregium_check(r, u, v)    # Verify K intrinsic
+geodesic_equations(r)               # Geodesic ODEs
+gauss_bonnet_discrete(vertices, faces)  # Discrete Gauss-Bonnet
+\end{lstlisting}
+
+\section{Numerical Examples}
+
+\begin{example}[Sphere of Radius $R$]
+$\mathbf{r}(\theta,\phi) = (R\sin\theta\cos\phi, R\sin\theta\sin\phi, R\cos\theta)$
+$E = R^2$, $F = 0$, $G = R^2\sin^2\theta$, $K = 1/R^2$, $H = 1/R$.
+\begin{lstlisting}[style=python]
+>>> from theorema import gaussian_curvature, first_fundamental_form
+>>> import numpy as np
+>>> r = lambda u,v: np.array([np.sin(u)*np.cos(v), np.sin(u)*np.sin(v), np.cos(u)])
+>>> E, F, G = first_fundamental_form(r, 1.0, 0.5)
+>>> K = gaussian_curvature(r, 1.0, 0.5)
+>>> print(f"K = {K:.6f}")  # 1.0
+\end{lstlisting}
+\end{example}
+
+\begin{example}[Cylinder]
+$\mathbf{r}(\theta,z) = (R\cos\theta, R\sin\theta, z)$
+$K = 0$ (intrinsically flat), $H = 1/(2R)$.
+\end{example}
+
+\begin{example}[Pseudosphere]
+Surface of revolution of the tractrix: $K = -1$ (constant negative curvature).
+\end{example}
+
+\section{Exercises}
+
+\begin{exercise}
+Prove that the Gaussian curvature of a surface of revolution $z = f(r)$ is $K = \frac{f' f''}{r(1+f'^2)^2}$.
+\end{exercise}
+
+\begin{exercise}
+Implement discrete differential geometry operators on triangle meshes to compute $K$ at vertices.
+\end{exercise}
+
+\begin{exercise}
+Verify the Theorema Egregium numerically: compute $K$ from first form only and compare with $K$ from both forms for various surfaces.
+\end{exercise}
+
+\begin{exercise}
+Apply the discrete Gauss-Bonnet theorem to a triangulated torus and verify $\sum K_i A_i = 0$.
+\end{exercise}
+
+\section{References}
+
+\begin{itemize}
+    \item \cite{gauss-disquisitiones-generales} -- Gauss, \textit{Disquisitiones Generales circa Superficies Curvas} (1827)
+    \item \cite{do-carmo} -- do Carmo, \textit{Differential Geometry of Curves and Surfaces}
+    \item \cite{spivak-dg} -- Spivak, \textit{A Comprehensive Introduction to Differential Geometry}
+    \item \cite{meyer-discrete} -- Meyer et al., \textit{Discrete Differential-Geometry Operators for Triangulated 2-Manifolds}
+\end{itemize}

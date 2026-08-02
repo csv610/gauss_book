@@ -1,0 +1,120 @@
+\section{Introduction}
+
+Gaussian processes (GPs) provide a principled, non-parametric approach to regression and classification. They define a distribution over functions, with the covariance structure encoding assumptions about smoothness, periodicity, and other properties. Kriging (geostatistics) is the application of GPs to spatial interpolation, named after D.G. Krige and formalized by Matheron.
+
+In this chapter, we cover:
+\begin{itemize}
+    \item Definition and properties of Gaussian processes
+    \item Covariance functions (kernels)
+    \item Gaussian process regression (Kriging)
+    \item Hyperparameter optimization
+    \item Scalable approximations for large datasets
+    \item Applications to spatial statistics and time series
+\end{itemize}
+
+\section{Gaussian Processes}
+
+\begin{definition}[Gaussian Process]
+A Gaussian process is a collection of random variables $\{f(x) : x \in \mathcal{X}\}$ such that any finite subset $(f(x_1), \ldots, f(x_n))$ has a multivariate normal distribution.
+\end{definition}
+
+A GP is completely specified by its mean function $m(x) = \E[f(x)]$ and covariance function $k(x, x') = \Cov(f(x), f(x'))$:
+\[
+f \sim \mathcal{GP}(m, k).
+\]
+
+\section{Covariance Functions (Kernels)}
+
+Common kernels:
+\begin{itemize}
+    \item \textbf{Squared Exponential (RBF):} $k(x,x') = \sigma^2 \exp\left(-\frac{\|x-x'\|^2}{2\ell^2}\right)$
+    \item \textbf{Matérn:} $k(x,x') = \sigma^2 \frac{2^{1-\nu}}{\Gamma(\nu)} \left(\frac{\sqrt{2\nu}\|x-x'\|}{\ell}\right)^\nu K_\nu\left(\frac{\sqrt{2\nu}\|x-x'\|}{\ell}\right)$
+    \item \textbf{Periodic:} $k(x,x') = \sigma^2 \exp\left(-\frac{2\sin^2(\pi|x-x'|/p)}{\ell^2}\right)$
+    \item \textbf{Rational Quadratic:} $k(x,x') = \sigma^2 \left(1 + \frac{\|x-x'\|^2}{2\alpha\ell^2}\right)^{-\alpha}$
+    \item \textbf{Linear:} $k(x,x') = \sigma^2 x^T x' + c$
+\end{itemize}
+
+\section{Gaussian Process Regression}
+
+Given observations $\mathbf{y} = (y_1, \ldots, y_n)^T$ at inputs $\mathbf{X} = (x_1, \ldots, x_n)^T$, with noise $y_i = f(x_i) + \epsilon_i$, $\epsilon_i \sim \mathcal{N}(0, \sigma_n^2)$:
+\[
+\mathbf{y} \sim \mathcal{N}(m(\mathbf{X}), K(\mathbf{X}, \mathbf{X}) + \sigma_n^2 I).
+\]
+
+For test inputs $\mathbf{X}_*$, the predictive distribution is
+\[
+f_* | \mathbf{y}, \mathbf{X}, \mathbf{X}_* \sim \mathcal{N}(\mu_*, \Sigma_*),
+\]
+where
+\begin{align*}
+\mu_* &= m(\mathbf{X}_*) + K(\mathbf{X}_*, \mathbf{X}) [K(\mathbf{X}, \mathbf{X}) + \sigma_n^2 I]^{-1} (\mathbf{y} - m(\mathbf{X})) \\
+\Sigma_* &= K(\mathbf{X}_*, \mathbf{X}_*) - K(\mathbf{X}_*, \mathbf{X}) [K(\mathbf{X}, \mathbf{X}) + \sigma_n^2 I]^{-1} K(\mathbf{X}, \mathbf{X}_*).
+\end{align*}
+
+\section{Log Marginal Likelihood}
+
+\[
+\log p(\mathbf{y} | \mathbf{X}, \theta) = -\frac{1}{2} \mathbf{y}^T K_\theta^{-1} \mathbf{y} - \frac{1}{2} \log |K_\theta| - \frac{n}{2} \log 2\pi,
+\]
+where $K_\theta = K(\mathbf{X}, \mathbf{X}) + \sigma_n^2 I$. Hyperparameters $\theta$ are optimized by gradient ascent.
+
+\section{Python Implementation}
+
+In \texttt{python/gp.py}:
+
+\begin{lstlisting}[style=python, caption={Key functions in python/gp.py}]
+class GaussianProcess:
+    def __init__(self, kernel, noise=1e-6)
+    def fit(self, X, y)
+    def predict(self, X_star, return_std=True)
+    def log_marginal_likelihood(self, theta)
+    def optimize_hyperparameters(self, X, y)
+
+rbf_kernel(x1, x2, length_scale, variance)
+matern_kernel(x1, x2, length_scale, variance, nu)
+periodic_kernel(x1, x2, length_scale, variance, period)
+kriging(x_obs, y_obs, x_pred, kernel)  # Simple Kriging
+ordinary_kriging(x_obs, y_obs, x_pred) # Ordinary Kriging
+\end{lstlisting}
+
+\section{Numerical Examples}
+
+\begin{example}[GP Regression]
+\begin{lstlisting}[style=python]
+>>> from gp import GaussianProcess, rbf_kernel
+>>> import numpy as np
+>>> X = np.array([0, 1, 2, 3, 4]).reshape(-1, 1)
+>>> y = np.sin(X.ravel()) + 0.1 * np.random.randn(5)
+>>> gp = GaussianProcess(rbf_kernel, noise=0.01)
+>>> gp.fit(X, y)
+>>> X_test = np.linspace(0, 4, 50).reshape(-1, 1)
+>>> mu, std = gp.predict(X_test, return_std=True)
+\end{lstlisting}
+\end{example}
+
+\section{Exercises}
+
+\begin{exercise}
+Implement the Matérn kernel with $\nu = 3/2$ and $\nu = 5/2$ using the simplified form.
+\end{exercise}
+
+\begin{exercise}
+Derive the gradient of the log marginal likelihood with respect to kernel hyperparameters.
+\end{exercise}
+
+\begin{exercise}
+Implement sparse Gaussian process approximations (FITC, VFE) for large $n$.
+\end{exercise}
+
+\begin{exercise}
+Apply ordinary Kriging to a spatial dataset and compare with inverse distance weighting.
+\end{exercise}
+
+\section{References}
+
+\begin{itemize}
+    \item \cite{rasmussen-williams} -- Rasmussen \& Williams, \textit{Gaussian Processes for Machine Learning}
+    \item \cite{cressie} -- Cressie, \textit{Statistics for Spatial Data}
+    \item \cite{gauss-theoria} -- Gauss's work on interpolation and geodesy
+    \item \cite{stein} -- Stein, \textit{Interpolation of Spatial Data}
+\end{itemize}

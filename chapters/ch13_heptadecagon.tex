@@ -1,0 +1,114 @@
+\section{Introduction}
+
+Gauss's work on the constructibility of regular polygons is one of his most famous achievements. At age 19, he proved that a regular heptadecagon (17-gon) is constructible with ruler and compass, and more generally characterized all constructible regular $n$-gons. This discovery was so important to Gauss that he requested a 17-gon be inscribed on his tombstone.
+
+In this chapter, we cover:
+\begin{itemize}
+    \item Roots of unity and cyclotomic polynomials
+    \item Gauss's criterion for constructible polygons
+    \item The 17-gon construction using Gaussian periods
+    \item General $n$-gon construction when possible
+    \item Implementation of the construction
+\end{itemize}
+
+\section{Roots of Unity}
+
+The vertices of a regular $n$-gon inscribed in the unit circle are the $n$-th roots of unity:
+\[
+\zeta_n^k = e^{2\pi i k / n}, \quad k = 0, 1, \ldots, n-1.
+\]
+
+\begin{definition}[Cyclotomic Polynomial]
+The $n$-th cyclotomic polynomial is
+\[
+\Phi_n(x) = \prod_{\substack{1 \le k \le n \\ \gcd(k,n)=1}} (x - \zeta_n^k).
+\]
+It is the minimal polynomial of $\zeta_n$ over $\Q$, has degree $\varphi(n)$, and is irreducible.
+\end{definition}
+
+\section{Gauss's Criterion}
+
+\begin{theorem}[Gauss-Wantzel Theorem]
+A regular $n$-gon is constructible with ruler and compass if and only if
+\[
+n = 2^k p_1 p_2 \cdots p_m
+\]
+where $p_i$ are distinct Fermat primes: $F_k = 2^{2^k} + 1$.
+\end{theorem}
+
+Known Fermat primes: $3, 5, 17, 257, 65537$. The next $2^{2^5}+1 = 4294967297 = 641 \times 6700417$ is composite.
+
+\section{The 17-gon Construction}
+
+Gauss used Gaussian periods to express $\cos(2\pi/17)$ in nested square roots. Let $\zeta = e^{2\pi i/17}$. The periods of length 2 are:
+\begin{align*}
+\eta_1 &= \zeta + \zeta^9 + \zeta^{13} + \zeta^{15} + \zeta^{16} + \zeta^8 + \zeta^4 + \zeta^2 \\
+\eta_2 &= \zeta^3 + \zeta^{10} + \zeta^5 + \zeta^{11} + \zeta^{14} + \zeta^7 + \zeta^{12} + \zeta^6
+\end{align*}
+
+These satisfy $\eta_1 + \eta_2 = -1$, $\eta_1 \eta_2 = -4$. Then $\eta_1 = \frac{-1 + \sqrt{17}}{2}$, $\eta_2 = \frac{-1 - \sqrt{17}}{2}$.
+
+Continuing this process yields the nested square root expression for $\cos(2\pi/17)$.
+
+\section{Python Implementation}
+
+In \texttt{python/heptadecagon.py}:
+
+\begin{lstlisting}[style=python, caption={Key functions in python/heptadecagon.py}]
+cyclotomic_poly(n)              # Phi_n(x) coefficients
+constructible_ngons(limit)      # List constructible n
+heptadecagon_vertices()         # Coordinates of 17-gon
+gaussian_periods(n, length)     # Gaussian periods
+cos_2pi_over_17()              # Exact expression
+construct_polygon(n)            # General construction
+\end{lstlisting}
+
+\section{Numerical Examples}
+
+\begin{example}[17-gon Vertices]
+\begin{lstlisting}[style=python]
+>>> from heptadecagon import heptadecagon_vertices
+>>> verts = heptadecagon_vertices()
+>>> for i, (x, y) in enumerate(verts[:4]):
+...     print(f"V{i}: ({x:.6f}, {y:.6f})")
+V0: (1.000000, 0.000000)
+V1: (0.932472, 0.361242)
+V2: (0.739009, 0.673696)
+V3: (0.445738, 0.895163)
+\end{lstlisting}
+\end{example}
+
+\begin{example}[Constructible $n$-gons]
+\begin{lstlisting}[style=python]
+>>> from heptadecagon import constructible_ngons
+>>> constructible_ngons(50)
+[3, 4, 5, 6, 8, 10, 12, 15, 16, 17, 20, 24, 30, 32, 34, 40, 48]
+\end{lstlisting}
+\end{example}
+
+\section{Exercises}
+
+\begin{exercise}
+Derive the nested square root expression for $\cos(2\pi/17)$ step by step using Gaussian periods.
+\end{exercise}
+
+\begin{exercise}
+Implement the construction of the 257-gon using Gaussian periods. How many square root nestings are needed?
+\end{exercise}
+
+\begin{exercise}
+Prove that $\Phi_n(x)$ is irreducible over $\Q$ using Eisenstein's criterion on $\Phi_p(x+1)$ for prime $p$.
+\end{exercise}
+
+\begin{exercise}
+Show that the coordinates of the 17-gon vertices lie in the field $\Q(\sqrt{17}, \sqrt{34-2\sqrt{17}}, \ldots)$.
+\end{exercise}
+
+\section{References}
+
+\begin{itemize}
+    \item \cite{gauss-disq} -- \textit{Disquisitiones Arithmeticae}, Articles 355--366
+    \item \cite{cox-galois} -- Cox, \textit{Galois Theory}, Ch. 11
+    \item \cite{stein-17gon} -- Stein, \textit{The 17-gon: A Study in Constructibility}
+    \item \cite{wantzel} -- Wantzel (1837), proof of necessity
+\end{itemize}

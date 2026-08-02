@@ -1,0 +1,103 @@
+\section{Introduction}
+
+Gaussian elimination is one of the fundamental algorithms of linear algebra. Gauss developed it for solving systems of linear equations arising from geodetic surveying and least squares problems. The method systematically eliminates variables to reduce a system to triangular form.
+
+In this chapter, we cover:
+\begin{itemize}
+    \item Forward elimination and back substitution
+    \item LU decomposition with partial pivoting
+    \item Cholesky decomposition for positive definite matrices
+    \item QR decomposition via Householder reflections
+    \item Condition number and numerical stability
+    \item Applications to least squares and eigenvalue problems
+\end{itemize}
+
+\section{Gaussian Elimination}
+
+\begin{algorithmthm}[Gaussian Elimination with Partial Pivoting]
+For $Ax = b$ with $A \in \R^{n\times n}$:
+\begin{enumerate}
+    \item For $k = 1$ to $n-1$:
+        \begin{enumerate}
+            \item Find pivot row $p \ge k$ with $\max |A_{p,k}|$
+            \item Swap rows $k$ and $p$ in $A$ and $b$
+            \item For $i = k+1$ to $n$:
+                $A_{i,k} \leftarrow A_{i,k} / A_{k,k}$
+                For $j = k+1$ to $n$: $A_{i,j} \leftarrow A_{i,j} - A_{i,k} A_{k,j}$
+                $b_i \leftarrow b_i - A_{i,k} b_k$
+        \end{enumerate}
+    \item Back substitution: $x_n = b_n/A_{n,n}$, $x_i = (b_i - \sum_{j=i+1}^n A_{i,j} x_j)/A_{i,i}$
+\end{enumerate}
+\end{algorithmthm}
+
+\section{LU Decomposition}
+
+$A = LU$ where $L$ is unit lower triangular and $U$ is upper triangular. With partial pivoting: $PA = LU$.
+
+\section{Cholesky Decomposition}
+
+For $A$ symmetric positive definite: $A = LL^T$ with $L$ lower triangular.
+
+\section{QR Decomposition}
+
+$A = QR$ with $Q$ orthogonal and $R$ upper triangular. Using Householder reflections $H = I - 2uu^T$.
+
+\section{Python Implementation}
+
+In \texttt{python/gaussian\_elim.py}:
+
+\begin{lstlisting}[style=python, caption={Key functions in python/gaussian\_elim.py}]
+gaussian_elimination(A, b)      # Solve Ax=b
+lu_decomposition(A)             # LU with partial pivoting
+cholesky(A)                     # Cholesky for SPD matrices
+qr_decomposition(A)             # QR via Householder
+condition_number(A)             # Estimate condition number
+least_squares_qr(A, b)          # Least squares via QR
+matrix_inverse(A)               # Inverse via LU
+\end{lstlisting}
+
+\section{Numerical Examples}
+
+\begin{example}[Gaussian Elimination]
+\begin{lstlisting}[style=python]
+>>> from gaussian_elim import gaussian_elimination, lu_decomposition
+>>> import numpy as np
+>>> A = np.array([[2, 1, -1], [-3, -1, 2], [-2, 1, 2]], dtype=float)
+>>> b = np.array([8, -11, -3], dtype=float)
+>>> x = gaussian_elimination(A.copy(), b.copy())
+>>> print(x)  # [2. 3. -1.]
+\end{lstlisting}
+\end{example}
+
+\begin{example}[LU Decomposition]
+\begin{lstlisting}[style=python]
+>>> P, L, U = lu_decomposition(A)
+>>> print("P:", P)
+>>> print("L:", L)
+>>> print("U:", U)
+>>> np.allclose(P @ A, L @ U)  # True
+\end{lstlisting}
+\end{example}
+
+\section{Exercises}
+
+\begin{exercise}
+Implement the Bareiss algorithm (fraction-free Gaussian elimination) for exact rational arithmetic.
+\end{exercise}
+
+\begin{exercise}
+Analyze the growth factor for Wilkinson's matrix and compare with random matrices.
+\end{exercise}
+
+\begin{exercise}
+Implement the Golub-Reinsch SVD algorithm using QR iterations.
+\end{exercise}
+
+\section{References}
+
+\begin{itemize}
+    \item \cite{gauss-works} -- Gauss's geodetic calculations
+    \item \cite{golub-vanloan} -- Golub \& Van Loan, \textit{Matrix Computations}
+    \item \cite{trefethen-bau} -- Trefethen \& Bau, \textit{Numerical Linear Algebra}
+    \item \cite{higham-accuracy} -- Higham, \textit{Accuracy and Stability of Numerical Algorithms}
+\end{itemize}
