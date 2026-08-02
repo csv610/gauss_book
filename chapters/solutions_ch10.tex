@@ -2,16 +2,16 @@
 
 \begin{solution}
 Gauss-Legendre quadrature with $n$ nodes integrates polynomials of degree $2n-1$ exactly. The nodes are the roots of the Legendre polynomial\index{Legendre polynomial} $P_n(x)$, and the weights are $w_i = \frac{2}{(1-x_i^2)[P_n'(x_i)]^2}$. For $\int_{-1}^{1} f(x)\,dx \approx \sum_{i=1}^n w_i f(x_i)$, the error is $O(f^{(2n)}(\xi))$.
-\end{solution>
+\end{solution}
 
 \begin{solution}
 The Golub-Welsch algorithm computes Gauss quadrature nodes and weights by finding the eigenvalues and first components of eigenvectors of the symmetric tridiagonal Jacobi matrix. For weight function $w(x) = 1$ on $[-1,1]$, the Jacobi matrix has entries $a_k = 0$, $b_k = \frac{k}{\sqrt{4k^2-1}}$.
-\end{solution>
+\end{solution}
 
 \begin{solution}
 Composite Gauss quadrature divides $[a,b]$ into $m$ subintervals and applies $n$-point Gauss-Legendre on each. The error is $O(m \cdot h^{2n}) = O((b-a)h^{2n-1})$ where $h = (b-a)/m$. For smooth integrands, this achieves spectral accuracy with few nodes per interval.
-\end{solution>
+\end{solution}
 
 \begin{solution}
 Gauss-Kronrod quadrature adds $n+1$ optimally chosen nodes to an $n$-point Gauss rule, giving a higher-order estimate for error control. The Clenshaw-Curtis rule uses Chebyshev polynomial\index{Chebyshev polynomial} nodes and is stable for adaptive quadrature. Both are implemented in numerical libraries like SciPy's \texttt{quad}.
-\end{solution>
+\end{solution}

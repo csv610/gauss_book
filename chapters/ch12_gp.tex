@@ -2,6 +2,8 @@
 
 Gaussian process \index{Gaussian process}es (GPs) provide a principled, non-parametric approach to regression and classification. They define a distribution over functions, with the covariance structure encoding assumptions about smoothness, periodicity, and other properties. Kriging \index{Kriging} (geostatistics) is the application of GPs to spatial interpolation, named after D.G. Krige and formalized by Matheron.
 
+Gauss first used the conceptual framework of GPs in 1820s geodesy work, where he interpolated spatial data using optimal linear predictors. The modern theory was developed by Whittaker and Robinson (1927) and later by Matheron (1963).
+
 In this chapter, we cover:
 \begin{itemize}
     \item Definition and properties of Gaussian processes
@@ -14,14 +16,18 @@ In this chapter, we cover:
 
 \section{Gaussian Processes}
 
-\begin{definition}[Gaussian Process]
-A Gaussian process is a collection of random variables $\{f(x) : x \in \mathcal{X}\}$ such that any finite subset $(f(x_1), \ldots, f(x_n))$ has a multivariate normal distribution.
-\end{definition}
-
 A GP is completely specified by its mean function $m(x) = \E[f(x)]$ and covariance function \index{covariance function} $k(x, x') = \Cov(f(x), f(x'))$:
 \[
 f \sim \mathcal{GP}(m, k).
 \]
+
+\begin{definition}[Kernel (Covariance Function) \index{kernel (Gaussian process)}]
+A symmetric positive definite function $k: \mathcal{X} \times \mathcal{X} \to \R$ serves as the covariance function. Common choices include the RBF, Matérn, and periodic kernels.
+\end{definition}
+
+\begin{theorem}[Positive Definiteness]
+A function $k$ is a valid covariance function iff for any points $x_1, \ldots, x_n$, the matrix $K_{ij} = k(x_i, x_j)$ is positive semi-definite.
+\end{theorem}
 
 \section{Covariance Functions (Kernels)}
 
@@ -33,6 +39,8 @@ Common kernels:
     \item \textbf{Rational Quadratic:} $k(x,x') = \sigma^2 \left(1 + \frac{\|x-x'\|^2}{2\alpha\ell^2}\right)^{-\alpha}$
     \item \textbf{Linear:} $k(x,x') = \sigma^2 x^T x' + c$
 \end{itemize}
+
+The Matérn kernel with $\nu = 1/2$ reduces to the exponential kernel, while $\nu \to \infty$ gives the RBF kernel.
 
 \section{Gaussian Process Regression}
 
@@ -57,6 +65,16 @@ where
 \log p(\mathbf{y} | \mathbf{X}, \theta) = -\frac{1}{2} \mathbf{y}^T K_\theta^{-1} \mathbf{y} - \frac{1}{2} \log |K_\theta| - \frac{n}{2} \log 2\pi,
 \]
 where $K_\theta = K(\mathbf{X}, \mathbf{X}) + \sigma_n^2 I$. Hyperparameters $\theta$ are optimized by gradient ascent.
+
+\section{Sparse Approximations}
+
+For large datasets, exact GP regression is intractable ($O(n^3)$). Sparse approximations include:
+\begin{itemize}
+    \item \textbf{FITC (Fully Independent Training Conditional):} Uses inducing points with independence assumption
+    \item \textbf{VFE (Variational Free Energy):} Variational inference with inducing points
+    \item \textbf{Sparse GP (SGPR):} Random subset of training points
+\end{itemize}
+These reduce complexity to $O(nm^2)$ where $m \ll n$ is the number of inducing points.
 
 \section{Python Implementation}
 
@@ -92,6 +110,17 @@ ordinary_kriging(x_obs, y_obs, x_pred) # Ordinary Kriging
 \end{lstlisting}
 \end{example}
 
+\begin{example}[Sparse GP Approximation]
+For $n = 10,000$ observations with $m = 100$ inducing points:
+\begin{lstlisting}[style=python]
+>>> from gp import SparseGP, FITC
+>>> sparse_gp = FITC(n_data=10000, n_inducing=100)
+>>> sparse_gp.fit(X, y)
+>>> mu, var = sparse_gp.predict(X_test)
+\end{lstlisting}
+Training time reduces from hours to seconds while maintaining reasonable accuracy.
+\end{example}
+
 \section{Exercises}
 
 \begin{exercise}
@@ -110,6 +139,17 @@ Implement sparse Gaussian process approximations (FITC, VFE) for large $n$.
 Apply ordinary Kriging to a spatial dataset and compare with inverse distance weighting.
 \end{exercise}
 
+\begin{exercise}
+Derive the predictive distribution for GP regression with noisy observations.
+\end{exercise}
+
+\begin{exercise}
+Compare the computational complexity of exact GP regression ($O(n^3)$) with sparse approximations.
+\end{exercise}
+
+\begin{exercise}
+Prove that the posterior predictive distribution is Gaussian using properties of conditional Gaussians.
+\end{exercise}
 
 
 \section{Exercise Solutions}
@@ -120,6 +160,34 @@ A Gaussian process $f \sim \mathcal{GP}(m(x), k(x,x'))$ is determined by its mea
 
 \begin{solution}
 The RBF kernel $k(x,x') = \sigma^2 \exp(-\|x-x'\|^2/(2\ell^2))$ produces infinitely differentiable functions. The length scale $\ell$ controls smoothness: small $\ell$ gives rapid oscillations, large $\ell$ gives smooth functions. The signal variance $\sigma^2$ controls the amplitude.
+\end{solution}
+
+\begin{solution}
+The gradient of the log marginal likelihood with respect to hyperparameter $\theta_j$ is:
+\[
+\frac{\partial \log p(\mathbf{y}|\mathbf{X}, \theta)}{\partial \theta_j} = \frac{1}{2} \mathbf{y}^T K^{-1} \frac{\partial K}{\partial \theta_j} K^{-1} \mathbf{y} - \frac{1}{2} \text{tr}\left(K^{-1} \frac{\partial K}{\partial \theta_j}\right)
+\]
+This is computed efficiently using the Cholesky decomposition $K = LL^T$.
+\end{solution}
+
+\begin{solution}
+For FITC, we introduce $m$ inducing points $\mathbf{u}$ at locations $\mathbf{Z}$. The approximate posterior is $q(\mathbf{f}) = \mathcal{N}(\mu, \Lambda)$ where $\mu = K_{fn}K_{nn}^{-1}\mathbf{y}$ and $\Lambda = K_{ff} - K_{fn}K_{nn}^{-1}K_{nf} + \text{diag}(\mathbf{y})$. This gives $O(nm^2)$ complexity.
+\end{solution}
+
+\begin{solution}
+Ordinary Kriging assumes a constant but unknown mean $\mu$. The predictor is $\hat{y}(x_0) = \sum_i \lambda_i y(x_i)$ with $\sum_i \lambda_i = 1$. Minimizing variance subject to this constraint gives the ordinary Kriging system $(\mathbf{1}^T K^{-1} \mathbf{1})^{-1} \mathbf{1}^T K^{-1} \mathbf{y}$.
+\end{solution}
+
+\begin{solution}
+The predictive distribution for GP regression with noisy observations is derived from the joint Gaussian distribution:
+\[
+\begin{pmatrix} \mathbf{y} \\ f_* \end{pmatrix} \sim \mathcal{N}\left(\begin{pmatrix} m(\mathbf{X}) \\ m(\mathbf{X}_*) \end{pmatrix}, \begin{pmatrix} K + \sigma_n^2 I & K_* \\ K_*^T & K_{**} \end{pmatrix}\right)
+\]
+Conditioning on $\mathbf{y}$ gives the predictive mean and variance as stated in the chapter.
+\end{solution}
+
+\begin{solution}
+Exact GP regression: $O(n^3)$ time for Cholesky decomposition, $O(n^2)$ storage. Sparse GP with $m$ inducing points: $O(nm^2)$ time and $O(nm)$ storage. For $n = 10^5$, $m = 100$, this is a speedup of $\sim 10^9$. The tradeoff is approximation error, which can be controlled by choosing inducing points strategically.
 \end{solution}
 
 

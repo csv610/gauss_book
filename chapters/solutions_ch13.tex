@@ -1,5 +1,17 @@
 \section{Exercise Solutions}
 
 \begin{solution}
-The regular heptadecagon (17-gon) has interior angle $\frac{(17-2) \cdot 180°}{17} = \frac{2700°}{17} \approx 158.82°$. The central angle is $360°/17 \approx 21.18°$. Using Gauss's construction, the vertices are at angles $2\pi k/17$ for $k = 0, \ldots, 16$, with coordinates given by nested square roots.
+For the heptadecagon, $\cos(2\pi/17) = \frac{-1 + \sqrt{17} + \sqrt{34-2\sqrt{17}} + 2\sqrt{17+3\sqrt{17}-\sqrt{34-2\sqrt{17}}-2\sqrt{34+2\sqrt{17}}}}{16}$. This is derived by solving the quartic equations from the Gaussian periods: $\eta_1 + \eta_2 = -1$, $\eta_1\eta_2 = -4$ gives $\eta_1 = \frac{-1+\sqrt{17}}{2}$, then further quadratic equations yield the nested radicals for $\cos(2\pi/17)$.
+\end{solution}
+
+\begin{solution}
+For the 257-gon, $257 = F_3 = 2^{2^3}+1$ is a Fermat prime. The construction requires $\varphi(257) = 256 = 2^8$ nested square roots. The Galois group $(\Z/257\Z)^*$ is cyclic of order 256, and the subgroup chain has index 2 at each step, giving a tower of quadratic extensions $\Q \subset \Q(\sqrt{257}) \subset \cdots \subset \Q(\zeta_{257} + \zeta_{257}^{-1})$. The explicit construction follows Gauss's method of periods with $f = 2$ (since $256 = 2^8$).
+\end{solution}
+
+\begin{solution}
+To prove $\Phi_p(x)$ is irreducible over $\Q$ for prime $p$, apply Eisenstein's criterion to $\Phi_p(x+1)$. We have $\Phi_p(x) = \frac{x^p-1}{x-1} = x^{p-1} + x^{p-2} + \cdots + 1$, so $\Phi_p(x+1) = \frac{(x+1)^p-1}{x} = x^{p-1} + \binom{p}{1}x^{p-2} + \cdots + \binom{p}{p-1}$. All coefficients except the leading one are divisible by $p$, and the constant term $\binom{p}{1} = p$ is not divisible by $p^2$. By Eisenstein, $\Phi_p(x+1)$ is irreducible, hence $\Phi_p(x)$ is irreducible.
+\end{solution}
+
+\begin{solution}
+The vertices of the regular 17-gon are at $\zeta^k = e^{2\pi ik/17}$ for $k = 0, \ldots, 16$. Since $\zeta + \zeta^{-1} = 2\cos(2\pi/17)$, all vertices lie in $\Q(\zeta + \zeta^{-1})$, the maximal real subfield of $\Q(\zeta)$. This field is obtained by successive quadratic extensions: $\Q \subset \Q(\sqrt{17}) \subset \Q(\sqrt{17}, \sqrt{34-2\sqrt{17}}) \subset \cdots$, with degree $[\Q(\zeta+\zeta^{-1}):\Q] = \varphi(17)/2 = 8$.
 \end{solution}

@@ -1,5 +1,17 @@
 \section{Exercise Solutions}
 
 \begin{solution}
-Gauss's method for orbit determination uses three observations $(\alpha_i, \delta_i, t_i)$ to find the heliocentric positions $\mathbf{r}_i$. From the f and g functions, $\mathbf{r}_2 = f_1\mathbf{r}_1 + f_3\mathbf{r}_3$ gives a linear system for the unknown distances. The semi-major axis follows from the vis-viva equation $v^2 = \mu(2/r - 1/a)$.
+Gauss's method uses three observations $(\alpha_i, \delta_i, t_i)$ to determine the heliocentric distances $r_i$. The geometric relation gives $\mathbf{r}_2 = f_1\mathbf{r}_1 + f_3\mathbf{r}_3$ where $f_1, f_3$ depend on the time intervals. This yields a linear system for $r_1, r_2, r_3$. The vis-viva equation $v^2 = \mu(2/r - 1/a)$ gives the semi-major axis once $r_2$ and $v_2$ are known. The six orbital elements follow from the state vector.
+\end{solution}
+
+\begin{solution}
+The method of least squares refinement starts with an initial orbit estimate and linearizes the observation equations: $\mathbf{y}_{\text{obs}} \approx \mathbf{y}(\mathbf{x}_0) + J(\mathbf{x} - \mathbf{x}_0)$ where $J$ is the Jacobian of observations with respect to orbital elements. The correction is $\delta\mathbf{x} = (J^T J)^{-1} J^T (\mathbf{y}_{\text{obs}} - \mathbf{y}(\mathbf{x}_0))$. Iterating this process converges to the maximum likelihood estimate. Condition number of $J^T J$ indicates numerical stability.
+\end{solution}
+
+\begin{solution}
+The differential correction method updates orbital elements using partial derivatives. For observation $i$ at time $t_i$, the predicted position depends on initial state $\mathbf{x}_0$. The state transition matrix $\Phi(t, t_0) = \frac{\partial \mathbf{r}(t)}{\partial \mathbf{r}(t_0)}$ propagates uncertainties. The correction is $\delta\mathbf{x}_0 = (H^T R^{-1} H)^{-1} H^T R^{-1} \delta\mathbf{y}$ where $H$ contains partial derivatives and $R$ is the observation covariance.
+\end{solution}
+
+\begin{solution}
+Universal variables solve Kepler's equation for all conic sections using Stumpff functions. Define $x$ such that $r = \frac{1}{\alpha} + C_2(\zeta)x^2$ where $\zeta = \alpha s$, $s = 1/r_0 + 1/r$, and $C_2, C_3$ are Stumpff functions. The time equation is $t - t_0 = \frac{1}{\sqrt{\mu}}(x^3 C_3(\zeta) + (r_0+r)x C_2(\zeta))$. Iterating on $x$ via Newton's method gives the universal anomaly, from which position and velocity follow for any orbit type.
 \end{solution}

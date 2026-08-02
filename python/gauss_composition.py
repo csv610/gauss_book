@@ -68,8 +68,9 @@ def reduce_form(f: BinaryQuadraticForm) -> BinaryQuadraticForm:
         if abs(b) > a:
             # Apply transformation (x,y) -> (x + ky, y) to reduce b
             k = -round(b / (2*a))
-            b = b + 2*a*k
-            c = a*k*k + b*k + c
+            b_new = b + 2*a*k
+            c = a*k*k + b*k + c  # Use OLD b here
+            b = b_new
             continue
         
         # Step 2: Make a <= c
@@ -98,19 +99,27 @@ def all_reduced_forms(D: int) -> List[BinaryQuadraticForm]:
     """List all reduced primitive forms of discriminant D < 0."""
     if D >= 0 or D % 4 not in (0, 1):
         return []
-    
+
     forms = []
     max_a = int(math.sqrt(-D / 3)) + 1
-    
+
     for a in range(1, max_a + 1):
         for b in range(-a, a + 1):
             disc_part = b*b - D
             if disc_part % (4*a) == 0:
                 c = disc_part // (4*a)
-                if a <= c and (abs(b) < a or (abs(b) == a and b >= 0) or (a == c and b >= 0)):
+                # Standard reduced form conditions:
+                # |b| <= a <= c
+                # If |b| = a, then b >= 0
+                # If a = c, then b >= 0
+                if a <= c and abs(b) <= a:
+                    if abs(b) == a and b < 0:
+                        continue
+                    if a == c and b < 0:
+                        continue
                     if math.gcd(math.gcd(a, b), c) == 1:
                         forms.append(BinaryQuadraticForm(a, b, c))
-    
+
     return forms
 
 
@@ -126,75 +135,55 @@ def class_number(D: int) -> int:
 def gauss_composition(f: BinaryQuadraticForm, g: BinaryQuadraticForm) -> BinaryQuadraticForm:
     """
     Gauss's composition of two binary quadratic forms of the same discriminant.
-    
+
     This implements Dirichlet's simplified version (1851) of Gauss's original
     algorithm from Art. 234-298 of Disquisitiones.
     """
     if f.disc != g.disc:
         raise ValueError("Forms must have same discriminant")
-    
+
     D = f.disc
     a1, b1, c1 = f.a, f.b, f.c
     a2, b2, c2 = g.a, g.b, g.c
-    
+
+    # Standard composition formula:
     # Find B such that B ≡ b1 (mod 2a1), B ≡ b2 (mod 2a2), B^2 ≡ D (mod 4a1a2)
-    # Using Chinese Remainder Theorem
-    
-    # Solve for B modulo 2*lcm(a1, a2)
-    # B = b1 + 2a1 * k = b2 + 2a2 * l
-    # => 2a1*k - 2a2*l = b2 - b1
-    
-    # Use extended Euclidean algorithm
+    # Then A = a1*a2, C = (B^2 - D)/(4A)
+
     def egcd(a, b):
         if b == 0:
             return (a, 1, 0)
         g, x1, y1 = egcd(b, a % b)
         return (g, y1, x1 - (a // b) * y1)
-    
-    # Find solution to 2a1*k ≡ b2 - b1 (mod 2a2)
-    A = 2 * a1
-    B = 2 * a2
-    C = b2 - b1
-    
-    g, k0, l0 = egcd(A, B)
-    if C % g != 0:
+
+    # Solve B ≡ b1 (mod 2a1) and B ≡ b2 (mod 2a2)
+    # Using CRT on moduli 2a1 and 2a2
+    m1, m2 = 2*a1, 2*a2
+    g, s, t = egcd(m1, m2)
+
+    if (b2 - b1) % g != 0:
         raise ValueError("Forms not composable: no solution to B congruence")
-    
-    k = k0 * (C // g)
-    l = l0 * (C // g)
-    
-    B = b1 + A * k
-    
-    # Normalize B modulo 2*a1*a2
-    modulus = 2 * a1 * a2
-    B = B % modulus
-    if B < 0:
-        B += modulus
-    
-    # Now A = a1*a2 / gcd(a1,a2)^2 ? 
-    # Actually: composed form has A = (a1*a2) / g^2 where g = gcd(a1, a2, (b1+b2)/2)
-    
-    # Standard Gauss composition:
-    # A = a1 * a2 / d^2
-    # where d = gcd(a1, a2, (b1+b2)/2)
-    
-    d = math.gcd(math.gcd(a1, a2), (b1 + b2) // 2)
-    A = a1 * a2 // (d * d)
-    
-    # Find B such that B ≡ b1 (mod 2a1), B ≡ b2 (mod 2a2), B^2 ≡ D (mod 4A)
-    # The B we found above needs adjustment
-    
-    # Use the formula: B = (b1 * a2 * s2 + b2 * a1 * s1) / d  (mod 2A)
-    # where s1, s2 are Bezout coefficients: a1*s1 + a2*s2 = d
-    _, s1, s2 = egcd(a1, a2)
-    
-    B = (b1 * a2 * s2 + b2 * a1 * s1) // d if (b1 * a2 * s2 + b2 * a1 * s1) >= 0 else -((-b1 * a2 * s2 - b2 * a1 * s1) // d)
-    B = B % (2 * A)
-    
-    # C = (B^2 - D) / (4A)
+
+    # Find solution modulo lcm(m1, m2)
+    lcm = m1 // g * m2
+    B = (b1 * t * m2 + b2 * s * m1) // g
+    B = B % lcm
+
+    # Now B satisfies the congruences but may not satisfy B^2 ≡ D (mod 4a1a2)
+    # We need to search for B' = B + k*lcm such that B'^2 ≡ D (mod 4a1a2)
+    modulus = 4 * a1 * a2
+
+    for k in range(lcm):
+        B_candidate = B + k * lcm
+        if B_candidate * B_candidate % modulus == D % modulus:
+            B = B_candidate % modulus
+            break
+    else:
+        raise ValueError("No suitable B found for composition")
+
+    A = a1 * a2
     C = (B * B - D) // (4 * A)
-    
-    # Result might not be reduced
+
     result = BinaryQuadraticForm(A, B, C)
     return reduce_form(result)
 

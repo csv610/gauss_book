@@ -49,12 +49,14 @@ def cos_2pi_over_17_value() -> float:
 
 def constructible_ngons(limit: int = 100) -> List[int]:
     """List of n for which regular n-gon is constructible.
-    
+
     n = 2^k * p1 * p2 * ... * pm where pi are distinct Fermat primes.
     """
+    if limit <= 0:
+        return []
     fermat_primes = [3, 5, 17, 257, 65537]
     constructible = set()
-    
+
     for k in range(int(math.log2(limit)) + 2):
         base = 2 ** k
         if base > limit:

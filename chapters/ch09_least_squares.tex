@@ -21,6 +21,14 @@ Given $A \in \R^{m \times n}$ ($m \ge n$) and $b \in \R^m$, find $x$ minimizing 
 The minimizer satisfies $A^T A x = A^T b$. If $A$ has full column rank, $A^T A$ is invertible and $x = (A^T A)^{-1} A^T b$.
 \end{theorem}
 
+\begin{theorem}[Gauss-Markov Theorem \index{Gauss-Markov theorem}]
+The least squares estimator is the best linear unbiased estimator (BLUE): among all linear estimators $\hat{x} = Cy$ with $E[\hat{x}] = x$, the LS estimator has minimum covariance.
+\end{theorem}
+
+\begin{definition}[Residuals \index{residuals}]
+The residual vector $r = b - Ax$ measures the discrepancy between observed and predicted values.
+\end{definition}
+
 \section{QR Solution}
 
 Using $A = QR$ with $Q^T Q = I$, $R$ upper triangular:
@@ -29,9 +37,17 @@ Using $A = QR$ with $Q^T Q = I$, $R$ upper triangular:
 \]
 Solve $Rx = Q^T b$ by back substitution. This is more stable than normal equations.
 
+\begin{definition}[Condition Number \index{condition number}]
+The condition number $\kappa(A) = \|A\| \cdot \|A^{-1}\|$ measures sensitivity to perturbations. For least squares, $\kappa(A^TA) = \kappa(A)^2$.
+\end{definition}
+
 \section{Weighted Least Squares}
 
 Minimize $\|W^{1/2}(Ax - b)\|_2^2$ for symmetric positive definite weight matrix $W$. Solution: $(A^T W A)x = A^T W b$.
+
+\begin{definition}[Information Matrix \index{information matrix}]
+The matrix $A^T W A$ is the information matrix, measuring the amount of information about $x$ contained in the observations.
+\end{definition}
 
 \section{Tikhonov Regularization}
 
@@ -39,6 +55,11 @@ For ill-conditioned problems, minimize $\|Ax - b\|_2^2 + \lambda \|x\|_2^2$:
 \[
 (A^T A + \lambda I)x = A^T b.
 \]
+The regularization parameter $\lambda$ controls the bias-variance tradeoff.
+
+\begin{definition}[Ridge Regression \index{ridge regression}]
+Tikhonov regularization with $\lambda > 0$ is equivalent to ridge regression in statistics, adding a penalty on the $L_2$ norm of coefficients.
+\end{definition}
 
 \section{Nonlinear Least Squares}
 
@@ -48,14 +69,19 @@ x_{k+1} = x_k - (J_k^T J_k)^{-1} J_k^T f(x_k)
 \]
 where $J_k$ is the Jacobian of $f$ at $x_k$.
 
-The Levenberg-Marquardt algorithm adds damping:
+The Levenberg-Marquardt algorithm \index{Levenberg-Marquardt algorithm} adds damping:
 \[
 x_{k+1} = x_k - (J_k^T J_k + \lambda I)^{-1} J_k^T f(x_k).
 \]
+This combines gradient descent ($\lambda$ large) with Gauss-Newton ($\lambda$ small).
 
 \section{Gauss and the Orbit of Ceres}
 
 In 1801, asteroid Ceres was discovered but lost. Gauss used least squares on three observations to predict its orbit, enabling its rediscovery. He solved a nonlinear least squares problem for the six orbital elements.
+
+\begin{definition}[Orbit Determination \index{orbit determination}]
+The problem of finding orbital elements from observations is called orbit determination. Gauss's method is a preliminary orbit determination technique.
+\end{definition}
 
 \section{Python Implementation}
 
@@ -102,6 +128,10 @@ Apply Levenberg-Marquardt to fit an exponential model $y = a e^{bx} + c$.
 Reconstruct Gauss's Ceres orbit determination \index{orbit determination} using modern observations.
 \end{exercise}
 
+\begin{exercise}
+Implement the iterative refinement algorithm for least squares solutions.
+\end{exercise}
+
 
 
 \section{Exercise Solutions}
@@ -120,6 +150,10 @@ The residual $r = b - Ax$ is orthogonal to the column space of $A$: $A^Tr = 0$. 
 
 \begin{solution}
 Iterative refinement solves $A\delta = r$ where $r = b - A\hat{x}$ is the residual, then updates $\hat{x} \leftarrow \hat{x} + \delta$. Each iteration reduces the error by a factor of $\kappa(A)\epsilon$. In practice, 2--3 iterations suffice to reach machine precision for well-conditioned systems.
+\end{solution}
+
+\begin{solution}
+The QR updating algorithm maintains the QR decomposition as new data arrives. For rank-1 updates, the Givens rotation structure allows $O(n^2)$ updates rather than $O(n^3)$ recomputation. Downdating removes a row using hyperbolic rotations.
 \end{solution}
 
 

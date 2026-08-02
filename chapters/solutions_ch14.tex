@@ -1,5 +1,17 @@
 \section{Exercise Solutions}
 
 \begin{solution}
-The Theorema Egregium states that Gaussian curvature $K = \kappa_1 \kappa_2$ is invariant under isometric deformations. This follows from the Gauss equation $R_{1212} = K(g_{11}g_{22} - g_{12}^2)$, where the Riemann curvature tensor depends only on the first fundamental form and its derivatives.
+For a surface of revolution $z = f(r)$, parametrize as $\mathbf{r}(r,\theta) = (r\cos\theta, r\sin\theta, f(r))$. Then $\mathbf{r}_r = (\cos\theta, \sin\theta, f')$, $\mathbf{r}_\theta = (-r\sin\theta, r\cos\theta, 0)$, giving $E = 1 + f'^2$, $F = 0$, $G = r^2$. The unit normal is $\mathbf{n} = \frac{(-f'\cos\theta, -f'\sin\theta, 1)}{\sqrt{1+f'^2}}$. Computing $L = \mathbf{r}_{rr} \cdot \mathbf{n} = \frac{f''}{(1+f'^2)^{3/2}}$, $M = 0$, $N = \frac{r f'}{\sqrt{1+f'^2}}$. Thus $K = \frac{LN - M^2}{EG-F^2} = \frac{f''}{r(1+f'^2)^2}$.
+\end{solution}
+
+\begin{solution}
+For a triangle mesh, the discrete Gaussian curvature at vertex $v_i$ is $K_i = \frac{2\pi - \sum_{j \in \text{stars}(i)} \theta_j}{A_i}$, where $\theta_j$ are the face angles at $v_i$ in adjacent triangles and $A_i$ is the circumscript area. Numerically, compute normals for each face, then angle deficits. For the discrete Theorema Egregium, verify that $K_i$ depends only on the edge lengths (intrinsic measurement) by computing from the first fundamental form alone.
+\end{solution}
+
+\begin{solution}
+For a sphere of radius $R$, compute $K$ from the first fundamental form: $E = R^2$, $F = 0$, $G = R^2\sin^2\theta$. The Christoffel symbols are $\Gamma^1_{12} = \Gamma^1_{21} = \cot\theta$, $\Gamma^2_{12} = \Gamma^2_{21} = \cot\theta$. The Riemann tensor component $R_{1212} = R^2\sin^2\theta$, so $K = R_{1212}/(EG-F^2) = 1/R^2$. Computing from both forms gives the same result, verifying the Theorema Egregium.
+\end{solution}
+
+\begin{solution}
+For a triangulated torus, assign curvature $K_i = 2\pi - \sum \theta_j$ at each vertex (angle deficit). The discrete Gauss-Bonnet theorem states $\sum_i K_i A_i = 2\pi\chi(T^2) = 0$. For a rectangular torus mesh with $n \times m$ vertices, each interior vertex has angle sum $2\pi$ (from 4 right angles), so $K_i = 0$. The total curvature is zero, confirming $\chi = 0$. For a non-flat torus, the positive and negative curvatures balance exactly.
 \end{solution}

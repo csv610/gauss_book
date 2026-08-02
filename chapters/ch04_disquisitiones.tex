@@ -2,6 +2,8 @@
 
 The \textit{Disquisitiones Arithmeticae} (1801) is Gauss's magnum opus, containing 355 articles across seven sections. It founded modern number theory and introduced the systematic use of congruences. In this chapter, we explore selected topics from this masterpiece, implementing Gauss's algorithms and extending his ideas with modern computation.
 
+Gauss began writing the \textit{Disquisitiones} in 1795 at the age of 17 and published it in 1801. The work was so influential that it earned Gauss the epithet ``Princeps Mathematicorum'' (Prince of Mathematicians). The seven sections cover: congruences, linear congruences, quadratic residues, higher congruences, cyclotomy, quadratic forms, and application of cyclotomy to geometry.
+
 \section{Section I: Congruences (Articles 1--45)}
 
 We covered the basics in Chapter~\ref{ch:modular}. Here we highlight:
@@ -53,6 +55,14 @@ The set of equivalence classes of primitive binary quadratic forms of fixed disc
 
 This group is isomorphic to the ideal class group \index{ideal class group} \index{class group!quadratic forms} of the quadratic field $\Q(\sqrt{\Delta})$.
 
+\begin{theorem}[Dirichlet's Unit Theorem]\index{Dirichlet's unit theorem}
+The unit group of the ring of integers of a quadratic field is of the form $\mu \times \Z$, where $\mu$ is the finite cyclic group of roots of unity.
+\end{theorem}
+
+\begin{theorem}[Minkowski's Bound]\index{Minkowski bound}
+Every ideal class of a quadratic field contains an ideal with norm bounded by $\frac{2}{\pi}\sqrt{|\Delta|}$.
+\end{theorem}
+
 \section{Section VII: Cyclotomic Equations (Articles 355--366)}
 
 Gauss solved $x^n - 1 = 0$ by radicals, showing the constructibility of the regular 17-gon (Article 365).
@@ -66,8 +76,11 @@ solve_linear_congruence(a, b, n)      # Article 49
 quadratic_forms(discriminant)         # Generate forms of given disc
 compose_forms(f, g)                   # Gauss composition
 class_group(discriminant)             # Class group structure
-cyclotomic \index{cyclotomy}_polynomial(n)              # Phi_n(x)
+cyclotomic \index{cyclotomy}polynomial(n)              # Phi_n(x)
 heptadecagon_construction()           # Gauss's 17-gon
+euler_criterion(a, p)                 # Article 132
+legendre_symbol(a, p)                 # Quadratic residue test
+gauss_lemma(a, p)                     # Article 129
 \end{lstlisting}
 
 \section{Numerical Examples}
@@ -108,6 +121,10 @@ Implement Gauss's algorithm for the 17-gon construction. Output coordinates of v
 Prove that the class group of discriminant $\Delta$ is isomorphic to the ideal class group of $\Q(\sqrt{\Delta})$.
 \end{exercise}
 
+\begin{exercise}
+Verify Dirichlet's unit theorem for $\Q(\sqrt{2})$ and $\Q(\sqrt{-1})$. Find the fundamental units.
+\end{exercise}
+
 
 
 \section{Exercise Solutions}
@@ -128,6 +145,10 @@ The 17-gon construction uses the period equations of the 17th cyclotomic field. 
 The map from ideal classes to form classes sends an ideal $\mathfrak{a} = [a, \frac{b+\sqrt{\Delta}}{2}]$ to the form $a x^2 + bxy + \frac{b^2-\Delta}{4a} y^2$. This is well-defined, surjective, and injective (by reduction theory). The group operation corresponds to ideal multiplication, establishing the isomorphism $\operatorname{Cl}(\Q(\sqrt{\Delta})) \cong \operatorname{Cls}(\Delta)$.
 \end{solution}
 
+\begin{solution}
+For $\Q(\sqrt{2})$, the fundamental unit is $1+\sqrt{2}$ since $(1+\sqrt{2})(-1+\sqrt{2}) = 1$. For $\Q(\sqrt{-1}) = \Q(i)$, the unit group is $\{\pm 1, \pm i\} \cong \Z/4\Z$, consistent with $\mu = 4$ roots of unity. Dirichlet's theorem states $\mathcal{O}_K^* \cong \mu \times \Z^{r_1+r_2-1}$ where $r_1$ is the number of real embeddings and $r_2$ the number of complex pairs.
+\end{solution}
+
 
 \section{References}
 
@@ -136,4 +157,5 @@ The map from ideal classes to form classes sends an ideal $\mathfrak{a} = [a, \f
     \item \cite{cox-primes} -- Cox, \textit{Primes of the Form $x^2+ny^2$}
     \item \cite{buell-binary} -- Buell, \textit{Binary Quadratic Forms}
     \item \cite{cohen-forms} -- Cohen, \textit{Number Theory}, Vol. 2
+    \item \cite{neukirch} -- Neukirch, \textit{Algebraic Number Theory}
 \end{itemize}

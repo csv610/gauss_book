@@ -59,6 +59,14 @@ The Christoffel symbols \index{Christoffel symbol} $\Gamma_{ij}^k$ are computed 
 
 \section{Christoffel Symbols and Riemann Tensor}
 
+\begin{definition}[Christoffel Symbols \index{Christoffel symbol}]
+The Christoffel symbols of the second kind are:
+\[
+\Gamma_{ij}^k = \frac{1}{2} g^{kl} \left(\frac{\partial g_{il}}{\partial x^j} + \frac{\partial g_{jl}}{\partial x^i} - \frac{\partial g_{ij}}{\partial x^l}\right).
+\]
+\end{definition}
+
+For the first fundamental form $g_{11} = E$, $g_{12} = F$, $g_{22} = G$:
 \begin{align*}
 \Gamma_{11}^1 &= \frac{GE_u - 2FF_u + FE_v}{2(EG-F^2)} \\
 \Gamma_{12}^1 &= \frac{GE_v - FG_u}{2(EG-F^2)} \\
@@ -67,6 +75,13 @@ The Christoffel symbols \index{Christoffel symbol} $\Gamma_{ij}^k$ are computed 
 \Gamma_{12}^2 &= \frac{EG_u - FE_v}{2(EG-F^2)} \\
 \Gamma_{22}^2 &= \frac{EG_v - 2FF_v + FG_u}{2(EG-F^2)}
 \end{align*}
+
+\begin{definition}[Riemann Curvature Tensor \index{Riemann curvature tensor}]
+The Riemann curvature tensor measures the failure of parallel transport to be path-independent:
+\[
+R^l_{ijk} = \frac{\partial \Gamma_{ik}^l}{\partial x^j} - \frac{\partial \Gamma_{ij}^l}{\partial x^k} + \Gamma_{im}^l \Gamma_{jk}^m - \Gamma_{km}^l \Gamma_{ij}^m.
+\]
+\end{definition}
 
 Then $R_{1212} = \frac{1}{2}(E_{vv} + G_{uu} - 2F_{uv}) + \text{terms in } \Gamma$.
 
@@ -128,12 +143,32 @@ Verify the Theorema Egregium numerically: compute $K$ from first form only and c
 Apply the discrete Gauss-Bonnet theorem to a triangulated torus and verify $\sum K_i A_i = 0$.
 \end{exercise}
 
+\begin{exercise}
+Compute the geodesics on a sphere of radius $R$ and verify they are great circles.
+\end{exercise}
+
 
 
 \section{Exercise Solutions}
 
 \begin{solution}
 The Theorema Egregium states that Gaussian curvature $K = \kappa_1 \kappa_2$ is invariant under isometric deformations. This follows from the Gauss equation $R_{1212} = K(g_{11}g_{22} - g_{12}^2)$, where the Riemann curvature tensor depends only on the first fundamental form and its derivatives.
+\end{solution}
+
+\begin{solution}
+For a surface of revolution $z = f(r)$, parametrize as $\mathbf{r}(r,\theta) = (r\cos\theta, r\sin\theta, f(r))$. Then $E = 1 + f'^2$, $F = 0$, $G = r^2$. Computing Christoffel symbols and the Riemann tensor gives $K = \frac{f' f''}{r(1+f'^2)^2}$.
+\end{solution}
+
+\begin{solution}
+For a triangle mesh, the discrete Gaussian curvature at vertex $v_i$ is $K_i = \frac{2\pi - \sum_{j \in \text{stars}(i)} \theta_j}{A_i}$, where $\theta_j$ are the face angles at $v_i$ and $A_i$ is the circumscript area.
+\end{solution}
+
+\begin{solution}
+For a triangulated torus, assign curvature $K_i = 2\pi - \sum \theta_j$ at each vertex (angle deficit). The discrete Gauss-Bonnet theorem states $\sum_i K_i A_i = 2\pi\chi(T^2) = 0$. For a rectangular torus mesh, each interior vertex has angle sum $2\pi$, so $K_i = 0$.
+\end{solution}
+
+\begin{solution}
+Geodesics on a sphere satisfy the geodesic equation $\ddot{u}^k + \Gamma_{ij}^k \dot{u}^i \dot{u}^j = 0$. For a sphere, the solutions are great circles: $\theta(t) = at + b$, $\phi(t) = c$. The geodesic distance is $R \cdot \arccos(\sin\theta_1\sin\theta_2 + \cos\theta_1\cos\theta_2\cos(\phi_1-\phi_2))$.
 \end{solution}
 
 

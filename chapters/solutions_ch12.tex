@@ -7,3 +7,35 @@ A Gaussian process $f \sim \mathcal{GP}(m(x), k(x,x'))$ is determined by its mea
 \begin{solution}
 The RBF kernel $k(x,x') = \sigma^2 \exp(-\|x-x'\|^2/(2\ell^2))$ produces infinitely differentiable functions. The length scale $\ell$ controls smoothness: small $\ell$ gives rapid oscillations, large $\ell$ gives smooth functions. The signal variance $\sigma^2$ controls the amplitude.
 \end{solution}
+
+\begin{solution}
+The gradient of the log marginal likelihood with respect to hyperparameter $\theta_j$ is:
+\[
+\frac{\partial \log p(\mathbf{y}|\mathbf{X}, \theta)}{\partial \theta_j} = \frac{1}{2} \mathbf{y}^T K^{-1} \frac{\partial K}{\partial \theta_j} K^{-1} \mathbf{y} - \frac{1}{2} \text{tr}\left(K^{-1} \frac{\partial K}{\partial \theta_j}\right)
+\]
+This is computed efficiently using the Cholesky decomposition $K = LL^T$.
+\end{solution}
+
+\begin{solution}
+For FITC, we introduce $m$ inducing points $\mathbf{u}$ at locations $\mathbf{Z}$. The approximate posterior is $q(\mathbf{f}) = \mathcal{N}(\mu, \Lambda)$ where $\mu = K_{fn}K_{nn}^{-1}\mathbf{y}$ and $\Lambda = K_{ff} - K_{fn}K_{nn}^{-1}K_{nf} + \text{diag}(\mathbf{y})$. This gives $O(nm^2)$ complexity.
+\end{solution}
+
+\begin{solution}
+Ordinary Kriging assumes a constant but unknown mean $\mu$. The predictor is $\hat{y}(x_0) = \sum_i \lambda_i y(x_i)$ with $\sum_i \lambda_i = 1$. Minimizing variance subject to this constraint gives the ordinary Kriging system $(\mathbf{1}^T K^{-1} \mathbf{1})^{-1} \mathbf{1}^T K^{-1} \mathbf{y}$.
+\end{solution}
+
+\begin{solution}
+The predictive distribution for GP regression with noisy observations is derived from the joint Gaussian distribution:
+\[
+\begin{pmatrix} \mathbf{y} \\ f_* \end{pmatrix} \sim \mathcal{N}\left(\begin{pmatrix} m(\mathbf{X}) \\ m(\mathbf{X}_*) \end{pmatrix}, \begin{pmatrix} K + \sigma_n^2 I & K_* \\ K_*^T & K_{**} \end{pmatrix}\right)
+\]
+Conditioning on $\mathbf{y}$ gives the predictive mean and variance as stated in the chapter.
+\end{solution}
+
+\begin{solution}
+Exact GP regression: $O(n^3)$ time for Cholesky decomposition, $O(n^2)$ storage. Sparse GP with $m$ inducing points: $O(nm^2)$ time and $O(nm)$ storage. For $n = 10^5$, $m = 100$, this is a speedup of $\sim 10^9$. The tradeoff is approximation error, which can be controlled by choosing inducing points strategically.
+\end{solution}
+
+\begin{solution}
+For a joint Gaussian $\begin{pmatrix} \mathbf{y} \\ f_* \end{pmatrix} \sim \mathcal{N}(\mu, \Sigma)$, the conditional distribution $f_* | \mathbf{y}$ is Gaussian with mean $\mu_* + \Sigma_{*y}\Sigma_{yy}^{-1}(\mathbf{y} - \mu_y)$ and covariance $\Sigma_{**} - \Sigma_{*y}\Sigma_{yy}^{-1}\Sigma_{y*}$. This is a fundamental property of multivariate Gaussian distributions.
+\end{solution}

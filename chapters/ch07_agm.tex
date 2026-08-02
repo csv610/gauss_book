@@ -6,6 +6,14 @@ a_{n+1} = \frac{a_n + b_n}{2}, \quad b_{n+1} = \sqrt{a_n b_n}.
 \]
 These sequences converge to a common limit $M(a_0, b_0)$, the arithmetic-geometric mean. Gauss discovered that $M(1, \sqrt{2})$ relates to the lemniscate \index{lemniscate} constant and elliptic integrals \index{elliptic integral}.
 
+The AGM has deep connections to:
+\begin{itemize}
+    \item Elliptic integrals and modular forms \index{modular form}
+    \item Fast algorithms for computing $\pi$ \index{pi!computational algorithms}
+    \item Theta functions \index{theta function} and their transformations
+    \item The theory of quadratic forms \index{quadratic form}
+\end{itemize}
+
 In this chapter, we cover:
 \begin{itemize}
     \item Definition and basic properties of the AGM
@@ -30,13 +38,13 @@ $M(a,b) = M(b,a)$ and $M(ta, tb) = t M(a,b)$ for $t > 0$.
 
 \section{Connection to Elliptic Integrals}
 
-\begin{definition}[Complete Elliptic Integral of the First Kind]
+\begin{definition}[Complete Elliptic Integral of the First Kind]\index{elliptic integral!complete}
 \[
 K(k) = \int_0^{\pi/2} \frac{d\theta}{\sqrt{1 - k^2 \sin^2\theta}} = \int_0^1 \frac{dt}{\sqrt{(1-t^2)(1-k^2 t^2)}}, \quad 0 \le k < 1.
 \]
 \end{definition}
 
-\begin{theorem}[Gauss's Identity]
+\begin{theorem}[Gauss's Identity]\index{Gauss's identity}
 \[
 \frac{1}{M(1, k')} = \frac{2}{\pi} K(k), \quad k' = \sqrt{1-k^2}.
 \]
@@ -47,6 +55,16 @@ Use the substitution $t = \frac{\sin\theta}{\sqrt{1 - k'^2 \sin^2\theta}}$ in $K
 \end{proof}
 
 \section{Gauss's Constant and the Lemniscate}
+
+\begin{definition}[Gauss's Constant]\index{Gauss's constant}
+\[
+G = \frac{1}{M(1, \sqrt{2})} = \frac{2}{\pi} \int_0^{\pi/2} \frac{d\theta}{\sqrt{1+\sin^2\theta}} \approx 0.8346268...
+\]
+\end{definition}
+
+\begin{theorem}[Lemniscate Constant]\index{lemniscate constant}
+The lemniscate constant $\varpi = 2 \int_0^1 \frac{dt}{\sqrt{1-t^4}}$ satisfies $\varpi = \frac{\Gamma(1/4)^2}{2\sqrt{2\pi}} = 2M(1, \sqrt{2})$.
+\end{theorem}
 
 \begin{definition}[Gauss's Constant]
 \[

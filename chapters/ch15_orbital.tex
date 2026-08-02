@@ -2,6 +2,8 @@
 
 Gauss's work in astronomy, particularly his determination of the orbit of Ceres from just three observations, is one of the most celebrated applications of mathematics to science. He developed the method of least squares specifically for this problem and introduced the Gauss method for preliminary orbit determination.
 
+In 1801, Italian astronomer Piazzi discovered Ceres but lost it when it passed behind the Sun. Gauss predicted its return position using only three observations, and it was rediscovered on December 7, 1801, within the predicted region. This achievement established Gauss's reputation across Europe.
+
 In this chapter, we cover:
 \begin{itemize}
     \item Two-body problem and Kepler's laws
@@ -18,7 +20,7 @@ The motion of a body under a central inverse-square force:
 \ddot{\mathbf{r}} = -\frac{\mu}{r^3} \mathbf{r}, \quad \mu = G(M+m).
 \]
 
-\begin{theorem}[Conservation Laws]
+\begin{theorem}[Conservation Laws \index{conservation laws (orbital)}]
 \begin{enumerate}
     \item Angular momentum: $\mathbf{h} = \mathbf{r} \times \dot{\mathbf{r}} = \text{const}$
     \item Energy: $\mathcal{E} = \frac{1}{2} \|\dot{\mathbf{r}}\|^2 - \frac{\mu}{r} = \text{const}$
@@ -26,7 +28,7 @@ The motion of a body under a central inverse-square force:
 \end{enumerate}
 \end{theorem}
 
-\section{Orbital Elements}
+\section{Orbital Elements \index{orbital elements}}
 
 Six classical elements:
 \begin{itemize}
@@ -43,11 +45,11 @@ Six classical elements:
 Given three observations $(\alpha_i, \delta_i, t_i)$ (right ascension, declination, time), Gauss solved for the orbit using:
 
 \begin{enumerate}
-    \item Compute approximate position vectors $\mathbf{\rho}_i$ (topocentric)
+    \item Compute approximate position vectors $\mathbf{\rho}_i$ (topocentric) \index{topocentric coordinates}
     \item Use the relationship $\mathbf{r} = \mathbf{R} + \mathbf{\rho}$ (heliocentric = Earth + topocentric)
-    \item Solve for $\rho_i$ using the coplanarity condition and Lagrange's interpolation
-    \item Compute velocity from the f and g functions
-    \item Refine using least squares
+    \item Solve for $\rho_i$ using the coplanarity condition and Lagrange's interpolation \index{Lagrange interpolation}
+    \item Compute velocity from the f and g functions \index{f and g functions (orbital)}
+    \item Refine using least squares \index{least squares!orbit refinement}
 \end{enumerate}
 
 \section{The f and g Functions}
@@ -101,14 +103,15 @@ Gauss's method has several limitations:
 In \texttt{python/orbital.py}:
 
 \begin{lstlisting}[style=python, caption={Key functions in python/orbital.py}]
-kepler_elements_from_state(r, v, mu)      # State to elements
+kepler_elements_from_state(r, v, mu)      # State to orbital elements
 state_from_kepler_elements(elems, mu)     # Elements to state
-gauss_method(obs1, obs2, obs3)            # Gauss's 3-obs method
-least_squares_orbit(observations, x0)     # Refine orbit
-propagate_state(r, v, dt, mu)             # Universal variables
-solve_kepler(M, e)                        # Kepler's equation solver
-f_g_functions(r0, v0, dt, mu)             # f, g, fdot, gdot
+gauss_method(obs1, obs2, obs3)            # Gauss's 3-obs preliminary orbit determination
+least_squares_orbit(observations, x0)     # Refine orbit via least squares
+propagate_state(r, v, dt, mu)             # Universal variables propagation
+solve_kepler(M, e)                        # Solve Kepler's equation \index{Kepler's equation}
+f_g_functions(r0, v0, dt, mu)             # f, g, fdot, gdot for state transition
 differential_correction(obs, x0)          # Iterative refinement
+stumpff_functions(z, n)                   # Stumpff functions for universal variables
 \end{lstlisting}
 
 \section{Numerical Examples}
@@ -142,19 +145,23 @@ differential_correction(obs, x0)          # Iterative refinement
 \section{Exercises}
 
 \begin{exercise}
-Implement the universal variable formulation for propagation (works for all orbit types).
+Implement the universal variable formulation for propagation (works for all orbit types) using Stumpff functions \index{Stumpff functions}.
 \end{exercise}
 
 \begin{exercise}
-Derive the partial derivatives of $(\alpha, \delta)$ with respect to orbital elements.
+Derive the partial derivatives of $(\alpha, \delta)$ with respect to orbital elements using the Jacobian matrix.
 \end{exercise}
 
 \begin{exercise}
-Apply Gauss's method to historical Ceres observations (Piazzi, 1801).
+Apply Gauss's method to historical Ceres observations (Piazzi, 1801) and compare with modern orbital elements.
 \end{exercise}
 
 \begin{exercise}
-Implement the batch least squares orbit determination with multiple observations.
+Implement the batch least squares orbit determination with multiple observations and compute the covariance matrix.
+\end{exercise}
+
+\begin{exercise}
+Compare Gauss's method with Laplace's method for preliminary orbit determination \index{Laplace method}.
 \end{exercise}
 
 \section{Historical Notes}

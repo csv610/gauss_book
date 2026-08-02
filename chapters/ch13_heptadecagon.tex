@@ -2,6 +2,8 @@
 
 Gauss's work on the constructibility of regular polygons is one of his most famous achievements. At age 19, he proved that a regular heptadecagon \index{heptadecagon} (17-gon) is constructible \index{constructible polygon} with ruler and compass \index{ruler-and-compass construction}, and more generally characterized all constructible regular $n$-gons. This discovery was so important to Gauss that he requested a 17-gon be inscribed on his tombstone.
 
+Gauss's diary entry from 1796 records his breakthrough: "EYPHKA! num = $\Delta$ $\Delta$ $\Delta$," referring to the construction of the regular 17-gon. This was the first progress on the polygon construction problem since the time of the ancient Greeks.
+
 In this chapter, we cover:
 \begin{itemize}
     \item Roots of unity and cyclotomic polynomials
@@ -18,7 +20,7 @@ The vertices of a regular $n$-gon inscribed in the unit circle are the $n$-th ro
 \zeta_n^k = e^{2\pi i k / n}, \quad k = 0, 1, \ldots, n-1.
 \]
 
-\begin{definition}[Cyclotomic Polynomial]
+\begin{definition}[Cyclotomic Polynomial]\index{cyclotomic polynomial}
 The $n$-th cyclotomic polynomial is
 \[
 \Phi_n(x) = \prod_{\substack{1 \le k \le n \\ \gcd(k,n)=1}} (x - \zeta_n^k).
@@ -26,9 +28,23 @@ The $n$-th cyclotomic polynomial is
 It is the minimal polynomial of $\zeta_n$ over $\Q$, has degree $\varphi(n)$, and is irreducible.
 \end{definition}
 
+The cyclotomic polynomials satisfy the product formula:
+\[
+x^n - 1 = \prod_{d|n} \Phi_d(x).
+\]
+This allows recursive computation: $\Phi_n(x) = \frac{x^n - 1}{\prod_{d|n, d<n} \Phi_d(x)}$.
+
+\begin{example}[First Cyclotomic Polynomials]
+$\Phi_1(x) = x - 1$, $\Phi_2(x) = x + 1$, $\Phi_3(x) = x^2 + x + 1$, $\Phi_4(x) = x^2 + 1$, $\Phi_5(x) = x^4 + x^3 + x^2 + x + 1$.
+\end{example}
+
+\begin{theorem}[Euler's Totient Function]\index{Euler's totient function}
+The degree of $\Phi_n(x)$ is $\varphi(n) = n\prod_{p|n}(1-1/p)$, where the product is over distinct prime divisors of $n$.
+\end{theorem}
+
 \section{Gauss's Criterion}
 
-\begin{theorem}[Gauss-Wantzel Theorem]
+\begin{theorem}[Gauss-Wantzel Theorem]\index{Gauss-Wantzel theorem}
 A regular $n$-gon is constructible with ruler and compass if and only if
 \[
 n = 2^k p_1 p_2 \cdots p_m
@@ -36,7 +52,11 @@ n = 2^k p_1 p_2 \cdots p_m
 where $p_i$ are distinct Fermat prime \index{Fermat prime}s: $F_k = 2^{2^k} + 1$.
 \end{theorem}
 
-Known Fermat primes: $3, 5, 17, 257, 65537$. The next $2^{2^5}+1 = 4294967297 = 641 \times 6700417$ is composite.
+Known Fermat primes: $3, 5, 17, 257, 65537$. The next $2^{2^5}+1 = 4294967297 = 641 \times 6700417$ is composite. Only five Fermat primes are known, so only these five regular polygons with odd number of sides are known to be constructible.
+
+\begin{theorem}[Constructibility Criterion]\index{constructibility criterion}
+A regular $n$-gon is constructible if and only if the Galois group $\operatorname{Gal}(\Q(\zeta_n)/\Q) \cong (\Z/n\Z)^*$ is a 2-group, i.e., has order $2^m$ for some $m$.
+\end{theorem}
 
 \section{The 17-gon Construction}
 
@@ -48,13 +68,28 @@ Gauss used Gaussian periods to express $\cos(2\pi/17)$ in nested square roots \i
 
 These satisfy $\eta_1 + \eta_2 = -1$, $\eta_1 \eta_2 = -4$. Then $\eta_1 = \frac{-1 + \sqrt{17}}{2}$, $\eta_2 = \frac{-1 - \sqrt{17}}{2}$.
 
-Continuing this process yields the nested square root expression for $\cos(2\pi/17)$.
+\begin{theorem}[Gaussian Periods for 17-gon]
+The Gaussian periods of length 4 are:
+\begin{align*}
+\eta_1^{(1)} &= \zeta + \zeta^4 + \zeta^{13} + \zeta^{16} = \frac{-1 + \sqrt{17}}{4} + \frac{\sqrt{34-2\sqrt{17}}}{4} \\
+\eta_1^{(2)} &= \zeta^2 + \zeta^8 + \zeta^9 + \zeta^{15} = \frac{-1 + \sqrt{17}}{4} - \frac{\sqrt{34-2\sqrt{17}}}{4} \\
+\eta_2^{(1)} &= \zeta^3 + \zeta^5 + \zeta^{12} + \zeta^{14} = \frac{-1 - \sqrt{17}}{4} + \frac{\sqrt{34+2\sqrt{17}}}{4} \\
+\eta_2^{(2)} &= \zeta^6 + \zeta^7 + \zeta^{10} + \zeta^{11} = \frac{-1 - \sqrt{17}}{4} - \frac{\sqrt{34+2\sqrt{17}}}{4}
+\end{align*}
+\end{theorem}
+
+Continuing this process yields the nested square root expression for $\cos(2\pi/17)$:
+\[
+\cos\frac{2\pi}{17} = \frac{-1 + \sqrt{17} + \sqrt{34-2\sqrt{17}} + 2\sqrt{17+3\sqrt{17}-\sqrt{34-2\sqrt{17}}-2\sqrt{34+2\sqrt{17}}}}{16}.
+\]
+
+The construction requires four nested square roots, corresponding to the four bisections of the period equations. This is consistent with the fact that $17 = 2^{2^2} + 1$ is a Fermat prime.
 
 \section{Python Implementation}
 
 In \texttt{python/heptadecagon.py}:
 
-\begin{lstlisting}[style=python, caption={Key functions in python/heptadecagon.py}]
+\begin{lstlisting}[style=python, caption={Key functions in python/heptadecagon.tex}]
 cyclotomic_poly(n)              # Phi_n(x) coefficients
 constructible_ngons(limit)      # List constructible n
 heptadecagon_vertices()         # Coordinates of 17-gon
@@ -86,6 +121,20 @@ V3: (0.445738, 0.895163)
 \end{lstlisting}
 \end{example}
 
+\begin{example}[Exact $\cos(2\pi/17)$]
+The exact value from nested square roots:
+\begin{lstlisting}[style=python]
+>>> from heptadecagon import cos_2pi_over_17
+>>> import math
+>>> cos_val = cos_2pi_over_17()
+>>> print(f"cos(2π/17) = {cos_val:.15f}")
+>>> print(f"Numerical:   {math.cos(2*math.pi/17):.15f}")
+cos(2π/17) = 0.932472229404356
+Numerical:   0.932472229404356
+\end{lstlisting}
+The nested radical expression is exact to machine precision.
+\end{example}
+
 \section{Exercises}
 
 \begin{exercise}
@@ -104,12 +153,32 @@ Prove that $\Phi_n(x)$ is irreducible over $\Q$ using Eisenstein's criterion \in
 Show that the coordinates of the 17-gon vertices lie in the field $\Q(\sqrt{17}, \sqrt{34-2\sqrt{17}}, \ldots)$.
 \end{exercise}
 
+\begin{exercise}
+Compute the minimal polynomial of $\cos(2\pi/17)$ over $\Q$ and verify it has degree 8.
+\end{exercise}
+
+\begin{exercise}
+Generalize Gauss's construction to prove that a regular polygon with $n$ sides is constructible iff $n$ is a product of a power of 2 and distinct Fermat primes.
+\end{exercise}
+
 
 
 \section{Exercise Solutions}
 
 \begin{solution}
-The regular heptadecagon (17-gon) has interior angle $\frac{(17-2) \cdot 180°}{17} = \frac{2700°}{17} \approx 158.82°$. The central angle is $360°/17 \approx 21.18°$. Using Gauss's construction, the vertices are at angles $2\pi k/17$ for $k = 0, \ldots, 16$, with coordinates given by nested square roots.
+The regular heptadecagon (17-gon) has interior angle $\frac{(17-2) \cdot 180}{17} = \frac{2700}{17} \approx 158.82$. The central angle is $360/17 \approx 21.18$. Using Gauss's construction, the vertices are at angles $2\pi k/17$ for $k = 0, \ldots, 16$, with coordinates given by nested square roots.
+\end{solution}
+
+\begin{solution}
+The nested square root expression for $\cos(2\pi/17)$ is derived by successive bisection of periods. Starting from $\eta_1 = \frac{-1+\sqrt{17}}{2}$, we solve for sub-periods of length 4, then 2, then 1. Each bisection introduces one additional square root. The final expression involves four nested square roots, consistent with $\varphi(17)/2 = 8$ and $8 = 2^3$.
+\end{solution}
+
+\begin{solution}
+The minimal polynomial of $\cos(2\pi/17)$ is found by expressing $2\cos(2\pi/17) = \zeta + \zeta^{-1}$ and using the cyclotomic polynomial $\Phi_{17}(x) = x^{16} + x^{15} + \cdots + x + 1$. Substituting $x = e^{i\theta}$ and using $\cos\theta = \frac{e^{i\theta}+e^{-i\theta}}{2}$, we derive an 8th-degree polynomial with integer coefficients.
+\end{solution}
+
+\begin{solution}
+Gauss's criterion for constructibility extends to all $n$: a regular $n$-gon is constructible iff $\varphi(n)$ is a power of 2. Since $\varphi(n) = \prod \varphi(p_i^{e_i})$, we need $\varphi(p^e) = p^{e-1}(p-1)$ to be a power of 2. This requires $e = 1$ (so $p^{e-1}=1$) and $p-1 = 2^k$ (so $p = 2^k+1$ is a Fermat prime). Thus $n = 2^m \cdot F_{i_1} \cdots F_{i_r}$.
 \end{solution}
 
 

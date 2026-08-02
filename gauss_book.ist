@@ -1,0 +1,24 @@
+% Index style file for gauss_book
+headings_flag 1
+heading_prefix "\\begingroup\\large\\sffamily\\bfseries "
+heading_suffix " \\endgroup\n"
+general_heading "\\begin{center}\\bfseries\\large Index\\end{center}\n"
+item_0 "\\item "
+subitem_0 "  \\item "
+subsubitem_0 "    \\item "
+ delim_t ", "
+ delim_a "! "
+ delim_r ": "
+ delim_y "; "
+  delim_0,
+ delimit_1 " see "
+ delimit_2 " see also "
+preamble "{\\bfseries\\large Index\n\\nopagebreak[4]
+\\markboth{\\textsf{Index}}{\\textsf{Index}}}\n"
+postamble "{\\parfillskip=0pt \\indent\\hfill$\\langle$end of index$\\rangle$\n\\par}\n"
+extra "See also the glossary in the Appendix for key definitions.\n"
+group_skip "\\nopagebreak[4]\n\\bigskip\n"
+letter_skip "\\nopagebreak[4]\n\\medskip\n"
+page_kern 0
+chapter_head_prefix "\\chapter*"
+chapter_head_suffix ""

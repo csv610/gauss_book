@@ -2,6 +2,8 @@
 
 The normal (Gaussian) distribution \index{normal distribution} is central to probability theory and statistics. Gauss introduced it in his work on the method of least squares and the theory of errors. The distribution arises naturally as the limit of sums of independent random variables (Central Limit Theorem \index{Central Limit Theorem}) and as the maximum entropy \index{Shannon entropy} distribution for a given variance.
 
+The normal distribution was first studied by Abraham de Moivre (1733) in the context of approximating the binomial distribution, but Gauss's work in the early 1800s established its fundamental importance in error theory and statistics.
+
 In this chapter, we cover:
 \begin{itemize}
     \item The normal distribution: PDF, CDF, properties
@@ -129,6 +131,10 @@ Implement the Box-Muller transform for generating normal random variables.
 Show that for normal data, the sample mean and sample variance are independent (Basu's theorem).
 \end{exercise}
 
+\begin{exercise}
+Prove the Cramér-Rao lower bound for estimators of the normal distribution parameters.
+\end{exercise}
+
 
 
 \section{Exercise Solutions}
@@ -146,7 +152,7 @@ Maximum likelihood estimation for $N(\mu, \sigma^2)$ gives $\hat{\mu} = \bar{x}$
 \end{solution}
 
 \begin{solution}
-Convolution of two normals: if $X \sim N(\mu_1, \sigma_1^2)$ and $Y \sim N(\mu_2, \sigma_2^2)$, then $X+Y \sim N(\mu_1+\mu_2, \sigma_1^2+\sigma_2^2)$. This follows from characteristic functions: $\phi_X(t)\phi_Y(t) = e^{i\mu_1 t - \sigma_1^2 t^2/2} \cdot e^{i\mu_2 t - \sigma_2^2 t^2/2} = e^{i(\mu_1+\mu_2)t - (\sigma_1^2+\sigma_2^2)t^2/2}$.
+The Cramér-Rao lower bound states that for any unbiased estimator $\hat{\theta}$ of $\theta$, $\operatorname{Var}(\hat{\theta}) \geq \frac{1}{I(\theta)}$ where $I(\theta)$ is the Fisher information. For $N(\mu, \sigma^2)$, $I(\mu) = n/\sigma^2$ and $I(\sigma^2) = n/(2\sigma^4)$. The sample mean achieves the bound for $\mu$, and $S^2$ is approximately efficient for $\sigma^2$.
 \end{solution}
 
 
