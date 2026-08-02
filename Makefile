@@ -11,8 +11,8 @@
 
 LATEXMK = latexmk
 LATEXMK_FLAGS = -pdf -silent -interaction=nonstopmode
-PYTHON = python3
-PYTEST = python3 -m pytest
+PYTHON = /opt/homebrew/bin/python3.11
+PYTEST = /opt/homebrew/bin/python3.11 -m pytest
 
 .PHONY: all book guide test test-fast clean rebuild
 
