@@ -26,6 +26,7 @@ build/
 *.snm
 *.vrb
 *.xdv
+gauss_book.run.xml
 .DS_Store
 *.class
 *.jar
