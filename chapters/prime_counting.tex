@@ -1,0 +1,203 @@
+\section{Introduction}
+
+At the age of fifteen, in 1792, Gauss conjectured that the density \index{prime density} of primes near a large number $x$ is approximately $1/\log x$, so that the number $\pi(x)$ of primes up to $x$ should behave like $x / \log x$. He recorded his counts in a small table of primes (the ``Gauss table''), and in his famous 1849 letter to the astronomer Johann Franz Encke he described how, as a boy, he had filled the back of his logarithm table with counts of primes in blocks of 1000, comparing them with $x/\log x$ and with the logarithmic integral $Li(x)$. The letter is reprinted in his \textit{Werke}~\cite{gauss-works}. The conjecture that $\pi(x) \sim x/\log x$ was proved independently by Hadamard and de la Vall\'ee Poussin in 1896 and is now called the prime number theorem.
+
+In this chapter, we cover:
+\begin{itemize}
+    \item The sieve of Eratosthenes \index{sieve of Eratosthenes} for computing $\pi(x)$ exactly
+    \item Primality testing with Miller--Rabin \index{Miller--Rabin test}
+    \item Gauss's estimate $x/\log x$ and the logarithmic integral $Li(x)$
+    \item Legendre's improvement and Riemann's approximation $R(x)$
+    \item The comparison tables that Gauss himself tabulated
+\end{itemize}
+
+\section{The Distribution of the Primes}
+
+\begin{definition}[Prime Counting Function]\index{prime counting function}
+For $x > 0$, the prime counting function is
+\[
+\pi(x) = \#\{p \le x : p \text{ prime}\}.
+\]
+\end{definition}
+
+The primes thin out as $x$ grows. Gauss's insight, recorded in 1792, is that near a large number $x$ the fraction of numbers that are prime is about $1/\log x$. Equivalently, the probability that a randomly chosen integer near $x$ is prime is roughly $1/\log x$.
+
+\begin{theorem}[Prime Number Theorem]\index{prime number theorem}
+\[
+\pi(x) \sim \frac{x}{\log x} \quad \text{as } x \to \infty.
+\]
+Equivalently, $\pi(x) \sim Li(x)$, where
+\[
+Li(x) = \int_2^x \frac{dt}{\log t}.
+\]
+\end{theorem}
+
+The prime number theorem was conjectured by Gauss (1792) and Legendre (1798) and proved by Hadamard and de la Vall\'ee Poussin in 1896 using the Riemann zeta function. The estimate $x/\log x$ is only the leading term; the logarithmic integral $Li(x)$ is a substantially better approximation. For a modern treatment, see \cite{davenport} and \cite{montgomery-vaughan}.
+
+\section{Computing $\pi(x)$: The Sieve of Eratosthenes}
+
+The oldest practical way to count primes is the sieve of Eratosthenes \index{sieve of Eratosthenes}: write down the integers up to $n$, cross out the multiples of 2, then of 3, then of 5, and so on. The numbers that survive are prime.
+
+\begin{algorithmthm}[Sieve of Eratosthenes]
+Given $n \ge 2$:
+\begin{enumerate}
+    \item Start with a boolean array marking every integer $2, \ldots, n$ as prime.
+    \item For each $p = 2, 3, \ldots$ with $p^2 \le n$: if $p$ is still marked prime, mark all multiples $p^2, p^2 + p, \ldots, n$ as composite.
+    \item The marked primes are exactly the primes $\le n$.
+\end{enumerate}
+\end{algorithmthm}
+
+The multiples below $p^2$ have already been removed by smaller primes, so the sieve may begin at $p^2$. The number of operations is $O(n \log \log n)$, which makes sieving up to $10^7$ entirely practical on a laptop.
+
+For single large numbers, Gauss's own trial-division approach is replaced by the Miller--Rabin test \index{Miller--Rabin test}, a probabilistic test that with our fixed base set is deterministic for every $n < 3.3 \cdot 10^{24}$, far beyond the range needed here.
+
+\section{Gauss's Estimate and the Logarithmic Integral}
+
+Gauss compared $\pi(x)$ with two approximations. The first is the naive estimate
+\[
+\pi(x) \approx \frac{x}{\log x}.
+\]
+The second is the logarithmic integral $Li(x) = \int_2^x dt / \log t$, the solution of the same heuristic where every integer near $t$ is prime with probability $1/\log t$. Legendre proposed the further improvement
+\[
+\pi(x) \approx \frac{x}{\log x - 1.08366}.
+\]
+
+\begin{remark}
+In the 1849 letter to Encke, Gauss stated that $Li(x)$ ``never \dots gives results that are too small'' and that the difference $Li(x) - \pi(x)$ is positive for all tabulated $x$ and grows roughly like $\sqrt{x} / \log x$. The first place where $Li(x)$ drops below $\pi(x)$ is the famous \index{Skewes' number} Skewes' number, far beyond $10^{100}$.
+\end{remark}
+
+Riemann refined the heuristics still further. His approximation
+\[
+R(x) = 1 + \sum_{k=1}^{\infty} \frac{(\log x)^k}{k\, \zeta(k+1)\, k!}
+\]
+(the Gram series) is remarkably close to $\pi(x)$ even for small $x$. At $x = 10^6$, $R(x)$ errs by only about 29, whereas $x/\log x$ errs by about 6100.
+
+\section{Python Implementation}
+
+In \texttt{python/prime\_counting.py}:
+
+\begin{lstlisting}[style=python, caption={Key functions in python/prime\_counting.py}]
+sieve_of_eratosthenes(n)     # All primes up to n
+is_prime(n)                  # Miller-Rabin primality test
+prime_pi(x)                  # pi(x): count of primes <= x
+nth_prime(n)                 # The n-th prime
+prime_density(x)             # Heuristic density 1/log(x)
+gauss_estimate(x)            # x/log(x)
+legendre_estimate(x)         # x/(log(x) - 1.08366)
+logarithmic_integral(x)      # Li(x) = Ei(log x)
+riemann_r(x)                 # Gram series R(x)
+prime_counting_table(x_max)  # pi, x/log x, Li(x) at powers of ten
+\end{lstlisting}
+
+\section{Numerical Examples}
+
+\begin{example}[Gauss's Table]
+The following reproduces Gauss's 1849 comparison table for powers of ten, including the ratio $\pi(x)/(x/\log x)$ that approaches 1:
+\begin{lstlisting}[style=python]
+>>> from prime_counting import prime_counting_table
+>>> for x, pi_x, xlx, lix, ratio in prime_counting_table(10**6):
+...     print(f"{x:>12} {pi_x:>8} {xlx:>8.0f} {lix:>8.0f} {ratio:.4f}")
+          10        4        4        6 0.9210
+         100       25       22       30 1.1513
+        1000      168      145      178 1.1605
+       10000     1229     1086     1246 1.1320
+      100000     9592     8686     9630 1.1043
+     1000000    78498    72382    78628 1.0845
+\end{lstlisting}
+At every power of ten from $10^3$ onward, $Li(x)$ is closer to $\pi(x)$ than is $x/\log x$, exactly as Gauss observed.
+\end{example}
+
+\begin{example}[The $n$-th Prime and Primality]
+\begin{lstlisting}[style=python]
+>>> from prime_counting import nth_prime, is_prime
+>>> nth_prime(1000)
+7919
+>>> is_prime(2**32 + 1)
+False
+>>> is_prime(2**61 - 1)
+True
+\end{lstlisting}
+Gauss's table was built precisely by sieving out the primes one by one; $2^{32}+1 = 641 \cdot 6700417$ is the Fermat number whose compositeness Euler proved in 1732, and $2^{61}-1$ is a Mersenne prime \index{Mersenne prime}.
+\end{example}
+
+\begin{example}[The Approximations at $x = 10^6$]
+\begin{lstlisting}[style=python]
+>>> from prime_counting import (prime_pi, gauss_estimate, legendre_estimate,
+...                             logarithmic_integral, riemann_r)
+>>> x = 10**6
+>>> print(f"pi(x)       = {prime_pi(x)}")
+>>> print(f"x/log x     = {gauss_estimate(x):.1f}")
+>>> print(f"Legendre    = {legendre_estimate(x):.1f}")
+>>> print(f"Li(x)       = {logarithmic_integral(x):.1f}")
+>>> print(f"R(x)        = {riemann_r(x):.1f}")
+pi(x)       = 78498
+x/log x     = 72382.4
+Legendre    = 78543.2
+Li(x)       = 78627.5
+R(x)        = 78527.4
+\end{lstlisting}
+The errors are 6100, 45, 130 and 29 respectively: each refinement in the history of the subject improves the count by an order of magnitude.
+\end{example}
+
+\section{Exercises}
+
+\begin{exercise}
+Verify by sieving that $\pi(10) = 4$, $\pi(100) = 25$ and $\pi(1000) = 168$. How many multiples were crossed out in each step of the sieve up to 100?
+\end{exercise}
+
+\begin{exercise}
+Use \texttt{nth\_prime} to find $p_{10^4}$ and $p_{10^5}$, and confirm Gauss's table entries $\pi(10^5) = 9592$ and $\pi(10^6) = 78498$.
+\end{exercise}
+
+\begin{exercise}
+Show that $\pi(x) \sim x/\log x$ implies that the $n$-th prime satisfies $p_n \sim n \log n$. Verify the ratio $p_n/(n \log n)$ for $n = 100$, $10^4$ and $10^6$.
+\end{exercise}
+
+\begin{exercise}
+Compute $Li(x) - \pi(x)$ and $x/\log x - \pi(x)$ for $x = 10^4, 10^5, 10^6$ and compare their rates of growth.
+\end{exercise}
+
+\begin{exercise}
+The Gram series for $R(x)$ requires many terms for large $x$. Find how many terms are needed to approximate $R(10^9)$ to within 1, and compare $R(10^9)$ with $\pi(10^9)$.
+\end{exercise}
+
+\begin{exercise}
+Prove that $\pi(x) \ge \log_2 x$ for all $x \ge 1$ using the identity
+\[
+2^{\pi(x)} \le \prod_{p \le x} p \le 4^x.
+\]
+\end{exercise}
+
+\section{Exercise Solutions}
+
+\begin{solution}
+$\pi(10) = 4$ (primes 2, 3, 5, 7); $\pi(100) = 25$; $\pi(1000) = 168$. For the sieve up to 100, the crossing-out steps use the primes $2, 3, 5, 7$ (the primes with $p^2 \le 100$); the number of multiples crossed out at the $p$-th step is $\lfloor 100/p \rfloor - \lfloor 100/p^2 \rfloor$ for the multiples above $p^2$, which are the only ones not already removed.
+\end{solution}
+
+\begin{solution}
+The module gives $p_{10^4} = 104729$ and $p_{10^5} = 1299709$. Since $p_n$ grows like $n \log n$, we have $\pi(10^5) = 9592$ because $p_{9592} < 10^5 < p_{9593}$, and similarly for $10^6$.
+\end{solution}
+
+\begin{solution}
+Inverting the prime number theorem: $\pi(x) \sim x/\log x$ means $x \sim \pi(x) \log x$. Setting $n = \pi(x)$ gives $p_n \sim n \log p_n$, and since $\log p_n \sim \log n$ (because $p_n$ is polynomial in $n$), we get $p_n \sim n \log n$. The ratios $p_{100}/(100 \log 100) = 541/460.5 \approx 1.17$ and $p_{10^4}/(10^4 \log 10^4) \approx 1.137$ and $p_{10^6}/(10^6 \log 10^6) \approx 1.1207$ all decrease slowly toward 1.
+\end{solution}
+
+\begin{solution}
+Using the module: at $x = 10^4$, $x/\log x - \pi(x) \approx 1086 - 1229 = -143$; $Li(x) - \pi(x) \approx 1246 - 1229 = 17$. At $x = 10^6$, $x/\log x - \pi(x) \approx -6100$ while $Li(x) - \pi(x) \approx 130$. The difference $Li(x) - \pi(x)$ grows like $O(\sqrt{x}/\log x)$, much more slowly than the linear-scale error of $x/\log x$.
+\end{solution}
+
+\begin{solution}
+$\log(10^9) \approx 20.72$, so the Gram series terms first grow until roughly $k \approx \log x \approx 20$, then decay; about 50--100 terms are needed. The module gives $R(10^9) = 50847455.1$ versus $\pi(10^9) = 50847534$, an error of about 79, far smaller than $Li(10^9) - \pi(10^9) \approx 1701$.
+\end{solution}
+
+\begin{solution}
+Since each prime divides a distinct binomial coefficient via $p \mid \binom{2p}{p}$, and the product of primes $\le x$ divides $\binom{2\lfloor x \rfloor}{\lfloor x \rfloor}$ times small factors, the estimate $\prod_{p \le x} p \le 4^x$ follows by induction from the fact that $\binom{2m}{m} \le 4^m$. Each prime contributes a factor at least 2, so $2^{\pi(x)} \le \prod_{p \le x} p \le 4^x$, hence $\pi(x) \ge x \log 2 / \log 4 = x/2 \cdot \log_2 e$, and in particular $\pi(x) \ge \log_2 x$ for $x \ge 2$.
+\end{solution}
+
+\section{References}
+
+\begin{itemize}
+    \item \cite{gauss-works} -- Gauss, \textit{Werke}, Vol.~II (letter to Encke, 1849)
+    \item \cite{davenport} -- Davenport, \textit{Multiplicative Number Theory}
+    \item \cite{montgomery-vaughan} -- Montgomery and Vaughan, \textit{Multiplicative Number Theory I: Classical Theory}
+\end{itemize}

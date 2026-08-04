@@ -1,0 +1,269 @@
+\section{Introduction}
+
+From the 1790s onward Gauss developed a non-Euclidean geometry \index{non-Euclidean geometry} in which the parallel postulate fails: through a point not on a line there are \emph{many} lines not meeting the given line, and the angle sum of a triangle is always \emph{less} than $\pi$. Gauss even measured the angles of the triangle formed by the peaks of the Brocken, Hoher Hagen and Inselsberg in his survey work, hoping to detect a non-Euclidean defect in physical space; he found none beyond the errors of observation. Fearful of the controversy that had met earlier attempts, he published nothing. After Lobachevsky (1829) and Bolyai (1832) published independently, Gauss wrote in 1846 that he had ``long possessed'' the ideas, and his \textit{Werke} contain fragments describing what we now call the hyperbolic plane~\cite{gauss-works}. The definitive models were given by Beltrami, Klein and Poincar\'e; for the history, see \cite{bonola} and \cite{milnor-hyperbolic}.
+
+This chapter makes the geometry computable using the two conformal models of the hyperbolic plane of constant curvature $-1$: the upper half-plane and the Poincar\'e disk.
+
+In this chapter, we cover:
+\begin{itemize}
+    \item The upper half-plane and Poincar\'e disk models and their isometry (the Cayley map)
+    \item Hyperbolic distance in both models
+    \item Geodesics as arcs of circles orthogonal to the boundary
+    \item The angle of parallelism \index{angle of parallelism} $\Pi(x) = 2\arctan(e^{-x})$
+    \item The hyperbolic laws of cosines and sines, and the angle defect
+    \item The area of hyperbolic circles and triangles (Gauss--Bonnet)
+\end{itemize}
+
+\section{Two Models of the Hyperbolic Plane}
+
+\begin{definition}[Upper Half-Plane Model]
+The upper half-plane $\mathbb{H} = \{z \in \C : \operatorname{Im} z > 0\}$ with line element
+\[
+ds^2 = \frac{dx^2 + dy^2}{y^2}
+\]
+is a model of the hyperbolic plane with curvature $-1$.
+\end{definition}
+
+\begin{definition}[Poincar\'e Disk Model]
+The unit disk $\mathbb{D} = \{z \in \C : \lvert z \rvert < 1\}$ with line element
+\[
+ds^2 = \frac{4\,(dx^2 + dy^2)}{(1 - \lvert z \rvert^2)^2}
+\]
+is an isometric model of the same geometry.
+\end{definition}
+
+The two models are related by the Cayley map \index{Cayley map}
+\[
+z \mapsto \frac{z - i}{z + i}, \qquad \mathbb{H} \to \mathbb{D},
+\]
+a conformal map taking the real axis (the boundary at infinity) to the unit circle. Because the map is conformal and preserves the line elements, it is an isometry: hyperbolic distances are unchanged. This gives an immediate computational check of every formula.
+
+\section{Hyperbolic Distance}
+
+\begin{theorem}[Distance in the Half-Plane]
+The hyperbolic distance between $z_1, z_2 \in \mathbb{H}$ is
+\[
+d(z_1, z_2) = \operatorname{arcosh}\!\left(1 + \frac{\lvert z_1 - z_2 \rvert^2}{2\,\operatorname{Im} z_1\, \operatorname{Im} z_2}\right).
+\]
+\end{theorem}
+
+\begin{theorem}[Distance in the Disk]
+The hyperbolic distance between $z_1, z_2 \in \mathbb{D}$ is
+\[
+d(z_1, z_2) = \operatorname{arcosh}\!\left(1 + \frac{2 \lvert z_1 - z_2 \rvert^2}{(1 - \lvert z_1 \rvert^2)(1 - \lvert z_2 \rvert^2)}\right).
+\]
+\end{theorem}
+
+These are Gauss's ``imaginary geometry'' formulas made concrete. A useful test case: the vertical ray in $\mathbb{H}$ is a unit-speed geodesic \index{geodesic}, and
+\[
+d(i, i\,e^t) = t,
+\]
+so dilations $z \mapsto e^t z$ act as hyperbolic translations. Points near the boundary $y \to 0$ are infinitely far from the interior.
+
+\section{Geodesics}
+
+In the half-plane model, geodesics are vertical rays and semicircles centered on the real axis. In the disk model they are diameters and arcs of circles meeting the unit circle orthogonally.
+
+\begin{proposition}
+A circle in the disk carrying a geodesic has center $C$ and radius $R$ satisfying the orthogonality condition
+\[
+\lvert C \rvert^2 - R^2 = 1.
+\]
+\end{proposition}
+
+Since the geodesic passes through $p$ and $q$, the center $C$ solves the two linear equations
+\[
+2\,\operatorname{Re}(C\, \overline{p}) = \lvert p \rvert^2 + 1, \qquad
+2\,\operatorname{Re}(C\, \overline{q}) = \lvert q \rvert^2 + 1,
+\]
+obtained by combining $\lvert C - p \rvert^2 = R^2$ with the orthogonality condition.
+
+\section{The Angle of Parallelism}
+
+\begin{definition}[Angle of Parallelism]\index{angle of parallelism}
+Given a distance $x > 0$, the angle of parallelism is
+\[
+\Pi(x) = 2\arctan(e^{-x}).
+\]
+\end{definition}
+
+Interpretation: place a point $P$ at distance $x$ above a line $\ell$ in the half-plane model. The lines through $P$ that are parallel to $\ell$ (the ones that meet $\ell$ only ``at infinity'') make angle $\Pi(x)$ with the perpendicular; the lines making a smaller angle are \emph{asymptotic}, while all lines between them are \emph{ultra-parallel} and never meet $\ell$ at all. As $x \to 0$, $\Pi(x) \to \pi/2$, recovering the Euclidean axiom locally; as $x \to \infty$, $\Pi(x) \to 0$. Lobachevsky's original observation (via Milnor~\cite{milnor-hyperbolic}) was that $x = -\log \tan(\Pi/2)$.
+
+\section{Hyperbolic Triangle Geometry}
+
+In a Euclidean triangle the angle sum is $\pi$. In the hyperbolic plane it is always smaller, and the defect measures area.
+
+\begin{theorem}[Hyperbolic Law of Cosines]\index{hyperbolic law of cosines}
+For a hyperbolic triangle with side lengths $a, b, c$ and opposite angles $A, B, C$,
+\[
+\cos C = \frac{\cosh a \cosh b - \cosh c}{\sinh a \sinh b},
+\]
+and cyclically. The third side from two sides and the included angle is
+\[
+\cosh c = \cosh a \cosh b - \sinh a \sinh b \cos C.
+\]
+\end{theorem}
+
+\begin{theorem}[Hyperbolic Law of Sines]
+\[
+\frac{\sinh a}{\sin A} = \frac{\sinh b}{\sin B} = \frac{\sinh c}{\sin C}.
+\]
+\end{theorem}
+
+\begin{theorem}[Angle Defect and Area, Gauss--Bonnet]\index{Gauss--Bonnet}
+For a hyperbolic triangle with curvature $-1$,
+\[
+\operatorname{Area} = \pi - (A + B + C).
+\]
+\end{theorem}
+
+\begin{example}[A Small Equilateral Triangle]
+For an equilateral triangle with sides $0.001$, the defect is about $4.3 \times 10^{-7}$: the geometry is Euclidean at the scale of everyday life, which is why Gauss's mountain-top measurements detected nothing. For sides $1.5$, each angle is only about $0.793$ radians, and the defect is $0.7626$.
+\end{example}
+
+\begin{theorem}[Area and Circumference of a Circle]
+A hyperbolic circle of radius $r$ has
+\[
+\text{circumference} = 2\pi \sinh r, \qquad \text{area} = 2\pi(\cosh r - 1).
+\]
+\end{theorem}
+
+The circumference grows like $\pi e^r$ rather than $2\pi r$: for large $r$ nearly all of the area lies in a thin band near the boundary, in stark contrast to the Euclidean plane.
+
+\section{Python Implementation}
+
+In \texttt{python/hyperbolic.py}:
+
+\begin{lstlisting}[style=python, caption={Key functions in python/hyperbolic.py}]
+half_plane_to_disk(z)        # Cayley map H -> D
+disk_to_half_plane(z)        # Inverse Cayley map
+half_plane_distance(z1, z2)  # Hyperbolic distance in H
+disk_distance(z1, z2)        # Hyperbolic distance in D
+geodesic_circle(p, q)        # Circle carrying geodesic through p, q
+angle_of_parallelism(x)      # Pi(x) = 2 arctan(e^{-x})
+hyperbolic_angles(a, b, c)   # Angles from side lengths
+hyperbolic_side_from_sas(a, b, C)  # Third side, two sides + included angle
+verify_hyperbolic_law_of_sines(a, b, c)
+hyperbolic_triangle_area(a, b, c)  # Angle defect
+circle_circumference(r)      # 2 pi sinh(r)
+circle_area(r)               # 2 pi (cosh(r) - 1)
+\end{lstlisting}
+
+\section{Numerical Examples}
+
+\begin{example}[Isometry of the Two Models]
+The Cayley map is an isometry, so distances agree in the two models:
+\begin{lstlisting}[style=python]
+>>> from hyperbolic import (half_plane_to_disk, half_plane_distance,
+...                         disk_distance)
+>>> z1, z2 = 0.5j, 0.3 + 0.7j
+>>> half_plane_distance(z1, z2)
+0.600391
+>>> disk_distance(half_plane_to_disk(z1), half_plane_to_disk(z2))
+0.600391
+\end{lstlisting}
+The two models compute the same distance, as they must.
+\end{example}
+
+\begin{example}[Unit-Speed Geodesic]
+\begin{lstlisting}[style=python]
+>>> from hyperbolic import half_plane_distance
+>>> from math import exp
+>>> half_plane_distance(1j, 1j * exp(1.0))
+1.0
+\end{lstlisting}
+Dilation $z \mapsto e^t z$ moves a point a hyperbolic distance exactly $t$, confirming that vertical rays are geodesics of speed one.
+\end{example}
+
+\begin{example}[The Angle of Parallelism]
+\begin{lstlisting}[style=python]
+>>> from hyperbolic import angle_of_parallelism
+>>> angle_of_parallelism(1.0)
+0.7050
+\end{lstlisting}
+At hyperbolic distance 1 from a line, the parallels already deviate from the perpendicular by almost $30^\circ$; the Euclidean-looking right angle is restored only as the distance shrinks to 0.
+\end{example}
+
+\begin{example}[A Hyperbolic Triangle]
+\begin{lstlisting}[style=python]
+>>> from hyperbolic import (hyperbolic_angles, hyperbolic_triangle_area,
+...                         verify_hyperbolic_law_of_sines)
+>>> A, B, C = hyperbolic_angles(1.5, 1.5, 1.5)
+>>> print(f"angles = {A:.4f} each, sum = {A+B+C:.4f} < pi = {3.1416}")
+angles = 0.7930 each, sum = 2.3790 < pi = 3.1416
+>>> hyperbolic_triangle_area(1.5, 1.5, 1.5)
+0.7626
+>>> verify_hyperbolic_law_of_sines(1.5, 1.5, 1.5)
+True
+\end{lstlisting}
+The defect $\pi - 2.3790 = 0.7626$ is the area, by the Gauss--Bonnet formula.
+\end{example}
+
+\begin{example}[Circle Growth]
+\begin{lstlisting}[style=python]
+>>> from hyperbolic import circle_circumference, circle_area
+>>> circle_circumference(2.0), circle_area(2.0)
+22.7882, 17.3554
+\end{lstlisting}
+For comparison, a Euclidean circle of radius 2 has circumference $4\pi \approx 12.57$ and area $4\pi \approx 12.57$: the hyperbolic circle is larger, and the ratio grows without bound as $r$ increases.
+\end{example}
+
+\section{Exercises}
+
+\begin{exercise}
+Prove that the Cayley map sends the real axis to the unit circle and the point $i$ to the origin. Conclude that it maps $\mathbb{H}$ conformally onto $\mathbb{D}$.
+\end{exercise}
+
+\begin{exercise}
+Derive the half-plane distance formula from the line element $ds^2 = (dx^2 + dy^2)/y^2$ by integrating along the vertical geodesic $[i, i\,e^t]$.
+\end{exercise}
+
+\begin{exercise}
+Compute the angle of parallelism $\Pi(x)$ for $x = 0.1, 0.5, 1, 2, 5$ and interpret the values. At what distance is $\Pi(x) = 45^\circ$?
+\end{exercise}
+
+\begin{exercise}
+Show from the law of cosines that a hyperbolic triangle with sides $1.5, 1.5, 1.5$ has angle sum $2.3790$, and verify the defect against \texttt{hyperbolic\_triangle\_area}.
+\end{exercise}
+
+\begin{exercise}
+Use the Gram--Schmidt-free circle construction to compute the geodesic through $p = 0.2 + 0.3i$ and $q = -0.3 + 0.5i$, and verify orthogonality to the unit circle.
+\end{exercise}
+
+\begin{exercise}
+For what radius $r$ does a hyperbolic circle of radius $r$ have area exactly $2\pi$? Compare with the Euclidean case $r = \sqrt{2}$.
+\end{exercise}
+
+\section{Exercise Solutions}
+
+\begin{solution}
+For a real $x$, the Cayley map gives $(x - i)/(x + i)$, whose modulus is $\lvert x - i \rvert / \lvert x + i \rvert = 1$; hence the real axis maps to the unit circle. For $z = i$, the value is $0$. Since the map is a M\"obius transformation taking the boundary to the boundary and $i$ (a point of $\mathbb{H}$) to $0$ (a point of $\mathbb{D}$), it maps $\mathbb{H}$ onto $\mathbb{D}$ conformally.
+\end{solution}
+
+\begin{solution}
+Along the vertical ray $z(t) = i e^t$ with $t \in [0, T]$, we have $y = e^t$ and $dy = e^t dt$, so the length is $\int_0^T dy/y = \int_0^T dt = T$. Thus the hyperbolic distance from $i$ to $i e^T$ is $T$, which is the claim.
+\end{solution}
+
+\begin{solution}
+The module values are $\Pi(0.1) = 87.1^\circ$, $\Pi(0.5) = 62.5^\circ$, $\Pi(1.0) = 40.4^\circ$, $\Pi(2.0) = 15.4^\circ$, $\Pi(5.0) = 0.77^\circ$. Setting $\Pi(x) = \pi/4$ gives $2\arctan(e^{-x}) = \pi/4$, so $e^{-x} = \tan(\pi/8)$, i.e.\ $x = -\log \tan(\pi/8) \approx 0.8814$.
+\end{solution}
+
+\begin{solution}
+From the law of cosines, $C = \arccos\big((\cosh^2 1.5 - \cosh 1.5)/\sinh^2 1.5\big) \approx 0.7930$ for each angle, so the sum is $2.3790 < \pi$, and the defect $\pi - 2.3790 = 0.7626$ matches the module's area output exactly.
+\end{solution}
+
+\begin{solution}
+Solving the two linear equations $2\operatorname{Re}(C \bar p) = \lvert p \rvert^2 + 1$ and $2\operatorname{Re}(C \bar q) = \lvert q \rvert^2 + 1$ for $C$ gives $C \approx 0.4289 + 1.5974i$, and $R = \sqrt{\lvert C \rvert^2 - 1} \approx 1.3174$. Then $\lvert C \rvert^2 - R^2 = 1$, the orthogonality condition.
+\end{solution}
+
+\begin{solution}
+Solve $2\pi(\cosh r - 1) = 2\pi$, i.e.\ $\cosh r = 2$, so $r = \operatorname{arcosh}(2) = \log(2 + \sqrt{3}) \approx 1.317$. The Euclidean circle of area $2\pi$ has radius $\sqrt{2} \approx 1.414$, so the hyperbolic radius needed for the same area is smaller: the hyperbolic plane ``spreads out'' faster.
+\end{solution}
+
+\section{References}
+
+\begin{itemize}
+    \item \cite{gauss-works} -- Gauss, \textit{Werke}, Vol.~VIII (fragments on non-Euclidean geometry)
+    \item \cite{bonola} -- Bonola, \textit{Non-Euclidean Geometry: A Critical and Historical Study of Its Developments}
+    \item \cite{milnor-hyperbolic} -- Milnor, ``Hyperbolic Geometry: The First 150 Years'' (1982)
+\end{itemize}

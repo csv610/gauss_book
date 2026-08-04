@@ -14,16 +14,19 @@ This appendix provides a complete reference of all Python modules, functions, an
 \texttt{quadratic.py} & Legendre/Jacobi/Kronecker symbols, quadratic reciprocity \\
 \texttt{gauss\_sums.py} & Gauss sums, Dirichlet characters, L-functions \\
 \texttt{disquisitiones.py} & Binary quadratic forms, class groups, cyclotomic polynomials \\
+\texttt{prime\_counting.py} & Sieve of Eratosthenes, $\pi(x)$, $x/\log x$ and $Li(x)$ estimates \\
 \texttt{gaussian\_integral.py} & Error function, normal distribution, error propagation \\
 \texttt{theta.py} & Jacobi theta functions, Dedekind eta, Eisenstein series \\
 \texttt{agm.py} & Arithmetic-geometric mean, elliptic integrals, $\pi$ algorithms \\
 \texttt{gaussian\_elim.py} & Gaussian elimination, LU/Cholesky/QR decomposition \\
 \texttt{least\_squares.py} & Linear/nonlinear least squares, Gauss-Newton, Levenberg-Marquardt \\
+\texttt{geodesy.py} & Triangulation, resection, spherical excess, network adjustment \\
 \texttt{gauss\_quadrature.py} & Gauss-Legendre/Hermite/Laguerre/Chebyshev quadrature \\
 \texttt{normal.py} & Normal distribution, MLE, confidence intervals \\
 \texttt{gp.py} & Gaussian processes, Kriging, kernels \\
 \texttt{heptadecagon.py} & 17-gon construction, Gauss periods, constructible polygons \\
 \texttt{theorema.py} & Differential geometry, Theorema Egregium, Gauss-Bonnet \\
+\texttt{hyperbolic.py} & Poincar\'e models, hyperbolic distance, angle of parallelism \\
 \texttt{orbital.py} & Orbital mechanics, Gauss's method, Kepler equation \\
 \texttt{lemniscate.py} & Lemniscate functions, Gauss constant relations \\
 \texttt{gauss\_composition.py} & Binary quadratic form composition, class groups \\
@@ -369,7 +372,19 @@ print(legendre_symbol(5, 13) * legendre_symbol(13, 5))  # 1
 r = tonelli_shanks(10, 13)  # 6 or 7 (since 6² = 36 ≡ 10 mod 13)
 \end{lstlisting}
 
-\subsection{Chapter 7: AGM and \texorpdfstring{$\pi$}{Pi}}
+\subsection{Chapter 5: The Distribution of the Primes}
+\begin{lstlisting}[style=python]
+from python.prime_counting import prime_pi, nth_prime, gauss_estimate
+
+# pi(x) and the n-th prime
+print(prime_pi(10**6))          # 78498
+print(nth_prime(1000))          # 7919
+
+# Gauss's estimate x/log x vs. pi(x)
+print(gauss_estimate(10**6))    # 72382.4
+\end{lstlisting}
+
+\subsection{Chapter 8: AGM and \texorpdfstring{$\pi$}{Pi}}
 \begin{lstlisting}[style=python]
 from python.agm import agm, pi_brent_salamin, elliptic_K
 
@@ -384,7 +399,7 @@ for n in range(1, 6):
 K = elliptic_K(1/math.sqrt(2))  # Gamma(1/4)^2 / (4*sqrt(pi))
 \end{lstlisting}
 
-\subsection{Chapter 8: Gaussian Elimination}
+\subsection{Chapter 9: Gaussian Elimination}
 \begin{lstlisting}[style=python]
 from python.gaussian_elim import gaussian_elimination, lu_decomposition, qr_solve
 import numpy as np
@@ -397,7 +412,23 @@ P, L, U = lu_decomposition(A)
 x_qr = qr_solve(A, b)  # Least squares via QR
 \end{lstlisting}
 
-\subsection{Chapter 13: Heptadecagon}
+\subsection{Chapter 11: Geodesy and Triangulation}
+\begin{lstlisting}[style=python]
+from python.geodesy import forward_triangulation, resection, spherical_excess
+from math import radians
+
+# Baseline triangulation: apex of an equilateral triangle
+pt, d1, d2 = forward_triangulation((0, 0), (1, 0), radians(60), radians(60))
+
+# Three-point problem
+alpha, beta = radians(56.3099), radians(75.9638)
+P = resection((0, 0), (1, 0), (2, 1), alpha, beta)  # (0.7, 0.9)
+
+# Spherical excess of the octant triangle is 90 degrees
+e, area = spherical_excess(0, 0, 0, 90, 90, 0)
+\end{lstlisting}
+
+\subsection{Chapter 15: Heptadecagon}
 \begin{lstlisting}[style=python]
 from python.heptadecagon import heptadecagon_vertices, constructible_ngons
 
@@ -408,7 +439,7 @@ print(constructible_ngons(50))
 # [3, 4, 5, 6, 8, 10, 12, 15, 16, 17, 20, 24, 30, 32, 34, 40, 48]
 \end{lstlisting}
 
-\subsection{Chapter 14: Theorema Egregium}
+\subsection{Chapter 16: Theorema Egregium}
 \begin{lstlisting}[style=python]
 from python.theorema import sphere, gaussian_curvature, first_fundamental_form
 
@@ -416,6 +447,20 @@ r = lambda u, v: (math.sin(u)*math.cos(v), math.sin(u)*math.sin(v), math.cos(u))
 E, F, G = first_fundamental_form(r, 1.0, 0.5)
 L, M, N = second_fundamental_form(r, 1.0, 0.5)
 K = gaussian_curvature(E, F, G, L, M, N)  # K = 1.0 for unit sphere
+\end{lstlisting}
+
+\subsection{Chapter 17: Hyperbolic Geometry}
+\begin{lstlisting}[style=python]
+from python.hyperbolic import (half_plane_distance, half_plane_to_disk,
+                               disk_distance, angle_of_parallelism)
+
+# Distances agree in both models of the hyperbolic plane
+z1, z2 = 0.5j, 0.3 + 0.7j
+print(half_plane_distance(z1, z2))                 # 0.600391
+print(disk_distance(half_plane_to_disk(z1), half_plane_to_disk(z2)))
+
+# Lobachevsky's angle of parallelism Pi(1) = 2 arctan(e^{-1})
+print(angle_of_parallelism(1.0))                   # 0.7050
 \end{lstlisting}
 
 \section{Version Information}

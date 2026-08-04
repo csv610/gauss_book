@@ -4,9 +4,9 @@ A textbook and Python library covering Gauss's contributions to mathematics, fro
 
 ## What's Inside
 
-- **15 chapters** covering number theory, analysis, linear algebra, statistics, and geometry
-- **18 Python modules** with 5,500+ lines of production-ready code
-- **193 tests** ensuring correctness
+- **18 chapters** covering number theory, analysis, linear algebra, statistics, geodesy, and geometry
+- **21 Python modules** with 5,500+ lines of production-ready code
+- **436 tests** ensuring correctness
 - **Index** with 353 terms
 - **Glossary** with 67 definitions
 - **Exercise solutions** for all chapters
@@ -21,7 +21,7 @@ make all         # Build book and student guide
 
 ### Run Tests
 ```bash
-make test        # Run all 193 tests
+make test        # Run all 436 tests
 ```
 
 ### Use the Code
@@ -29,6 +29,9 @@ make test        # Run all 193 tests
 from python.modular import mod_inv, solve_congruence
 from python.gaussian_elim import lu_decomposition, cholesky
 from python.quadratic import legendre_symbol, quadratic_residue
+from python.prime_counting import riemann_r, nth_prime
+from python.geodesy import vincenty_distance, resection
+from python.hyperbolic import half_plane_distance, angle_of_parallelism
 ```
 
 ## Chapters
@@ -39,17 +42,20 @@ from python.quadratic import legendre_symbol, quadratic_residue
 | 2 | Quadratic Reciprocity | quadratic.py |
 | 3 | Gauss Sums | gauss_sums.py |
 | 4 | Disquisitiones Arithmeticae | disquisitiones.py |
-| 5 | Gaussian Integral | gaussian_integral.py |
-| 6 | Theta Functions | theta.py |
-| 7 | Arithmetic-Geometric Mean | agm.py |
-| 8 | Gaussian Elimination | gaussian_elim.py |
-| 9 | Least Squares | least_squares.py |
-| 10 | Gaussian Quadrature | gauss_quadrature.py |
-| 11 | Normal Distribution | normal.py |
-| 12 | Gaussian Processes | gp.py |
-| 13 | Heptadecagon Construction | heptadecagon.py |
-| 14 | Theorema Egregium | theorema.py |
-| 15 | Orbital Mechanics | orbital.py |
+| 5 | The Distribution of the Primes | prime_counting.py |
+| 6 | Gaussian Integral | gaussian_integral.py |
+| 7 | Theta Functions | theta.py |
+| 8 | Arithmetic-Geometric Mean | agm.py |
+| 9 | Gaussian Elimination | gaussian_elim.py |
+| 10 | Least Squares | least_squares.py |
+| 11 | Geodesy and Triangulation | geodesy.py |
+| 12 | Gaussian Quadrature | gauss_quadrature.py |
+| 13 | Normal Distribution | normal.py |
+| 14 | Gaussian Processes | gp.py |
+| 15 | Heptadecagon Construction | heptadecagon.py |
+| 16 | Theorema Egregium | theorema.py |
+| 17 | Hyperbolic Geometry | hyperbolic.py |
+| 18 | Orbital Mechanics | orbital.py |
 
 ## Requirements
 

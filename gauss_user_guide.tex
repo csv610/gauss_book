@@ -186,15 +186,18 @@ cd /path/to/Gauss
 python -m python.modular          # Chapter 1: Modular arithmetic
 python -m python.quadratic        # Chapter 2: Quadratic reciprocity
 python -m python.gauss_sums       # Chapter 3: Gauss sums
-python -m python.agm              # Chapter 7: Arithmetic-geometric mean
-python -m python.gaussian_elim    # Chapter 8: Gaussian elimination
-python -m python.least_squares    # Chapter 9: Least squares
-python -m python.gauss_quadrature # Chapter 10: Gauss quadrature
-python -m python.normal           # Chapter 11: Normal distribution
-python -m python.gp               # Chapter 12: Gaussian processes
-python -m python.heptadecagon     # Chapter 13: Heptadecagon
-python -m python.theorema         # Chapter 14: Theorema Egregium
-python -m python.orbital          # Chapter 15: Orbital mechanics
+python -m python.prime_counting   # Chapter 5: Distribution of the primes
+python -m python.agm              # Chapter 8: Arithmetic-geometric mean
+python -m python.gaussian_elim    # Chapter 9: Gaussian elimination
+python -m python.least_squares    # Chapter 10: Least squares
+python -m python.geodesy          # Chapter 11: Geodesy and triangulation
+python -m python.gauss_quadrature # Chapter 12: Gauss quadrature
+python -m python.normal           # Chapter 13: Normal distribution
+python -m python.gp               # Chapter 14: Gaussian processes
+python -m python.heptadecagon     # Chapter 15: Heptadecagon
+python -m python.theorema         # Chapter 16: Theorema Egregium
+python -m python.hyperbolic       # Chapter 17: Hyperbolic geometry
+python -m python.orbital          # Chapter 18: Orbital mechanics
 python -m python.lemniscate       # Lemniscate functions
 python -m python.gauss_composition # Binary quadratic forms
 \end{lstlisting}
@@ -274,7 +277,39 @@ cyclotomic_poly(n)            # Phi_n(x)
 heptadecagon_vertices()       # Coordinates of 17-gon
 \end{lstlisting}
 
-\subsection{Chapter 5: Gaussian Integral and Error Function}
+\subsection{Chapter 5: The Distribution of the Primes}
+
+\textbf{Key Concepts:}
+\begin{itemize}
+    \item Gauss's logarithmic integral estimate $\operatorname{Li}(x)$ for $\pi(x)$
+    \item Riemann's prime-counting function $R(x)$ and the Gram series
+    \item The prime number theorem
+    \item Primality testing with Miller-Rabin
+\end{itemize}
+
+\textbf{Key Functions in \texttt{python/prime\_counting.py}:}
+\begin{lstlisting}[style=python]
+sieve_of_eratosthenes(n)        # All primes up to n
+prime_pi(x)                     # pi(x), exact count
+nth_prime(n)                    # n-th prime
+is_prime(n)                     # Deterministic Miller-Rabin
+gauss_estimate(x)               # x / log x
+legendre_estimate(x)            # Li(x) - Li(sqrt(x))/2
+logarithmic_integral(x)         # Li(x) via scipy.special.expi
+riemann_r(x)                    # R(x), Gram series
+prime_counting_table(n)         # Comparison table
+\end{lstlisting}
+
+\textbf{Try this:}
+\begin{lstlisting}[style=python]
+>>> from python.prime_counting import riemann_r, prime_pi
+>>> riemann_r(10**6)    # 78527.4 vs pi(10^6) = 78498
+78527.3994140625
+>>> prime_pi(10**6)
+78498
+\end{lstlisting}
+
+\subsection{Chapter 6: Gaussian Integral and Error Function}
 
 \textbf{Key Functions in \texttt{python/gaussian\_integral.py}:}
 \begin{lstlisting}[style=python]
@@ -287,7 +322,7 @@ faddeeva(z)                         # Faddeeva function
 error_propagation(f, vars)          # Delta method
 \end{lstlisting}
 
-\subsection{Chapter 6: Theta Functions and Modular Forms}
+\subsection{Chapter 7: Theta Functions and Modular Forms}
 
 \textbf{Key Functions in \texttt{python/theta.py}:}
 \begin{lstlisting}[style=python]
@@ -300,7 +335,7 @@ eisenstein_series(k, tau)         # G_k(tau)
 j_invariant(tau)                  # j(tau)
 \end{lstlisting}
 
-\subsection{Chapter 7: Arithmetic-Geometric Mean}
+\subsection{Chapter 8: Arithmetic-Geometric Mean}
 
 \textbf{Key Functions in \texttt{python/agm.py}:}
 \begin{lstlisting}[style=python]
@@ -322,7 +357,7 @@ n=1: pi = 3.141592653589793
 n=2: pi = 3.141592653589793
 \end{lstlisting}
 
-\subsection{Chapter 8: Gaussian Elimination and Matrix Decompositions}
+\subsection{Chapter 9: Gaussian Elimination and Matrix Decompositions}
 
 \textbf{Key Functions in \texttt{python/gaussian\_elim.py}:}
 \begin{lstlisting}[style=python]
@@ -336,7 +371,7 @@ ridge_regression(A, b, lam)   # Tikhonov regularization
 bareiss(A)                    # Fraction-free elimination
 \end{lstlisting}
 
-\subsection{Chapter 9: Least Squares and Gauss-Newton}
+\subsection{Chapter 10: Least Squares and Gauss-Newton}
 
 \textbf{Key Functions in \texttt{python/least\_squares.py}:}
 \begin{lstlisting}[style=python]
@@ -348,7 +383,42 @@ fit_exponential(x, y)         # a*exp(bx)+c
 polyfit(x, y, deg)            # Polynomial fit
 \end{lstlisting}
 
-\subsection{Chapter 10: Gauss Quadrature}
+\subsection{Chapter 11: Geodesy and Triangulation}
+
+\textbf{Key Concepts:}
+\begin{itemize}
+    \item Gauss's 1820s Hanover survey (Gauss's geodesy)
+    \item Distance on the sphere: haversine and Vincenty formulae
+    \item Forward triangulation from a measured baseline
+    \item The three-point (resection) problem
+    \item Spherical excess and triangle network adjustment
+\end{itemize}
+
+\textbf{Key Functions in \texttt{python/geodesy.py}:}
+\begin{lstlisting}[style=python]
+haversine_distance(lat1, lon1, lat2, lon2)   # Great-circle distance
+vincenty_distance(lat1, lon1, lat2, lon2)    # Ellipsoidal distance
+spherical_excess(lat1, lon1, lat2, lon2, lat3, lon3)
+forward_triangulation(p1, p2, angle1, angle2)  # New point from baseline
+intersection(p1, p2, angle1, angle2)
+resection(p1, p2, p3, alpha, beta)            # Three-point problem
+adjust_triangle_angles(A, B, C)               # Equal correction
+conditional_adjustment(...)                   # Weighted network
+meridian_arc_degree(lat)                      # 1 degree of latitude
+\end{lstlisting}
+
+\textbf{Try this:}
+\begin{lstlisting}[style=python]
+>>> from python.geodesy import vincenty_distance, meridian_arc_degree
+>>> from math import radians
+>>> vincenty_distance(radians(48.8566), radians(2.3522),
+...                   radians(51.5074), radians(-0.1278))
+343923.1
+>>> meridian_arc_degree(radians(0))    # at the equator
+110574.4
+\end{lstlisting}
+
+\subsection{Chapter 12: Gauss Quadrature}
 
 \textbf{Key Functions in \texttt{python/gauss\_quadrature.py}:}
 \begin{lstlisting}[style=python]
@@ -361,7 +431,7 @@ integrate(f, a, b, n)         # Quadrature integration
 integrate_adaptive(f, a, b)   # Adaptive Gauss-Kronrod
 \end{lstlisting}
 
-\subsection{Chapter 11: Normal Distribution and Error Analysis}
+\subsection{Chapter 13: Normal Distribution and Error Analysis}
 
 \textbf{Key Functions in \texttt{python/normal.py}:}
 \begin{lstlisting}[style=python]
@@ -373,7 +443,7 @@ error_propagation(f, vars)    # Delta method
 confidence_interval_normal(...)
 \end{lstlisting}
 
-\subsection{Chapter 12: Gaussian Processes}
+\subsection{Chapter 14: Gaussian Processes}
 
 \textbf{Key Functions in \texttt{python/gp.py}:}
 \begin{lstlisting}[style=python]
@@ -388,7 +458,7 @@ matern_kernel(x1, x2, length_scale, variance, nu)
 kriging(x_obs, y_obs, x_pred, kernel)
 \end{lstlisting}
 
-\subsection{Chapter 13: Heptadecagon and Constructible Polygons}
+\subsection{Chapter 15: Heptadecagon and Constructible Polygons}
 
 \textbf{Key Functions in \texttt{python/heptadecagon.py}:}
 \begin{lstlisting}[style=python]
@@ -399,7 +469,7 @@ cos_2pi_over_17()             # Exact expression
 gauss_periods(p)              # Gauss periods
 \end{lstlisting}
 
-\subsection{Chapter 14: Theorema Egregium}
+\subsection{Chapter 16: Theorema Egregium}
 
 \textbf{Key Functions in \texttt{python/theorema.py}:}
 \begin{lstlisting}[style=python]
@@ -412,7 +482,42 @@ theorema_egregium_check(r, u, v)
 gauss_bonnet_discrete(vertices, faces)
 \end{lstlisting}
 
-\subsection{Chapter 15: Orbital Mechanics}
+\subsection{Chapter 17: Hyperbolic Geometry}
+
+\textbf{Key Concepts:}
+\begin{itemize}
+    \item The half-plane and Poincar\'e disk models
+    \item Gauss's contributions and his non-Euclidean geometry notes
+    \item Distance, geodesics, and the angle of parallelism $\Pi(x) = 2\arctan(e^{-x})$
+    \item Hyperbolic laws of sines and cosines
+    \item Gauss-Bonnet: area is the angle defect
+\end{itemize}
+
+\textbf{Key Functions in \texttt{python/hyperbolic.py}:}
+\begin{lstlisting}[style=python]
+half_plane_to_disk(z)          # Cayley transform
+disk_to_half_plane(z)
+half_plane_distance(z1, z2)
+disk_distance(z1, z2)
+geodesic_circle(z1, z2)        # (center, radius) of orthogonal circle
+angle_of_parallelism(x)        # 2 arctan(e^{-x})
+hyperbolic_law_of_sines(a, A, b, B)
+hyperbolic_law_of_cosines(a, b, C)
+hyperbolic_triangle_area(A, B, C)  # Angle defect
+circle_circumference(r)        # 2*pi*sinh(r)
+circle_area(r)                 # 2*pi*(cosh(r) - 1)
+\end{lstlisting}
+
+\textbf{Try this:}
+\begin{lstlisting}[style=python]
+>>> from python.hyperbolic import angle_of_parallelism, half_plane_distance
+>>> angle_of_parallelism(1.0)
+0.7050
+>>> half_plane_distance(0.5j, 0.3 + 0.7j)
+0.600391
+\end{lstlisting}
+
+\subsection{Chapter 18: Orbital Mechanics}
 
 \textbf{Key Functions in \texttt{python/orbital.py}:}
 \begin{lstlisting}[style=python]
@@ -589,17 +694,22 @@ Chinese Remainder Theorem & $x = \sum a_i N_i M_i \pmod{N}$ \\
 Legendre Symbol & $\left(\frac{a}{p}\right) \equiv a^{(p-1)/2} \pmod{p}$ \\
 Quadratic Reciprocity & $\left(\frac{p}{q}\right)\left(\frac{q}{p}\right) = (-1)^{\frac{p-1}{2}\frac{q-1}{2}}$ \\
 Gauss Sum & $g(p) = \sum_{a=0}^{p-1} e^{2\pi i a^2/p}$ \\
+Prime Counting & $\pi(x) \sim \operatorname{Li}(x)$, \quad $R(x) = \sum_{k=1}^{\infty}\frac{\mu(k)}{k}\operatorname{Li}(x^{1/k})$ \\
 AGM & $M(a,b) = \lim a_n = \lim b_n$ \\
 Brent-Salamin $\pi$ & $\pi = \frac{4a_n^2}{1-\sum 2^n(a_n-b_n)^2}$ \\
 Gaussian Elimination & $PA = LU$ \\
 QR & $A = QR$, $Q^TQ=I$ \\
 Least Squares & $x = (A^TA)^{-1}A^Tb$ \\
+Haversine & $a = \sin^2(\Delta\varphi/2) + \cos\varphi_1\cos\varphi_2\sin^2(\Delta\lambda/2)$ \\
+Spherical Excess & $E = A + B + C - \pi$ \\
 Gaussian PDF & $\phi(x) = \frac{1}{\sqrt{2\pi}\sigma}e^{-(x-\mu)^2/2\sigma^2}$ \\
 Gaussian CDF & $\Phi(x) = \frac{1}{2}(1+\text{erf}(\frac{x-\mu}{\sigma\sqrt{2}}))$ \\
 GP Regression & $\mu_* = K_*^T(K+\sigma^2I)^{-1}y$ \\
 17-gon & $\cos(2\pi/17) = \frac{1}{16}(-1+\sqrt{17}+\sqrt{34-2\sqrt{17}}+\cdots)$ \\
 Theorema Egregium & $K = \frac{LN-M^2}{EG-F^2}$ \\
 Gauss-Bonnet & $\int_S K dA + \int_{\partial S}\kappa_g ds = 2\pi\chi(S)$ \\
+Angle of Parallelism & $\Pi(x) = 2\arctan(e^{-x})$ \\
+Hyperbolic Area & $A = \pi - (A+B+C)$ \\
 \bottomrule
 \end{tabular}
 
